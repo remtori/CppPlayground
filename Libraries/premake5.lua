@@ -1,4 +1,8 @@
 make_proj("TestASL", "./ASL/Tests", "Test")
+	links
+	{
+		"ASL",
+	}
 
 make_proj("ASL", "./ASL")
 	excludes

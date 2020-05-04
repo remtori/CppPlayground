@@ -2,8 +2,9 @@
 
 My attempt at implementing all STL library, including but not limited to:
 
-- [ ] Assertions
-- [ ] StdLibExtras: max, min, ... move, exchange, forward, swap
+- [x] Assertions
+- [x] Types: shorthand types
+- [x] StdLibExtras: max, min, move, forward, swap
 - [ ] Smart Pointer: OwnPtr, RefPtr and their Nonnull counterpart
 - [ ] Optional
 - [ ] ByteBuffer
@@ -19,7 +20,6 @@ My attempt at implementing all STL library, including but not limited to:
 - [ ] UniqueString (string with the same value has the same implementation)
 - [ ] StringBuilder
 - [ ] StringView
-- [ ] Types: shorthand types
 - [ ] DoublyLinkedList
 
 The order above is also the priority of these things
