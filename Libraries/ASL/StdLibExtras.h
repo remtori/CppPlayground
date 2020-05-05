@@ -1,5 +1,9 @@
 #pragma once
 
+namespace std {
+using nullptr_t = decltype(nullptr);
+}
+
 namespace ASL {
 
 template<typename T>
@@ -74,8 +78,17 @@ inline constexpr T&& forward(typename RemoveReference<T>::Type&& param) noexcept
     return static_cast<T&&>(param);
 }
 
+template<typename T, typename U = T>
+inline constexpr T exchange(T& slot, U&& value)
+{
+    T old_value = move(slot);
+    slot = forward<U>(value);
+    return old_value;
+}
+
 } // namespace ASL
 
+using ASL::exchange;
 using ASL::forward;
 using ASL::max;
 using ASL::min;
