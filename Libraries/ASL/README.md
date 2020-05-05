@@ -6,7 +6,7 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] Types: shorthand types
 - [x] StdLibExtras: max, min, move, forward, swap
 - [x] Smart Pointer: OwnPtr, RefPtr and their Nonnull counterpart
-- [ ] Optional
+- [x] Optional
 - [ ] ByteBuffer
 - [ ] Function
 - [ ] Vector
