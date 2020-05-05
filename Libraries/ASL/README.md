@@ -5,7 +5,7 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] Assertions
 - [x] Types: shorthand types
 - [x] StdLibExtras: max, min, move, forward, swap
-- [ ] Smart Pointer: OwnPtr, RefPtr and their Nonnull counterpart
+- [x] Smart Pointer: OwnPtr, RefPtr and their Nonnull counterpart
 - [ ] Optional
 - [ ] ByteBuffer
 - [ ] Function
