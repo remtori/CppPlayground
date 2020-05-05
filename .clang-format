@@ -11,6 +11,5 @@ IndentPPDirectives: AfterHash
 BreakBeforeBraces: Custom
 BraceWrapping:
     AfterFunction: true
-    AfterNamespace: true
 NamespaceIndentation: None
 FixNamespaceComments: true

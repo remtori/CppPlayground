@@ -1,7 +1,6 @@
 #pragma once
 
-namespace ASL
-{
+namespace ASL {
 
 template<typename T>
 inline constexpr T min(const T& a, const T& b)
