@@ -76,7 +76,7 @@ public:
     {
         clear();
 #ifndef SANITIZE_PTRS
-        if constexpr (sizeof(T) == 8)
+        if constexpr (sizeof(T*) == 8)
             m_ptr = (T*)0x1f1f1f1f1f1f1f1f;
         else
             m_ptr = (T*)0x1f1f1f1f;
