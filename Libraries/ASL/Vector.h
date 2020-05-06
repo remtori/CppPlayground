@@ -123,7 +123,7 @@ public:
 
     void grow_capacity(size_t needed_capacity)
     {
-        if (needed_capacity >= m_capacity)
+        if (m_capacity >= needed_capacity)
             return;
 
         // grow with some padding to avoid repeated malloc and free
@@ -139,7 +139,7 @@ public:
         auto new_buffer = (T*)malloc(sizeof(T) * new_capacity);
 
         if constexpr (Traits<T>::is_trivial()) {
-            __builtin_memmove(new_buffer, m_buffer, m_size * sizeof(T));
+            memmove(new_buffer, m_buffer, m_size * sizeof(T));
         } else {
             for (size_t i = 0; i < m_size; i++) {
                 new (&new_buffer[i]) T(move(m_buffer[i]));
