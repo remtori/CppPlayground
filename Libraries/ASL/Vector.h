@@ -3,8 +3,8 @@
 #include "Assertions.h"
 #include "StdLibExtras.h"
 #include "Traits.h"
-#include "Types.h"
 #include "TypedTransfer.h"
+#include "Types.h"
 #include <initializer_list>
 
 namespace ASL {
@@ -45,9 +45,9 @@ public:
     }
 
     Vector(Vector&& other)
-        : m_size(other.m_size)
+        : m_buffer(other.m_buffer)
+        , m_size(other.m_size)
         , m_capacity(other.m_capacity)
-        , m_buffer(other.m_buffer)
     {
         other.m_buffer = nullptr;
         other.m_size = 0;
@@ -144,7 +144,7 @@ public:
 
     inline void append(const T& value)
     {
-        append(move(T(value)));
+        append(T(value));
     }
 
     void append(const Vector& other)
@@ -211,7 +211,7 @@ public:
 
         ++m_size;
         if constexpr (Traits<T>::is_trivial()) {
-            memmove(&m_buffer[index + 1], &m_buffer[index], (m_size - index - 1) * sizeof(T));
+            TypedTransfer<T>::move(&m_buffer[index + 1], &m_buffer[index], m_size - index - 1);
         } else {
             for (size_t i = m_size - 1; i > index; --i) {
                 new (&m_buffer[i]) T(move(at(i - 1)));
@@ -251,7 +251,7 @@ public:
         ASSERT(index < m_size);
 
         if constexpr (Traits<T>::is_trivial()) {
-            memmove(&m_buffer[index], &m_buffer[index + 1], (m_size - index - 1) * sizeof(T));
+            TypedTransfer<T>::move(&m_buffer[index], &m_buffer[index + 1], m_size - index - 1);
         } else {
             at(index).~T();
             for (size_t i = index + 1; i < m_size; ++i) {
@@ -281,14 +281,13 @@ public:
         auto new_buffer = (T*)malloc(sizeof(T) * new_capacity);
 
         if constexpr (Traits<T>::is_trivial()) {
-            memmove(new_buffer, m_buffer, m_size * sizeof(T));
+            TypedTransfer<T>::move(new_buffer, m_buffer, m_size);
         } else {
             for (size_t i = 0; i < m_size; i++) {
                 new (&new_buffer[i]) T(move(m_buffer[i]));
                 at(i).~T();
             }
         }
-
 
         free(m_buffer);
         m_buffer = new_buffer;
