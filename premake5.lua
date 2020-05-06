@@ -17,6 +17,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 function make_proj(name, src_dir, proj_kind)
 	project(name)
 	location(src_dir)
+	warnings "Extra"
 
 	local isTest = false
 	if (proj_kind == "Test") then
