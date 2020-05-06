@@ -1,10 +1,10 @@
 #pragma once
 
+#include "assert.h"
 
 #ifdef _MSC_VER
 #define ASSERT(x) if(!(x)) { __debugbreak(); assert(false); }
 #else
-#include "assert.h"
 #define ASSERT assert
 #endif
 
