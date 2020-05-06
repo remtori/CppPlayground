@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Assertions.h"
+#include "Optional.h"
 #include "StdLibExtras.h"
 #include "Traits.h"
 #include "TypedTransfer.h"
@@ -8,6 +9,52 @@
 #include <initializer_list>
 
 namespace ASL {
+
+template<typename VectorType, typename ElementType>
+class VectorIterator {
+public:
+    bool operator!=(const VectorIterator& other) const { return m_index != other.m_index; }
+    bool operator==(const VectorIterator& other) const { return m_index == other.m_index; }
+    bool operator<(const VectorIterator& other) const { return m_index < other.m_index; }
+    bool operator>(const VectorIterator& other) const { return m_index > other.m_index; }
+    bool operator>=(const VectorIterator& other) const { return m_index >= other.m_index; }
+
+    VectorIterator& operator++()
+    {
+        ++m_index;
+        return *this;
+    }
+    VectorIterator& operator--()
+    {
+        --m_index;
+        return *this;
+    }
+
+    VectorIterator operator-(size_t value) { return { m_vector, m_index - value }; }
+    VectorIterator operator+(size_t value) { return { m_vector, m_index + value }; }
+    VectorIterator& operator=(const VectorIterator& other)
+    {
+        m_index = other.m_index;
+        return *this;
+    }
+
+    ElementType& operator*() { return m_vector[m_index]; }
+    ElementType* operator->() { return &m_vector[m_index]; }
+
+    bool is_end() const { return m_index == m_vector.size(); }
+    size_t index() const { return m_index; }
+
+private:
+    friend VectorType;
+    explicit VectorIterator(VectorType& vector, size_t index)
+        : m_vector(vector)
+        , m_index(index)
+    {
+    }
+
+    VectorType& m_vector;
+    size_t m_index = 0;
+};
 
 template<typename T>
 class Vector {
@@ -96,6 +143,53 @@ public:
 
     inline T& operator[](size_t i) { return at(i); }
     inline const T& operator[](size_t i) const { return at(i); }
+
+    using Iterator = VectorIterator<Vector, T>;
+    Iterator begin() { return Iterator(*this, 0); }
+    Iterator end() { return Iterator(*this, m_size); }
+
+    using ConstIterator = VectorIterator<const Vector, const T>;
+    ConstIterator begin() const { return ConstIterator(*this, 0); }
+    ConstIterator end() const { return ConstIterator(*this, m_size); }
+
+    template<typename Finder>
+    ConstIterator find(Finder finder) const
+    {
+        for (size_t i = 0; i < m_size; ++i) {
+            if (finder(at(i)))
+                return ConstIterator(*this, i);
+        }
+        return end();
+    }
+
+    template<typename Finder>
+    Iterator find(Finder finder)
+    {
+        for (size_t i = 0; i < m_size; ++i) {
+            if (finder(at(i)))
+                return Iterator(*this, i);
+        }
+        return end();
+    }
+
+    ConstIterator find(const T& value) const
+    {
+        return find([&](auto& other) { return value == other; });
+    }
+
+    Iterator find(const T& value)
+    {
+        return find([&](auto& other) { return value == other; });
+    }
+
+    Optional<size_t> find_first_index(const T& value)
+    {
+        for (size_t i = 0; i < m_size; ++i) {
+            if (value == at(i))
+                return i;
+        }
+        return {};
+    }
 
     T& front() { return at(0); }
     const T& front() const { return at(0); }
@@ -227,6 +321,22 @@ public:
         insert(index, T(value));
     }
 
+    template<typename C>
+    void insert_before_matching(T&& value, C callback, size_t first_index = 0, size_t* inserted_index = nullptr)
+    {
+        for (size_t i = first_index; i < size(); ++i) {
+            if (callback(at(i))) {
+                insert(i, move(value));
+                if (inserted_index)
+                    *inserted_index = i;
+                return;
+            }
+        }
+        append(move(value));
+        if (inserted_index)
+            *inserted_index = size() - 1;
+    }
+
     void unchecked_append(T&& value)
     {
         ASSERT((m_size + 1) <= m_capacity);
@@ -261,6 +371,29 @@ public:
         }
 
         --m_size;
+    }
+
+    template<typename Callback>
+    void remove_first_matching(Callback callback)
+    {
+        for (size_t i = 0; i < size(); ++i) {
+            if (callback(at(i))) {
+                remove(i);
+                return;
+            }
+        }
+    }
+
+    template<typename Callback>
+    void remove_all_matching(Callback callback)
+    {
+        for (size_t i = 0; i < size();) {
+            if (callback(at(i))) {
+                remove(i);
+            } else {
+                ++i;
+            }
+        }
     }
 
     void grow_capacity(size_t needed_capacity)

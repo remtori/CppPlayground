@@ -37,14 +37,14 @@ TEST_CASE("Vector", "[container]")
         strings.append("DEF");
 
         int loop_counter = 0;
-        for (size_t i = 0; i < strings.size(); i++) {
-            REQUIRE(!strings[i].empty());
+        for (const std::string& str : strings) {
+            REQUIRE(!str.empty());
             ++loop_counter;
         }
 
         loop_counter = 0;
-        for (size_t i = 0; i < strings.size(); i++) {
-            REQUIRE(!strings[i].empty());
+        for (auto& str : strings) {
+            REQUIRE(!str.empty());
             ++loop_counter;
         }
         REQUIRE(loop_counter == 2);
@@ -123,6 +123,23 @@ TEST_CASE("Vector", "[container]")
 
         REQUIRE(strings.size() == 1000u);
         REQUIRE(strings == same_strings);
+    }
+
+    SECTION("Insert string ordered")
+    {
+        Vector<std::string> strings;
+        strings.append("abc");
+        strings.append("def");
+        strings.append("ghi");
+
+        strings.insert_before_matching("f-g", [](auto& entry) {
+            return "f-g" < entry;
+        });
+
+        REQUIRE(strings[0] == "abc");
+        REQUIRE(strings[1] == "def");
+        REQUIRE(strings[2] == "f-g");
+        REQUIRE(strings[3] == "ghi");
     }
 
     SECTION("Prepend")
