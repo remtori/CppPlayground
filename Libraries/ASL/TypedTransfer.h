@@ -1,7 +1,7 @@
 #pragma once
 
-#include <stdlib.h>
 #include "StdLibExtras.h"
+#include <string.h>
 
 namespace ASL {
 
@@ -48,6 +48,6 @@ public:
     }
 };
 
-}
+} // namespace ASL
 
 using ASL::TypedTransfer;
