@@ -9,7 +9,7 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] Optional
 - [x] Vector
 - [x] HashFunctions
-- [ ] SinglyLinkedList
+- [x] SinglyLinkedList
 - [ ] HashSet
 - [ ] HashMap
 - [ ] ByteBuffer
