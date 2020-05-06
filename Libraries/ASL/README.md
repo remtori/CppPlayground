@@ -7,13 +7,13 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] StdLibExtras: max, min, move, forward, swap
 - [x] Smart Pointer: OwnPtr, RefPtr and their Nonnull counterpart
 - [x] Optional
+- [x] Vector
+- [x] HashFunctions
+- [ ] SinglyLinkedList
+- [ ] HashSet
+- [ ] HashMap
 - [ ] ByteBuffer
 - [ ] Function
-- [ ] Vector
-- [ ] SinglyLinkedList
-- [ ] HashFunctions
-- [ ] HashTable
-- [ ] HashMap
 - [ ] WeakPtr
 - [ ] StringImpl
 - [ ] String
