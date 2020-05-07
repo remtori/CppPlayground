@@ -238,7 +238,9 @@ public:
 
     inline void append(const T& value)
     {
-        append(move(T(value)));
+        grow_capacity(m_size + 1);
+        new (&m_buffer[m_size]) T(value);
+        ++m_size;
     }
 
     void append(const Vector& other)

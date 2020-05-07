@@ -139,7 +139,14 @@ public:
 
     void append(const T& value)
     {
-        append(move(T(value)));
+        auto* node = new Node(T(value));
+        if (!m_head) {
+            m_head = node;
+            m_tail = node;
+            return;
+        }
+        m_tail->next = node;
+        m_tail = node;
     }
 
     void append(T&& value)
