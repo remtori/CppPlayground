@@ -139,7 +139,7 @@ public:
 
     void append(const T& value)
     {
-        append(T(value));
+        append(move(T(value)));
     }
 
     void append(T&& value)
