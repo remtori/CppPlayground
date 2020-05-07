@@ -13,11 +13,13 @@ public:
     {
         if (m_is_end && other.m_is_end)
             return false;
+
         return &m_table != &other.m_table
             || m_is_end != other.m_is_end
             || m_bucket_index != other.m_bucket_index
             || m_bucket_iterator != other.m_bucket_iterator;
     }
+
     bool operator==(const HashTableIterator& other) const { return !(*this != other); }
 
     ElementType& operator*() { return *m_bucket_iterator; }
@@ -38,10 +40,12 @@ public:
                     m_is_end = true;
                     return;
                 }
+
                 m_bucket_iterator = m_table.m_buckets[m_bucket_index].begin();
             } else {
                 ++m_bucket_iterator;
             }
+
             if (!m_bucket_iterator.is_end())
                 return;
         }
@@ -52,9 +56,9 @@ private:
 
     explicit HashTableIterator(HashTableType& table, bool is_end, BucketIteratorType bucket_iterator = {}, size_t bucket_index = 0)
         : m_table(table)
+        , m_bucket_iterator(bucket_iterator)
         , m_bucket_index(bucket_index)
         , m_is_end(is_end)
-        , m_bucket_iterator(bucket_iterator)
     {
         if (!is_end && !m_table.is_empty() && m_bucket_iterator.is_end()) {
             m_bucket_iterator = m_table.m_buckets[0].begin();
@@ -64,12 +68,12 @@ private:
     }
 
     HashTableType& m_table;
-    size_t m_bucket_index { 0 };
-    bool m_is_end { false };
     BucketIteratorType m_bucket_iterator;
+    size_t m_bucket_index = 0;
+    bool m_is_end = false;
 };
 
-template<typename T, typename TraitsForT>
+template<typename T, typename TraitsForT = Traits<T>>
 class HashTable {
     using Bucket = SinglyLinkedList<T>;
 

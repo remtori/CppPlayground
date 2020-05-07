@@ -6,7 +6,7 @@ TEST_CASE("HashTable", "[container]")
 {
     SECTION("Basic usage")
     {
-        HashTable<int, Traits<int>> a;
+        HashTable<int> a;
         a.set(4);
         a.set(5);
         a.set(6);
@@ -19,7 +19,7 @@ TEST_CASE("HashTable", "[container]")
 
     SECTION("Iterating")
     {
-        HashTable<int, Traits<int>> a;
+        HashTable<int> a;
         a.set(4);
         a.set(5);
         a.set(6);
@@ -27,11 +27,15 @@ TEST_CASE("HashTable", "[container]")
         for (auto& v : a) {
             REQUIRE(a.contains(v));
         }
+
+        for (const auto& v : a) {
+            REQUIRE(a.contains(v));
+        }
     }
 
     SECTION("Find and remove")
     {
-        HashTable<int, Traits<int>> a;
+        HashTable<int> a;
         a.set(4);
         a.set(5);
         a.set(6);
@@ -46,7 +50,7 @@ TEST_CASE("HashTable", "[container]")
 
     SECTION("Preloccate")
     {
-        HashTable<int, Traits<int>> a;
+        HashTable<int> a;
         a.ensure_capacity(100);
         REQUIRE(a.size() == 0);
 
