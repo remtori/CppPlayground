@@ -12,7 +12,7 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] SinglyLinkedList
 - [x] HashTable
 - [x] HashMap
-- [ ] Function
+- [x] Function
 - [ ] StringImpl
 - [ ] String
 - [ ] UniqueString (string with the same value has the same implementation)

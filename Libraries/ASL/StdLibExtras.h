@@ -52,6 +52,183 @@ template<class T>
 struct IsLvalueReference<T&> : TrueType {
 };
 
+template<class>
+struct IsFunction : FalseType {
+};
+
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...)> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...)> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) const> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) const> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) volatile> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) volatile> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) const volatile> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) const volatile> : TrueType {
+};
+
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...)&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...)&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) const&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) const&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) volatile&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) volatile&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) const volatile&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) const volatile&> : TrueType {
+};
+
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) &&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) &&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) const&&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) const&&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) volatile&&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) volatile&&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args...) const volatile&&> : TrueType {
+};
+template<class Ret, class... Args>
+struct IsFunction<Ret(Args..., ...) const volatile&&> : TrueType {
+};
+
+template<class T>
+struct IsRvalueReference : FalseType {
+};
+template<class T>
+struct IsRvalueReference<T&&> : TrueType {
+};
+
+template<class T>
+struct RemovePointer {
+    using Type = T;
+};
+template<class T>
+struct RemovePointer<T*> {
+    using Type = T;
+};
+template<class T>
+struct RemovePointer<T* const> {
+    using Type = T;
+};
+template<class T>
+struct RemovePointer<T* volatile> {
+    using Type = T;
+};
+template<class T>
+struct RemovePointer<T* const volatile> {
+    using Type = T;
+};
+
+template<class T>
+struct RemoveConst {
+    using Type = T;
+};
+
+template<class T>
+struct RemoveConst<const T> {
+    using Type = T;
+};
+
+template<class T>
+struct RemoveVolatile {
+    using Type = T;
+};
+
+template<class T>
+struct RemoveVolatile<volatile T> {
+    using Type = T;
+};
+
+template<class T>
+struct RemoveCV {
+    using Type = typename RemoveVolatile<typename RemoveConst<T>::Type>::Type;
+};
+
+template<class T>
+struct __IsPointerHelper : FalseType {
+};
+
+template<class T>
+struct __IsPointerHelper<T*> : TrueType {
+};
+
+template<class T>
+struct IsPointer : __IsPointerHelper<typename RemoveCV<T>::Type> {
+};
+
+template<typename T, typename U>
+struct IsSame {
+    enum {
+        value = 0
+    };
+};
+
+template<typename T>
+struct IsSame<T, T> {
+    enum {
+        value = 1
+    };
+};
+
+template<bool condition, class TrueType, class FalseType>
+struct Conditional {
+    using Type = TrueType;
+};
+
+template<class TrueType, class FalseType>
+struct Conditional<false, TrueType, FalseType> {
+    using Type = FalseType;
+};
+
+template<bool B, class T = void>
+struct EnableIf {
+};
+
+template<class T>
+struct EnableIf<true, T> {
+    using Type = T;
+};
+
 template<typename T>
 struct RemoveReference {
     using Type = T;
@@ -88,6 +265,7 @@ inline constexpr T exchange(T& slot, U&& value)
 
 } // namespace ASL
 
+using ASL::Conditional;
 using ASL::exchange;
 using ASL::forward;
 using ASL::max;
