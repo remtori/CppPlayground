@@ -41,7 +41,7 @@ public:
                     return;
                 }
 
-                m_bucket_iterator = m_table.m_buckets[m_bucket_index].begin();
+                m_bucket_iterator = m_table.bucket(m_bucket_index).begin();
             } else {
                 ++m_bucket_iterator;
             }
@@ -61,7 +61,7 @@ private:
         , m_is_end(is_end)
     {
         if (!is_end && !m_table.is_empty() && m_bucket_iterator.is_end()) {
-            m_bucket_iterator = m_table.m_buckets[0].begin();
+            m_bucket_iterator = m_table.bucket(0).begin();
             if (m_bucket_iterator.is_end())
                 skip_to_next();
         }
@@ -286,6 +286,16 @@ public:
     }
 
 private:
+    Bucket& bucket(size_t index)
+    {
+        return m_buckets[index];
+    }
+
+    const Bucket& bucket(size_t index) const
+    {
+        return m_buckets[index];
+    }
+
     Bucket& lookup(const T& value, size_t* bucket_index = nullptr)
     {
         unsigned hash = TraitsForT::hash(value);
