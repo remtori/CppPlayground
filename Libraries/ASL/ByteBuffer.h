@@ -22,24 +22,25 @@ public:
 
     void clear();
 
-    size_t capacity() const { return m_capacity; }
+    size_t size() const { return m_size; }
     u8* data() { return m_buffer; }
     const u8* data() const { return m_buffer; }
 
     u8& operator[](size_t index)
     {
-        ASSERT(index < m_capacity);
+        ASSERT(index < m_size);
         return m_buffer[index];
     }
 
-    void copy_from(const void* ptr, size_t byte_size, size_t offset = 0);
-    void fill(u8 c, size_t length = 0, size_t offset = 0);
+    void append(const void* data, size_t byte_size);
+    void overwrite(const void* ptr, size_t byte_size, size_t offset = 0);
+    void fill(u8 c, size_t byte_size = 0, size_t offset = 0);
 
-    void grow_capacity(size_t growth_size, bool fill_null_space = true);
+    void grow(size_t growth_size, bool fill_null_space = true);
     void ensure_capacity(size_t new_capacity, bool fill_null_space = true);
 
 private:
-    size_t m_capacity = 0;
+    size_t m_size = 0;
     u8* m_buffer = nullptr;
 };
 

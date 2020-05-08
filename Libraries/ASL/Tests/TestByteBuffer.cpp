@@ -15,27 +15,32 @@ TEST_CASE("ByteBuffer", "[container]")
         REQUIRE(String(a) == "abc");
     }
 
+    SECTION("Append")
+    {
+        ByteBuffer a;
+    }
+
     SECTION("Fill")
     {
-        ByteBuffer b(4);
-        b.fill('f');
-        REQUIRE(String(b) == "ffff");
+        ByteBuffer a(4);
+        a.fill('f');
+        REQUIRE(String(a) == "ffff");
 
-        b.fill('d', 2);
-        REQUIRE(String(b) == "ddff");
+        a.fill('d', 2);
+        REQUIRE(String(a) == "ddff");
 
-        b.fill('e', 2, 3);
-        REQUIRE(String(b) == "ddfe");
+        a.fill('e', 1, 3);
+        REQUIRE(String(a) == "ddfe");
     }
 
     SECTION("Copy from")
     {
-        ByteBuffer b = ByteBuffer::from_data("eeee");
+        ByteBuffer a = ByteBuffer::from_data("eeee");
 
-        b.copy_from((void*)"abc", 3);
-        REQUIRE(String(b) == "abce");
+        a.overwrite((void*)"abc", 3);
+        REQUIRE(String(a) == "abce");
 
-        b.copy_from((void*)"abc", 3, 1);
-        REQUIRE(String(b) == "aabc");
+        a.overwrite((void*)"abc", 3, 1);
+        REQUIRE(String(a) == "aabc");
     }
 }

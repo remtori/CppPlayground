@@ -68,7 +68,7 @@ public:
     }
 
     String(const ByteBuffer& buffer)
-        : m_impl(StringImpl::from_chars((const char*)buffer.data(), buffer.capacity()))
+        : m_impl(StringImpl::from_chars((const char*)buffer.data(), buffer.size()))
     {
     }
 
