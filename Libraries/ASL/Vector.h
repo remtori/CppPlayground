@@ -7,6 +7,8 @@
 #include "TypedTransfer.h"
 #include "Types.h"
 #include <initializer_list>
+#include <new>
+#include <stdlib.h>
 
 namespace ASL {
 
