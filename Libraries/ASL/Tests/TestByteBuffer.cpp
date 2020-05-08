@@ -11,13 +11,16 @@ TEST_CASE("ByteBuffer", "[container]")
         a[0] = 'a';
         a[1] = 'b';
         a[2] = 'c';
-
         REQUIRE(String(a) == "abc");
     }
 
     SECTION("Append")
     {
         ByteBuffer a;
+        a.append("aa", 2);
+        REQUIRE(String(a) == "aa");
+        a.append("bcd", 3);
+        REQUIRE(String(a) == "aabcd");
     }
 
     SECTION("Fill")
@@ -33,7 +36,7 @@ TEST_CASE("ByteBuffer", "[container]")
         REQUIRE(String(a) == "ddfe");
     }
 
-    SECTION("Copy from")
+    SECTION("Overwrite")
     {
         ByteBuffer a = ByteBuffer::from_data("eeee");
 
