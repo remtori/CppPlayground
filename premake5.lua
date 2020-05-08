@@ -42,7 +42,6 @@ function make_proj(name, src_dir, proj_kind)
 
 	includedirs
 	{
-		src_dir,
 		_MAIN_SCRIPT_DIR .. "/Libraries",
 	}
 
