@@ -7,13 +7,15 @@
 namespace ASL {
 
 class String;
+class SharedString;
 
 class StringView {
 public:
     using ConstIterator = const char*;
 
     StringView() {};
-    StringView(const String& str);
+    StringView(const String&);
+    StringView(const SharedString&);
     StringView(const char* cstring);
     StringView(const char* cstring, size_t length);
 

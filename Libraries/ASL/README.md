@@ -16,7 +16,7 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] StringImpl
 - [x] String
 - [x] StringView
-- [ ] UniqueString (string with the same value has the same implementation)
+- [x] SharedString (string with the same value has the same implementation)
 - [ ] StringBuilder
 - [ ] DoublyLinkedList
 - [ ] WeakPtr

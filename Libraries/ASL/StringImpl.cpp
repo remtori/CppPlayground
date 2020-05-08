@@ -1,6 +1,7 @@
 #include "StringImpl.h"
 
 #include "Assertions.h"
+#include "SharedString.h"
 #include <new>
 #include <stdlib.h>
 #include <string.h>
@@ -58,6 +59,13 @@ RefPtr<StringImpl> StringImpl::from_chars(const char* cstring, size_t length)
     memcpy(buffer, cstring, length * sizeof(char));
 
     return new_stringimpl;
+}
+
+StringImpl::~StringImpl()
+{
+    if (m_is_shared) {
+        SharedString::will_destroy_impl(this);
+    }
 }
 
 void StringImpl::operator delete(void* ptr)

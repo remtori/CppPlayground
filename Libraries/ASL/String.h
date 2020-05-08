@@ -8,6 +8,8 @@
 
 namespace ASL {
 
+class SharedString;
+
 class String {
 public:
     using ConstIterator = const char*;
@@ -64,6 +66,9 @@ public:
     {
     }
 
+    String(const StringView&);
+    String(const SharedString&);
+
     bool is_null() const { return !m_impl; }
     bool is_empty() const { return length() == 0; }
     size_t length() const { return m_impl ? m_impl->length() : 0; }
@@ -76,10 +81,10 @@ public:
     ConstIterator begin() const { return characters(); }
     ConstIterator end() const { return begin() + length(); }
 
-    bool starts_with(const StringView&) const;
-    bool ends_with(const StringView&) const;
     bool starts_with(char) const;
     bool ends_with(char) const;
+    bool starts_with(const StringView&) const;
+    bool ends_with(const StringView&) const;
 
     String substring(size_t start, size_t length) const;
     StringView substring_view(size_t start, size_t length) const;
@@ -129,6 +134,9 @@ public:
     bool operator>(const char*) const;
     bool operator<=(const String& other) const { return !(*this > other); }
     bool operator<=(const char* other) const { return !(*this > other); }
+
+    bool operator==(const SharedString&) const;
+    bool operator!=(const SharedString& other) const { return !(*this == other); }
 
 private:
     RefPtr<StringImpl> m_impl;

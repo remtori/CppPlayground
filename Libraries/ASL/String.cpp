@@ -1,5 +1,7 @@
 #include "String.h"
 
+#include "SharedString.h"
+#include "StringView.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -64,6 +66,19 @@ String String::repeated(char ch, size_t count)
     memset(buffer, ch, count);
 
     return *impl;
+}
+
+String::String(const StringView& view)
+{
+    if (view.m_impl)
+        m_impl = *view.m_impl;
+    else
+        m_impl = StringImpl::from_chars(view.characters_wont(), view.length());
+}
+
+String::String(const SharedString& shared)
+    : m_impl(shared.impl())
+{
 }
 
 bool String::starts_with(const StringView& str) const
@@ -231,6 +246,11 @@ bool String::operator==(const char* cstring) const
         return false;
 
     return !strcmp(characters(), cstring);
+}
+
+bool String::operator==(const SharedString& other) const
+{
+    return *this == String(other.impl());
 }
 
 bool String::operator<(const String& other) const

@@ -14,6 +14,7 @@ public:
     static RefPtr<StringImpl> from_chars(const char* cstring);
     static RefPtr<StringImpl> from_chars(const char* cstring, size_t length);
 
+    ~StringImpl();
     void operator delete(void* ptr);
 
     size_t length() const { return m_length; }
@@ -33,6 +34,9 @@ public:
         ASSERT(i < m_length);
         return characters()[i];
     }
+
+    bool is_shared() const { return m_is_shared; }
+    void set_shared(bool shared) const { m_is_shared = shared; }
 
     unsigned hash() const
     {
@@ -67,6 +71,7 @@ private:
     }
 
     size_t m_length = 0;
+    mutable bool m_is_shared = false;
     mutable unsigned m_hash = 0;
     mutable bool m_has_hash = false;
 

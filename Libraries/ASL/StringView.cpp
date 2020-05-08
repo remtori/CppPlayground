@@ -1,7 +1,7 @@
 #include "StringView.h"
 
+#include "SharedString.h"
 #include "String.h"
-
 #include <string.h>
 
 namespace ASL {
@@ -10,6 +10,13 @@ StringView::StringView(const String& str)
     : m_impl(str.impl())
     , m_characters(str.characters())
     , m_length(str.length())
+{
+}
+
+StringView::StringView(const SharedString& shared)
+    : m_impl(shared.impl())
+    , m_characters(shared.characters())
+    , m_length(shared.length())
 {
 }
 
