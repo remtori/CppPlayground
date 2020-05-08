@@ -11,7 +11,7 @@ static StringImpl* s_empty_string_impl = nullptr;
 
 StringImpl& StringImpl::empty()
 {
-    if (s_empty_string_impl) {
+    if (!s_empty_string_impl) {
         void* slot = malloc(sizeof(StringImpl) + sizeof(char));
         s_empty_string_impl = new (slot) StringImpl(ConstructTheEmptyStringImpl);
     }
