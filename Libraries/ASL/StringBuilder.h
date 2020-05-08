@@ -1,11 +1,9 @@
 #pragma once
 
 #include "ByteBuffer.h"
+#include "Forward.h"
 
 namespace ASL {
-
-class String;
-class StringView;
 
 class StringBuilder {
 public:

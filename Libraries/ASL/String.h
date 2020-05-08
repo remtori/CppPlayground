@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ByteBuffer.h"
+#include "Forward.h"
 #include "RefPtr.h"
 #include "StringImpl.h"
 #include "StringView.h"
@@ -8,8 +9,6 @@
 #include "Vector.h"
 
 namespace ASL {
-
-class SharedString;
 
 class String {
 public:

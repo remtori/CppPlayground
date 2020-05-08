@@ -1,13 +1,11 @@
 #pragma once
 
+#include "Forward.h"
 #include "Optional.h"
 #include "StringImpl.h"
 #include "Vector.h"
 
 namespace ASL {
-
-class String;
-class SharedString;
 
 class StringView {
 public:
