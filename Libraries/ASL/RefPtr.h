@@ -4,6 +4,7 @@
 #include "NonnullRefPtr.h"
 #include "OwnPtr.h"
 #include "StdLibExtras.h"
+#include "Types.h"
 
 namespace ASL {
 
