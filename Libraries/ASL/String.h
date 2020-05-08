@@ -2,7 +2,9 @@
 
 #include "RefPtr.h"
 #include "StringImpl.h"
+#include "StringView.h"
 #include "Traits.h"
+#include "Vector.h"
 
 namespace ASL {
 
@@ -74,8 +76,18 @@ public:
     ConstIterator begin() const { return characters(); }
     ConstIterator end() const { return begin() + length(); }
 
+    bool starts_with(const StringView&) const;
+    bool ends_with(const StringView&) const;
     bool starts_with(char) const;
     bool ends_with(char) const;
+
+    String substring(size_t start, size_t length) const;
+    StringView substring_view(size_t start, size_t length) const;
+    StringView view() const;
+
+    Vector<String> split_limit(char separator, size_t limit, bool keep_empty = false) const;
+    Vector<String> split(char separator, bool keep_empty = false) const;
+    Vector<StringView> split_view(char separator, bool keep_empty = false) const;
 
     StringImpl* impl() { return m_impl.ptr(); }
     const StringImpl* impl() const { return m_impl.ptr(); }

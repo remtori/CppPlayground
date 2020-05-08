@@ -13,11 +13,11 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] HashTable
 - [x] HashMap
 - [x] Function
-- [ ] StringImpl
-- [ ] String
+- [x] StringImpl
+- [x] String
+- [x] StringView
 - [ ] UniqueString (string with the same value has the same implementation)
 - [ ] StringBuilder
-- [ ] StringView
 - [ ] DoublyLinkedList
 - [ ] WeakPtr
 - [ ] ByteBuffer

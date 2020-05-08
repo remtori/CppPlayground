@@ -4,7 +4,7 @@
 
 #include <string.h>
 
-TEST_CASE("String", "[container]")
+TEST_CASE("String", "[string]")
 {
     SECTION("Empty String")
     {
@@ -90,9 +90,9 @@ TEST_CASE("String", "[container]")
         String a = "ABCDEF";
         REQUIRE(a.starts_with('A'));
         REQUIRE(!a.starts_with('B'));
-        // REQUIRE(a.starts_with("AB"));
-        // REQUIRE(a.starts_with("ABCDEF"));
-        // REQUIRE(!a.starts_with("DEF"));
+        REQUIRE(a.starts_with("AB"));
+        REQUIRE(a.starts_with("ABCDEF"));
+        REQUIRE(!a.starts_with("DEF"));
     }
 
     SECTION("Ends With")
@@ -100,8 +100,24 @@ TEST_CASE("String", "[container]")
         String a = "ABCDEF";
         REQUIRE(a.ends_with('F'));
         REQUIRE(!a.ends_with('E'));
-        // REQUIRE(a.ends_with("EF"));
-        // REQUIRE(a.ends_with("ABCDEF"));
-        // REQUIRE(!a.ends_with("ABC"));
+        REQUIRE(a.ends_with("EF"));
+        REQUIRE(a.ends_with("ABCDEF"));
+        REQUIRE(!a.ends_with("ABC"));
+    }
+
+    SECTION("Split")
+    {
+
+        String test = "foo bar baz";
+        auto parts = test.split(' ');
+
+        REQUIRE(parts.size() == 3u);
+        REQUIRE(parts[0] == "foo");
+        REQUIRE(parts[1] == "bar");
+        REQUIRE(parts[2] == "baz");
+
+        REQUIRE(parts[0].characters()[3] == '\0');
+        REQUIRE(parts[1].characters()[3] == '\0');
+        REQUIRE(parts[2].characters()[3] == '\0');
     }
 }

@@ -66,6 +66,37 @@ String String::repeated(char ch, size_t count)
     return *impl;
 }
 
+bool String::starts_with(const StringView& str) const
+{
+    if (str.is_empty())
+        return true;
+
+    if (is_empty())
+        return false;
+
+    if (str.length() > length())
+        return false;
+
+    if (characters() == str.characters_wont())
+        return true;
+
+    return !memcmp(characters(), str.characters_wont(), str.length());
+}
+
+bool String::ends_with(const StringView& str) const
+{
+    if (str.is_empty())
+        return true;
+
+    if (is_empty())
+        return false;
+
+    if (str.length() > length())
+        return false;
+
+    return !memcmp(characters() + length() - str.length(), str.characters_wont(), str.length());
+}
+
 bool String::starts_with(char ch) const
 {
     if (is_empty())
@@ -78,6 +109,88 @@ bool String::ends_with(char ch) const
     if (is_empty())
         return false;
     return characters()[length() - 1] == ch;
+}
+
+String String::substring(size_t start, size_t length) const
+{
+    if (!length)
+        return {};
+
+    ASSERT(m_impl);
+    ASSERT(start + length <= m_impl->length());
+
+    return { characters() + start, length };
+}
+
+StringView String::substring_view(size_t start, size_t length) const
+{
+    ASSERT(m_impl);
+    ASSERT(start + length <= m_impl->length());
+
+    return { characters() + start, length };
+}
+
+StringView String::view() const
+{
+    return { characters(), length() };
+}
+
+Vector<String> String::split_limit(char separator, size_t limit, bool keep_empty) const
+{
+    if (is_empty())
+        return {};
+
+    Vector<String> v;
+
+    size_t start = 0;
+    for (size_t i = 0; i < length(); ++i) {
+        if (characters()[i] == separator) {
+            size_t len = i - start;
+            if (len != 0 || keep_empty) {
+                v.append(substring(start, len));
+                if (v.size() == limit)
+                    break;
+            }
+
+            start = i + 1;
+        }
+    }
+
+    size_t len = length() - start;
+    if (len != 0 || keep_empty)
+        v.append(substring(start, len));
+
+    return v;
+}
+
+Vector<String> String::split(char separator, bool keep_empty) const
+{
+    return split_limit(separator, 0, keep_empty);
+}
+
+Vector<StringView> String::split_view(char separator, bool keep_empty) const
+{
+    if (is_empty())
+        return {};
+
+    Vector<StringView> v;
+
+    size_t start = 0;
+    for (size_t i = 0; i < length(); i++) {
+        if (characters()[i] == separator) {
+            size_t len = i - start;
+            if (len != 0 || keep_empty)
+                v.append(substring_view(start, len));
+
+            start = i + 1;
+        }
+    }
+
+    size_t len = length() - start;
+    if (len != 0 || keep_empty)
+        v.append(substring_view(start, len));
+
+    return v;
 }
 
 String String::isolated_copy() const
