@@ -17,8 +17,8 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] String
 - [x] StringView
 - [x] SharedString (string with the same value has the same implementation)
-- [ ] ByteBuffer
-- [ ] StringBuilder
+- [x] ByteBuffer
+- [x] StringBuilder
 - [ ] DoublyLinkedList
 - [ ] WeakPtr
 
