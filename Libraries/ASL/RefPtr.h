@@ -49,20 +49,20 @@ public:
 
     /////////// Copy from RefPtr //////////////
 
-    RefPtr(RefPtr<T>& other)
-        : m_ptr(other.ptr())
+    RefPtr(const RefPtr<T>& other)
+        : m_ptr(const_cast<T*>(other.ptr()))
     {
         ref(m_ptr);
     }
 
     template<typename U>
-    RefPtr(RefPtr<U>& other)
-        : m_ptr(other.ptr())
+    RefPtr(const RefPtr<U>& other)
+        : m_ptr(const_cast<T*>(other.ptr()))
     {
         ref(m_ptr);
     }
 
-    RefPtr& operator=(RefPtr& other)
+    RefPtr& operator=(const RefPtr& other)
     {
         RefPtr tmp(other);
         swap(tmp);
@@ -70,7 +70,7 @@ public:
     }
 
     template<typename U>
-    RefPtr& operator=(RefPtr<U>& other)
+    RefPtr& operator=(const RefPtr<U>& other)
     {
         RefPtr tmp(other);
         swap(tmp);

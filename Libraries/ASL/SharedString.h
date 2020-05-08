@@ -23,7 +23,7 @@ public:
 
     SharedString& operator=(const SharedString& other)
     {
-        m_impl = other.impl();
+        m_impl = other.m_impl;
         return *this;
     }
 
