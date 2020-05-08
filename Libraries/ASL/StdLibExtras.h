@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Types.h"
+
 namespace ASL {
 
 template<typename T>
@@ -258,6 +260,66 @@ inline constexpr T exchange(T& slot, U&& value)
     slot = forward<U>(value);
     return old_value;
 }
+
+template<typename>
+struct __IsIntegerHelper : FalseType {
+};
+
+template<>
+struct __IsIntegerHelper<i8> : TrueType {
+};
+
+template<>
+struct __IsIntegerHelper<u8> : TrueType {
+};
+
+template<>
+struct __IsIntegerHelper<i16> : TrueType {
+};
+
+template<>
+struct __IsIntegerHelper<u16> : TrueType {
+};
+
+template<>
+struct __IsIntegerHelper<i32> : TrueType {
+};
+
+template<>
+struct __IsIntegerHelper<u32> : TrueType {
+};
+
+template<>
+struct __IsIntegerHelper<i64> : TrueType {
+};
+
+template<>
+struct __IsIntegerHelper<u64> : TrueType {
+};
+
+template<typename T>
+struct IsInteger : __IsIntegerHelper<typename RemoveCV<T>::Type> {
+};
+
+template<typename>
+struct __IsFloatHelper : FalseType {
+};
+
+template<>
+struct __IsFloatHelper<float> : TrueType {
+};
+
+template<>
+struct __IsFloatHelper<double> : TrueType {
+};
+
+template<>
+struct __IsFloatHelper<long double> : TrueType {
+};
+
+template<typename T>
+struct IsFloat : __IsFloatHelper<typename RemoveCV<T>::Type> {
+};
 
 } // namespace ASL
 
