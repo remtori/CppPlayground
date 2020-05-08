@@ -1,0 +1,48 @@
+#pragma once
+
+#include "Assertions.h"
+#include "Types.h"
+
+namespace ASL {
+
+class ByteBuffer {
+public:
+    static ByteBuffer from_data(const char*);
+    static ByteBuffer from_data(const void* ptr, size_t byte_size);
+
+    ByteBuffer() {}
+    ByteBuffer(size_t inital_capacity)
+    {
+        ensure_capacity(inital_capacity);
+    }
+
+    ByteBuffer(const ByteBuffer&);
+    ByteBuffer(ByteBuffer&&);
+    ~ByteBuffer();
+
+    void clear();
+
+    size_t capacity() const { return m_capacity; }
+    u8* data() { return m_buffer; }
+    const u8* data() const { return m_buffer; }
+
+    u8& operator[](size_t index)
+    {
+        ASSERT(index < m_capacity);
+        return m_buffer[index];
+    }
+
+    void copy_from(const void* ptr, size_t byte_size, size_t offset = 0);
+    void fill(u8 c, size_t length = 0, size_t offset = 0);
+
+    void grow_capacity(size_t growth_size, bool fill_null_space = true);
+    void ensure_capacity(size_t new_capacity, bool fill_null_space = true);
+
+private:
+    size_t m_capacity = 0;
+    u8* m_buffer = nullptr;
+};
+
+}; // namespace ASL
+
+using ASL::ByteBuffer;

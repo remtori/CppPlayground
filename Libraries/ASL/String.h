@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ByteBuffer.h"
 #include "RefPtr.h"
 #include "StringImpl.h"
 #include "StringView.h"
@@ -63,6 +64,11 @@ public:
 
     String(NonnullRefPtr<StringImpl>&& impl)
         : m_impl(move(impl))
+    {
+    }
+
+    String(const ByteBuffer& buffer)
+        : m_impl(StringImpl::from_chars((const char*)buffer.data(), buffer.capacity()))
     {
     }
 
