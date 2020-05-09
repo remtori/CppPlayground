@@ -1,6 +1,7 @@
 #include "String.h"
 
 #include "SharedString.h"
+#include "StringUtils.h"
 #include "StringView.h"
 #include <stdio.h>
 #include <string.h>
@@ -66,6 +67,21 @@ String String::repeated(char ch, size_t count)
     memset(buffer, ch, count);
 
     return *impl;
+}
+
+u32 String::to_uint(bool* ok) const
+{
+    return string_to_uint(*this, ok);
+}
+
+i32 String::to_int(bool* ok) const
+{
+    return string_to_int(*this, ok);
+}
+
+double String::to_double(bool* ok) const
+{
+    return string_to_double(*this, ok);
 }
 
 String::String(const StringView& view)

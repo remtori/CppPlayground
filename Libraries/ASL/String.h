@@ -83,6 +83,10 @@ public:
         return (*m_impl)[i];
     }
 
+    u32 to_uint(bool* ok = nullptr) const;
+    i32 to_int(bool* ok = nullptr) const;
+    double to_double(bool* ok = nullptr) const;
+
     ConstIterator begin() const { return characters(); }
     ConstIterator end() const { return begin() + length(); }
 

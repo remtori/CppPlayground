@@ -107,7 +107,6 @@ TEST_CASE("String", "[string]")
 
     SECTION("Split")
     {
-
         String test = "foo bar baz";
         auto parts = test.split(' ');
 
@@ -119,5 +118,31 @@ TEST_CASE("String", "[string]")
         REQUIRE(parts[0].characters()[3] == '\0');
         REQUIRE(parts[1].characters()[3] == '\0');
         REQUIRE(parts[2].characters()[3] == '\0');
+    }
+
+    SECTION("To number")
+    {
+        REQUIRE(String("34343").to_uint() == 34343u);
+        REQUIRE(String("+12312").to_uint() == 12312u);
+        REQUIRE(String("-34343").to_int() == -34343);
+        REQUIRE(String("12334343").to_int() == 12334343);
+        REQUIRE(String("-3.14").to_double() == -3.14);
+
+        bool ok;
+
+        String("-1").to_uint(&ok);
+        REQUIRE(!ok);
+
+        String("--1").to_int(&ok);
+        REQUIRE(!ok);
+
+        String("abc").to_int(&ok);
+        REQUIRE(!ok);
+
+        String("333.3.3").to_double(&ok);
+        REQUIRE(!ok);
+
+        String("-3-4.234").to_double(&ok);
+        REQUIRE(!ok);
     }
 }
