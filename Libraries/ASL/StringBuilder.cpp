@@ -51,4 +51,23 @@ void StringBuilder::append(char c)
     m_length += 1;
 }
 
+void StringBuilder::append_repeated(const StringView& view, u32 times)
+{
+    will_append(view.length() * times);
+    for (u32 i = 0; i < times; ++i) {
+        m_buffer.overwrite(view.characters_wont(), view.length(), m_length);
+        m_length += view.length();
+    }
+}
+
+void StringBuilder::append_repeated(char c, u32 times)
+{
+    if (times == 0)
+        return;
+
+    will_append(times);
+    m_buffer.fill(c, times, m_length);
+    m_length += times;
+}
+
 } // namespace ASL

@@ -21,6 +21,8 @@ public:
 
     void append(const StringView&);
     void append(char);
+    void append_repeated(const StringView&, u32 times);
+    void append_repeated(char, u32 times);
 
 private:
     inline void will_append(size_t);
