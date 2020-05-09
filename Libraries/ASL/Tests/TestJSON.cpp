@@ -1,8 +1,9 @@
 #include <catch2/catch2.hpp>
 
 #include <ASL/JsonParser.h>
+#include <iostream>
 
-TEST_CASE("JsonParser", "[parser]")
+TEST_CASE("JSON Parser and Stringify", "[parser]")
 {
     SECTION("parse string")
     {
@@ -64,5 +65,39 @@ TEST_CASE("JsonParser", "[parser]")
         REQUIRE(arr[2].as_i32() == -3);
         REQUIRE(arr[3].is_string());
         REQUIRE(arr[3].as_string() == "hello");
+    }
+
+    SECTION("Stringify and parse test")
+    {
+        JsonObject a;
+        a.set("hey", "guy");
+        a.set("a number", 243);
+
+        {
+            JsonObject an_object;
+            an_object.set("whoa", "nuts");
+            {
+                JsonArray an_array;
+                an_array.append(1);
+                an_array.append(2);
+                an_array.append("thr<h1>ee");
+
+                an_object.set("an array", move(an_array));
+                REQUIRE(an_array.is_empty());
+            }
+            an_object.set("more", "stuff");
+
+            a.set("an object", move(an_object));
+            REQUIRE(an_object.is_empty());
+        }
+
+        a.set("awesome", true);
+        a.set("bogus", false);
+        a.set("meaning", JsonValue());
+
+        JsonParser parser(a.to_string(3));
+        auto clone_a = parser.parse();
+
+        REQUIRE(clone_a.equals(a));
     }
 }

@@ -147,6 +147,9 @@ public:
 
     bool equals(const JsonValue& other) const;
 
+    void serialize(StringBuilder&, int space = 0, int indent = 0) const;
+    String to_string(int space = 0) const;
+
 private:
     void clear();
     void copy_from(const JsonValue& other);

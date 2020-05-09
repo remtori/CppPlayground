@@ -41,9 +41,17 @@ public:
 
     const JsonValue& at(int index) const { return m_values.at(index); }
     const JsonValue& operator[](int index) const { return at(index); }
+    JsonValue& at(int index) { return m_values.at(index); }
+    JsonValue& operator[](int index) { return at(index); }
 
     void clear() { m_values.clear(); }
     void append(JsonValue value) { m_values.append(move(value)); }
+
+    Vector<JsonValue>::Iterator begin() { return m_values.begin(); }
+    Vector<JsonValue>::Iterator end() { return m_values.end(); }
+
+    Vector<JsonValue>::ConstIterator begin() const { return m_values.begin(); }
+    Vector<JsonValue>::ConstIterator end() const { return m_values.end(); }
 
     template<typename Callback>
     void for_each(Callback callback) const
@@ -56,8 +64,13 @@ public:
 
     void ensure_capacity(int capacity) { m_values.ensure_capacity(capacity); }
 
+    void serialize(StringBuilder&, int space = 0, int indent = 0) const;
+    String to_string(int space = 0) const;
+
 private:
     Vector<JsonValue> m_values;
 };
 
 } // namespace ASL
+
+using ASL::JsonArray;

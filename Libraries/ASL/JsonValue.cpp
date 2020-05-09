@@ -4,6 +4,7 @@
 #include "JsonArray.h"
 #include "JsonObject.h"
 #include "StdLibExtras.h"
+#include "StringBuilder.h"
 #include "StringImpl.h"
 
 namespace ASL {
@@ -195,6 +196,49 @@ void JsonValue::clear()
 
     m_type = Type::Undefined;
     m_value.as_string = nullptr;
+}
+
+void JsonValue::serialize(StringBuilder& builder, int space, int indent) const
+{
+    switch (m_type) {
+    case Type::Int32:
+    case Type::Int64:
+        builder.append(String::number(as_i32()));
+        break;
+    case Type::UInt32:
+    case Type::UInt64:
+        builder.append(String::number(as_u32()));
+        break;
+    case Type::Double:
+        builder.append(String::number(as_double()));
+        break;
+    case Type::Bool:
+        builder.append(as_bool() ? "true" : "false");
+        break;
+    case Type::String:
+        builder.append('"');
+        // TODO: need to escapse special chars
+        builder.append(as_string());
+        builder.append('"');
+        break;
+    case Type::Array:
+        as_array().serialize(builder, space, indent);
+        break;
+    case Type::Object:
+        as_object().serialize(builder, space, indent);
+        break;
+    case Type::Null:
+    default:
+        builder.append("null");
+        break;
+    }
+}
+
+String JsonValue::to_string(int space) const
+{
+    StringBuilder builder;
+    serialize(builder, space);
+    return builder.to_string();
 }
 
 } // namespace ASL

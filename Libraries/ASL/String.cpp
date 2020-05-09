@@ -57,6 +57,13 @@ String String::number(long long value)
     return String(buffer, size);
 }
 
+String String::number(double value)
+{
+    char buffer[32];
+    int size = sprintf(buffer, "%.4f", value);
+    return String(buffer, size);
+}
+
 String String::repeated(char ch, size_t count)
 {
     if (!count)

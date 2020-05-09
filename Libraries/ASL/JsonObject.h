@@ -71,6 +71,11 @@ public:
         m_members.set(key, move(value));
     }
 
+    HashMap<String, JsonValue>::IteratorType begin() { return m_members.begin(); }
+    HashMap<String, JsonValue>::IteratorType end() { return m_members.end(); }
+    HashMap<String, JsonValue>::ConstIteratorType begin() const { return m_members.begin(); }
+    HashMap<String, JsonValue>::ConstIteratorType end() const { return m_members.end(); }
+
     template<typename Callback>
     void for_each(Callback callback) const
     {
@@ -78,8 +83,13 @@ public:
             callback(it.key, it.value);
     }
 
+    void serialize(StringBuilder&, int space = 0, int indent = 0) const;
+    String to_string(int space = 0) const;
+
 private:
     HashMap<String, JsonValue> m_members;
 };
 
 } // namespace ASL
+
+using ASL::JsonObject;
