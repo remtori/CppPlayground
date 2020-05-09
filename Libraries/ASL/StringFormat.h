@@ -49,20 +49,19 @@ public:
     template<class... Args>
     static String format(StringView fmt, const Args&... input_args)
     {
-        StringBuilder builder;
-        Vector<String> arg_format;
-        Vector<StringView> args;
+        // StringBuilder builder;
+        // Vector<String> arg_format;
+        // Vector<StringView> args;
 
-        auto resolve = [&](auto&& arg) {
-            builder.append(any_to_string_view(arg));
-        };
+        // auto resolve = [&](auto&& arg) {
+        //     builder.append(any_to_string_view(arg));
+        // };
 
-        (resolve(input_args), ...);
+        // (resolve(input_args), ...);
 
-        return builder.to_string();
+        // return builder.to_string();
+        return "Unimplemented";
     }
-
-    String format_float(double value, u32 padding = 0, u32 precision = 4);
 };
 
 } // namespace ASL
