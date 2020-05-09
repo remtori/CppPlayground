@@ -100,6 +100,20 @@ TEST_CASE("Vector", "[container]")
         REQUIRE(ints[5] == 40);
     }
 
+    SECTION("Append")
+    {
+        Vector<char> str;
+        str.append('a');
+        str.append('b');
+        str.append("cdef", 4);
+        REQUIRE(str[0] == 'a');
+        REQUIRE(str[1] == 'b');
+        REQUIRE(str[2] == 'c');
+        REQUIRE(str[3] == 'd');
+        REQUIRE(str[4] == 'e');
+        REQUIRE(str[5] == 'f');
+    }
+
     SECTION("Compare")
     {
         Vector<int> ints;

@@ -245,6 +245,16 @@ public:
         ++m_size;
     }
 
+    void append(const T* data, size_t element_count)
+    {
+        grow_capacity(m_size + element_count);
+        for (size_t i = 0; i < element_count; i++) {
+            new (&m_buffer[m_size + i]) T(data[i]);
+        }
+
+        m_size += element_count;
+    }
+
     void append(const Vector& other)
     {
         grow_capacity(m_size + other.m_size);
