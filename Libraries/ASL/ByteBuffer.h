@@ -33,7 +33,7 @@ public:
     }
 
     void append(const void* data, size_t byte_size);
-    void overwrite(const void* ptr, size_t byte_size, size_t offset = 0);
+    void overwrite(const void* data, size_t byte_size, size_t offset = 0);
     void fill(u8 c, size_t byte_size = 0, size_t offset = 0);
 
     void grow(size_t growth_size, bool fill_null_space = true);

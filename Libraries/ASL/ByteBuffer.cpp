@@ -68,7 +68,7 @@ void ByteBuffer::overwrite(const void* ptr, size_t byte_size, size_t offset)
 void ByteBuffer::fill(u8 c, size_t byte_size, size_t offset)
 {
     if (byte_size == 0)
-        byte_size = m_size;
+        byte_size = m_size - offset;
 
     ASSERT(offset + byte_size <= m_size);
     memset(&m_buffer[offset], c, byte_size);
