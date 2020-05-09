@@ -100,8 +100,8 @@ public:
 
     HashTable(HashTable&& other)
         : m_buckets(other.m_buckets)
-        , m_size(other.m_size)
         , m_capacity(other.m_capacity)
+        , m_size(other.m_size)
     {
         other.m_size = 0;
         other.m_capacity = 0;
@@ -128,7 +128,7 @@ public:
     size_t size() const { return m_size; }
     size_t capacity() const { return m_capacity; }
 
-    void set(T& value)
+    void set(const T& value)
     {
         if (!m_capacity)
             ensure_capacity(1);

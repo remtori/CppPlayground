@@ -40,4 +40,8 @@ class String;
 class StringBuilder;
 class StringView;
 
+class JsonValue;
+class JsonObject;
+class JsonArray;
+
 } // namespace ASL
