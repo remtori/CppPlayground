@@ -8,6 +8,13 @@
 
 namespace ASL {
 
+inline char to_lower_case(char c)
+{
+    if ('A' <= c && c <= 'Z')
+        return c + ('a' - 'A');
+    return c;
+}
+
 String String::empty()
 {
     return StringImpl::empty();
@@ -104,7 +111,7 @@ String::String(const SharedString& shared)
 {
 }
 
-bool String::starts_with(const StringView& str) const
+bool String::starts_with(const StringView& str, bool case_sensitive) const
 {
     if (str.is_empty())
         return true;
@@ -118,10 +125,17 @@ bool String::starts_with(const StringView& str) const
     if (characters() == str.characters_wont())
         return true;
 
-    return !memcmp(characters(), str.characters_wont(), str.length());
+    if (case_sensitive)
+        return !memcmp(characters(), str.characters_wont(), str.length());
+
+    for (size_t i = 0; i < str.length(); ++i)
+        if (to_lower_case(characters()[i]) != to_lower_case(str[i]))
+            return false;
+
+    return true;
 }
 
-bool String::ends_with(const StringView& str) const
+bool String::ends_with(const StringView& str, bool case_sensitive) const
 {
     if (str.is_empty())
         return true;
@@ -132,21 +146,57 @@ bool String::ends_with(const StringView& str) const
     if (str.length() > length())
         return false;
 
-    return !memcmp(characters() + length() - str.length(), str.characters_wont(), str.length());
+    if (case_sensitive)
+        return !memcmp(characters() + length() - str.length(), str.characters_wont(), str.length());
+
+    for (size_t i = 0; i < str.length(); ++i)
+        if (to_lower_case(characters()[i + length() - str.length()]) != to_lower_case(str[i]))
+            return false;
+
+    return true;
 }
 
-bool String::starts_with(char ch) const
+bool String::starts_with(char c, bool case_sensitive) const
 {
     if (is_empty())
         return false;
-    return characters()[0] == ch;
+
+    if (case_sensitive)
+        return characters()[0] == c;
+
+    return to_lower_case(characters()[0]) == to_lower_case(c);
 }
 
-bool String::ends_with(char ch) const
+bool String::ends_with(char c, bool case_sensitive) const
 {
     if (is_empty())
         return false;
-    return characters()[length() - 1] == ch;
+
+    if (case_sensitive)
+        return characters()[length() - 1] == c;
+
+    return to_lower_case(characters()[length() - 1]) == to_lower_case(c);
+}
+
+bool String::equals(const StringView& str, bool case_sensitive)
+{
+    if (str.is_empty())
+        return is_empty();
+
+    if (is_empty())
+        return false;
+
+    if (str.length() != length())
+        return false;
+
+    if (case_sensitive)
+        return !memcmp(characters(), str.characters_wont(), str.length());
+
+    for (size_t i = 0; i < str.length(); ++i)
+        if (to_lower_case(characters()[i]) != to_lower_case(str[i]))
+            return false;
+
+    return true;
 }
 
 String String::substring(size_t start, size_t length) const
@@ -214,7 +264,7 @@ Vector<StringView> String::split_view(char separator, bool keep_empty) const
     Vector<StringView> v;
 
     size_t start = 0;
-    for (size_t i = 0; i < length(); i++) {
+    for (size_t i = 0; i < length(); ++i) {
         if (characters()[i] == separator) {
             size_t len = i - start;
             if (len != 0 || keep_empty)

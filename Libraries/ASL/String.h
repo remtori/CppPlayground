@@ -91,10 +91,11 @@ public:
     ConstIterator begin() const { return characters(); }
     ConstIterator end() const { return begin() + length(); }
 
-    bool starts_with(char) const;
-    bool ends_with(char) const;
-    bool starts_with(const StringView&) const;
-    bool ends_with(const StringView&) const;
+    bool starts_with(char, bool case_sensitive = true) const;
+    bool ends_with(char, bool case_sensitive = true) const;
+    bool starts_with(const StringView&, bool case_sensitive = true) const;
+    bool ends_with(const StringView&, bool case_sensitive = true) const;
+    bool equals(const StringView&, bool case_sensitive = true);
 
     String substring(size_t start, size_t length) const;
     StringView substring_view(size_t start, size_t length) const;

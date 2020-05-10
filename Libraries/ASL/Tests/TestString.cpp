@@ -93,6 +93,12 @@ TEST_CASE("String", "[string]")
         REQUIRE(a.starts_with("AB"));
         REQUIRE(a.starts_with("ABCDEF"));
         REQUIRE(!a.starts_with("DEF"));
+
+        REQUIRE(a.starts_with('a', false));
+        REQUIRE(!a.starts_with('b', false));
+        REQUIRE(a.starts_with("ab", false));
+        REQUIRE(a.starts_with("abcdef", false));
+        REQUIRE(!a.starts_with("def", false));
     }
 
     SECTION("Ends With")
@@ -103,6 +109,21 @@ TEST_CASE("String", "[string]")
         REQUIRE(a.ends_with("EF"));
         REQUIRE(a.ends_with("ABCDEF"));
         REQUIRE(!a.ends_with("ABC"));
+
+        REQUIRE(a.ends_with('f', false));
+        REQUIRE(!a.ends_with('e', false));
+        REQUIRE(a.ends_with("ef", false));
+        REQUIRE(a.ends_with("abcdef", false));
+        REQUIRE(!a.ends_with("abc", false));
+    }
+
+    SECTION("Equals")
+    {
+        String a = "ABCDEF";
+        REQUIRE(a.equals("ABCDEF"));
+        REQUIRE(!a.equals("ABCDE"));
+        REQUIRE(a.equals("abcdef", false));
+        REQUIRE(!a.equals("abcde", false));
     }
 
     SECTION("Split")
