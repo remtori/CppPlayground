@@ -1,6 +1,5 @@
 #include <catch2/catch2.hpp>
 
-#include <ASL/LogStream.h>
 #include <ASL/Optional.h>
 #include <ASL/String.h>
 #include <ASL/Vector.h>

@@ -5,22 +5,11 @@
 #include "String.h"
 #include "StringBuilder.h"
 #include "StringView.h"
+#include "TryToString.h"
 #include "Vector.h"
 #include <stdio.h>
 
 namespace ASL {
-
-template<class T>
-constexpr auto call_to_string_if_present(const T* obj, String& result) -> decltype(obj->to_string(), TrueType {})
-{
-    result = obj->to_string();
-    return {};
-}
-
-constexpr auto call_to_string_if_present(...) -> FalseType
-{
-    return {};
-}
 
 template<typename T>
 constexpr StringView any_to_string_view(const T& value, const char* fmt = "%f")
@@ -34,14 +23,7 @@ constexpr StringView any_to_string_view(const T& value, const char* fmt = "%f")
         return StringView(buf);
     }
 
-    String result = "<error-type-unknown>";
-
-    if constexpr (IsPointer<T>::value)
-        call_to_string_if_present(value, result);
-    else
-        call_to_string_if_present(&value, result);
-
-    return result;
+    return try_to_string(value);
 }
 
 class StringFormat {
