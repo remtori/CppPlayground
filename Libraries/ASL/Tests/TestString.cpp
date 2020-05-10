@@ -166,4 +166,51 @@ TEST_CASE("String", "[string]")
         String("-3-4.234").to_double(&ok);
         REQUIRE(!ok);
     }
+
+    SECTION("Find")
+    {
+        String a = "ABBCDEEF";
+
+        {
+            auto v = a.find("B");
+            REQUIRE(v.has_value());
+            REQUIRE(v.value() == 1u);
+        }
+        {
+            auto v = a.rfind("B");
+            REQUIRE(v.has_value());
+            REQUIRE(v.value() == 2u);
+        }
+        {
+            auto v = a.find("BB");
+            REQUIRE(v.has_value());
+            REQUIRE(v.value() == 1u);
+        }
+        {
+            auto v = a.find("G");
+            REQUIRE(!v.has_value());
+        }
+        {
+            auto v = a.find("AC");
+            REQUIRE(!v.has_value());
+        }
+        {
+            auto v = a.rfind("G");
+            REQUIRE(!v.has_value());
+        }
+        {
+            auto v = a.rfind("AC");
+            REQUIRE(!v.has_value());
+        }
+        {
+            auto v = a.find_first_of('B');
+            REQUIRE(v.has_value());
+            REQUIRE(v.value() == 1);
+        }
+        {
+            auto v = a.find_last_of('B');
+            REQUIRE(v.has_value());
+            REQUIRE(v.value() == 2);
+        }
+    }
 }

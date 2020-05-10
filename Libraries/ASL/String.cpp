@@ -199,12 +199,67 @@ bool String::equals(const StringView& str, bool case_sensitive)
     return true;
 }
 
+Optional<size_t> String::find(const StringView& str, size_t offset)
+{
+    if (length() < str.length())
+        return {};
+
+    for (size_t i = offset; i < length() - str.length(); ++i)
+        if (str == substring_view(i, str.length()))
+            return i;
+
+    return {};
+}
+
+Optional<size_t> String::rfind(const StringView& str, size_t offset)
+{
+    if (length() < str.length())
+        return {};
+
+    if (offset == npos)
+        offset = length();
+
+    size_t i = min(offset, length()) - str.length();
+    while (i--) {
+        if (str == substring_view(i, str.length()))
+            return i;
+    }
+
+    return {};
+}
+
+Optional<size_t> String::find_first_of(char c, size_t offset)
+{
+    for (size_t i = offset; i < length(); ++i)
+        if (characters()[i] == c)
+            return i;
+
+    return {};
+}
+
+Optional<size_t> String::find_last_of(char c, size_t offset)
+{
+    if (offset == npos)
+        offset = length();
+
+    size_t i = min(offset, length()) - 1;
+    while (i--) {
+        if (characters()[i] == c)
+            return i;
+    }
+
+    return {};
+}
+
 String String::substring(size_t start, size_t length) const
 {
     if (!length)
         return {};
 
     ASSERT(m_impl);
+    if (length == npos)
+        length = m_impl->length() - start;
+
     ASSERT(start + length <= m_impl->length());
 
     return { characters() + start, length };
@@ -213,6 +268,9 @@ String String::substring(size_t start, size_t length) const
 StringView String::substring_view(size_t start, size_t length) const
 {
     ASSERT(m_impl);
+    if (length == npos)
+        length = m_impl->length() - start;
+
     ASSERT(start + length <= m_impl->length());
 
     return { characters() + start, length };

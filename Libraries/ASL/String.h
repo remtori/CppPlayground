@@ -2,6 +2,8 @@
 
 #include "ByteBuffer.h"
 #include "Forward.h"
+#include "NumericLimits.h"
+#include "Optional.h"
 #include "RefPtr.h"
 #include "StringImpl.h"
 #include "StringView.h"
@@ -13,6 +15,7 @@ namespace ASL {
 class String {
 public:
     using ConstIterator = const char*;
+    static const size_t npos = NumericLimits<size_t>::max();
 
     static String empty();
     static String number(unsigned);
@@ -97,8 +100,13 @@ public:
     bool ends_with(const StringView&, bool case_sensitive = true) const;
     bool equals(const StringView&, bool case_sensitive = true);
 
-    String substring(size_t start, size_t length) const;
-    StringView substring_view(size_t start, size_t length) const;
+    Optional<size_t> find(const StringView&, size_t offset = 0);
+    Optional<size_t> rfind(const StringView&, size_t offset = npos);
+    Optional<size_t> find_first_of(char, size_t offset = 0);
+    Optional<size_t> find_last_of(char, size_t offset = npos);
+
+    String substring(size_t start, size_t length = npos) const;
+    StringView substring_view(size_t start, size_t length = npos) const;
     StringView view() const;
 
     Vector<String> split_limit(char separator, size_t limit, bool keep_empty = false) const;
