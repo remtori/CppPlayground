@@ -2,8 +2,6 @@
 
 #include <ASL/String.h>
 
-#include <string.h>
-
 TEST_CASE("String", "[string]")
 {
     SECTION("Empty String")

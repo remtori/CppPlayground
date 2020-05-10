@@ -1,7 +1,7 @@
 #include <catch2/catch2.hpp>
 
+#include <ASL/String.h>
 #include <ASL/Vector.h>
-#include <string>
 
 TEST_CASE("Vector", "[container]")
 {
@@ -30,21 +30,21 @@ TEST_CASE("Vector", "[container]")
         REQUIRE(ints.size() == 0u);
     }
 
-    SECTION("Useage with std::string")
+    SECTION("Useage with String")
     {
-        Vector<std::string> strings;
+        Vector<String> strings;
         strings.append("ABC");
         strings.append("DEF");
 
         int loop_counter = 0;
-        for (const std::string& str : strings) {
-            REQUIRE(!str.empty());
+        for (const String& str : strings) {
+            REQUIRE(!str.is_empty());
             ++loop_counter;
         }
 
         loop_counter = 0;
         for (auto& str : strings) {
-            REQUIRE(!str.empty());
+            REQUIRE(!str.is_empty());
             ++loop_counter;
         }
         REQUIRE(loop_counter == 2);
@@ -127,12 +127,12 @@ TEST_CASE("Vector", "[container]")
         REQUIRE(ints.size() == 1000u);
         REQUIRE(ints == same_ints);
 
-        Vector<std::string> strings;
-        Vector<std::string> same_strings;
+        Vector<String> strings;
+        Vector<String> same_strings;
 
         for (int i = 0; i < 1000; ++i) {
-            strings.append(std::to_string(i));
-            same_strings.append(std::to_string(i));
+            strings.append(String::number(i));
+            same_strings.append(String::number(i));
         }
 
         REQUIRE(strings.size() == 1000u);
@@ -141,7 +141,7 @@ TEST_CASE("Vector", "[container]")
 
     SECTION("Insert string ordered")
     {
-        Vector<std::string> strings;
+        Vector<String> strings;
         strings.append("abc");
         strings.append("def");
         strings.append("ghi");
