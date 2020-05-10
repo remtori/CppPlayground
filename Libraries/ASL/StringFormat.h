@@ -1,6 +1,7 @@
 // BROKEN - DO NOT USE
 #pragma once
 
+#include "CallToString.h"
 #include "StdLibExtras.h"
 #include "String.h"
 #include "StringBuilder.h"
@@ -9,18 +10,6 @@
 #include <stdio.h>
 
 namespace ASL {
-
-template<class T>
-constexpr auto call_to_string_if_present(const T* obj, String& result) -> decltype(obj->to_string(), TrueType {})
-{
-    result = obj->to_string();
-    return {};
-}
-
-constexpr auto call_to_string_if_present(...) -> FalseType
-{
-    return {};
-}
 
 template<typename T>
 constexpr StringView any_to_string_view(const T& value, const char* fmt = "%f")
