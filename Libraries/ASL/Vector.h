@@ -133,13 +133,13 @@ public:
 
     inline T& at(size_t i)
     {
-        ASSERT(i >= 0 && i < m_size);
+        ASSERT(i < m_size);
         return m_buffer[i];
     }
 
     inline const T& at(size_t i) const
     {
-        ASSERT(i >= 0 && i < m_size);
+        ASSERT(i < m_size);
         return m_buffer[i];
     }
 
