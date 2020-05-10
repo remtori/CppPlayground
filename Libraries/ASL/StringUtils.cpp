@@ -21,7 +21,7 @@ u32 string_to_uint(const StringView& str, bool* ok)
     }
 
     u32 value = 0;
-    for (; i < str.length(); i++) {
+    for (; i < str.length(); ++i) {
         if ('0' > str[i] || str[i] > '9') {
             set(ok, false);
             return 0;
@@ -47,7 +47,7 @@ i32 string_to_int(const StringView& str, bool* ok)
     }
 
     i32 value = 0;
-    for (; i < str.length(); i++) {
+    for (; i < str.length(); ++i) {
         if ('0' > str[i] || str[i] > '9') {
             set(ok, false);
             return 0;
@@ -82,7 +82,7 @@ double string_to_double(const StringView& str, bool* ok)
     }
 
     i32 divider = (whole < 0) ? -1 : 1;
-    for (size_t i = 0; i < fraction_str.length(); i++)
+    for (size_t i = 0; i < fraction_str.length(); ++i)
         divider *= 10;
 
     set(ok, true);

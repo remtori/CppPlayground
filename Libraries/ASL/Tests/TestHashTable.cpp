@@ -54,7 +54,7 @@ TEST_CASE("HashTable", "[container]")
         a.ensure_capacity(100);
         REQUIRE(a.size() == 0);
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; ++i)
             a.set(i);
 
         REQUIRE(a.size() == 100);

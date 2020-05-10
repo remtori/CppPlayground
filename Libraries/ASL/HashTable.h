@@ -277,7 +277,7 @@ public:
         m_buckets = new_buckets;
         m_capacity = new_capacity;
 
-        for (size_t i = 0; i < old_capacity; i++) {
+        for (size_t i = 0; i < old_capacity; ++i) {
             for (auto& v : old_buckets[i])
                 insert(move(v));
         }

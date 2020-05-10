@@ -20,7 +20,7 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] ByteBuffer
 - [x] StringBuilder
 - [x] JsonParser
-- [ ] DebugStream
+- [ ] LogStream
 - [ ] StringFormat
 - [ ] DoublyLinkedList
 - [ ] WeakPtr

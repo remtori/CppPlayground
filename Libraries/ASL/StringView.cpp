@@ -158,7 +158,7 @@ Vector<StringView> StringView::split_view(char separator, bool keep_empty) const
     Vector<StringView> v;
 
     size_t start = 0;
-    for (size_t i = 0; i < m_length; i++) {
+    for (size_t i = 0; i < m_length; ++i) {
         if (m_characters[i] == separator) {
             size_t len = i - start;
             if (len != 0 || keep_empty)

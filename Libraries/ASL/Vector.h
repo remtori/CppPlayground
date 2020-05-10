@@ -248,7 +248,7 @@ public:
     void append(const T* data, size_t element_count)
     {
         grow_capacity(m_size + element_count);
-        for (size_t i = 0; i < element_count; i++) {
+        for (size_t i = 0; i < element_count; ++i) {
             new (&m_buffer[m_size + i]) T(data[i]);
         }
 
@@ -430,7 +430,7 @@ public:
         if constexpr (Traits<T>::is_trivial()) {
             TypedTransfer<T>::move(new_buffer, m_buffer, m_size);
         } else {
-            for (size_t i = 0; i < m_size; i++) {
+            for (size_t i = 0; i < m_size; ++i) {
                 new (&new_buffer[i]) T(move(m_buffer[i]));
                 at(i).~T();
             }
