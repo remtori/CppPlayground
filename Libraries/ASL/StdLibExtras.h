@@ -4,6 +4,16 @@
 
 namespace ASL {
 
+static inline bool is_whitespace(char c)
+{
+    return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+}
+
+static inline bool is_number(char c)
+{
+    return ('0' <= c && c <= '9') || c == '-' || c == '+' || c == '.' || c == 'e' || c == 'E';
+}
+
 template<typename T>
 inline constexpr T min(const T& a, const T& b)
 {
