@@ -67,7 +67,7 @@ void FileSystemPath::resolve()
     }
 
     m_basename = parts[parts.size() - 1];
-    auto pos = m_basename.find_last_of('.');
+    auto pos = m_basename.last_index_of('.');
 
     if (pos.has_value()) {
         size_t i = pos.value();

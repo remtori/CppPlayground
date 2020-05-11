@@ -170,43 +170,43 @@ TEST_CASE("String", "[string]")
         String a = "ABBCDEEF";
 
         {
-            auto v = a.find("B");
+            auto v = a.index_of("B");
             REQUIRE(v.has_value());
             REQUIRE(v.value() == 1u);
         }
         {
-            auto v = a.rfind("B");
+            auto v = a.last_index_of("B");
             REQUIRE(v.has_value());
             REQUIRE(v.value() == 2u);
         }
         {
-            auto v = a.find("BB");
+            auto v = a.index_of("BB");
             REQUIRE(v.has_value());
             REQUIRE(v.value() == 1u);
         }
         {
-            auto v = a.find("G");
+            auto v = a.index_of("G");
             REQUIRE(!v.has_value());
         }
         {
-            auto v = a.find("AC");
+            auto v = a.index_of("AC");
             REQUIRE(!v.has_value());
         }
         {
-            auto v = a.rfind("G");
+            auto v = a.last_index_of("G");
             REQUIRE(!v.has_value());
         }
         {
-            auto v = a.rfind("AC");
+            auto v = a.last_index_of("AC");
             REQUIRE(!v.has_value());
         }
         {
-            auto v = a.find_first_of('B');
+            auto v = a.index_of('B');
             REQUIRE(v.has_value());
             REQUIRE(v.value() == 1);
         }
         {
-            auto v = a.find_last_of('B');
+            auto v = a.last_index_of('B');
             REQUIRE(v.has_value());
             REQUIRE(v.value() == 2);
         }

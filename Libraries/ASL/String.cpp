@@ -199,7 +199,7 @@ bool String::equals(const StringView& str, bool case_sensitive)
     return true;
 }
 
-Optional<size_t> String::find(const StringView& str, size_t offset)
+Optional<size_t> String::index_of(const StringView& str, size_t offset)
 {
     if (length() < str.length())
         return {};
@@ -211,7 +211,7 @@ Optional<size_t> String::find(const StringView& str, size_t offset)
     return {};
 }
 
-Optional<size_t> String::rfind(const StringView& str, size_t offset)
+Optional<size_t> String::last_index_of(const StringView& str, size_t offset)
 {
     if (length() < str.length())
         return {};
@@ -228,7 +228,7 @@ Optional<size_t> String::rfind(const StringView& str, size_t offset)
     return {};
 }
 
-Optional<size_t> String::find_first_of(char c, size_t offset)
+Optional<size_t> String::index_of(char c, size_t offset)
 {
     for (size_t i = offset; i < length(); ++i)
         if (characters()[i] == c)
@@ -237,7 +237,7 @@ Optional<size_t> String::find_first_of(char c, size_t offset)
     return {};
 }
 
-Optional<size_t> String::find_last_of(char c, size_t offset)
+Optional<size_t> String::last_index_of(char c, size_t offset)
 {
     if (offset == npos)
         offset = length();
