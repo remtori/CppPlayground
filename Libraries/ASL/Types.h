@@ -26,3 +26,9 @@ using FlatPtr = intptr_t;
 namespace std {
 using nullptr_t = decltype(nullptr);
 }
+
+enum class TriState : u8 {
+    False = 0,
+    True = 1,
+    Unknown = 2,
+};
