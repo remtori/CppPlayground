@@ -100,10 +100,10 @@ public:
     bool ends_with(const StringView&, bool case_sensitive = true) const;
     bool equals(const StringView&, bool case_sensitive = true);
 
-    Optional<size_t> index_of(const StringView&, size_t offset = 0);
-    Optional<size_t> last_index_of(const StringView&, size_t offset = npos);
-    Optional<size_t> index_of(char, size_t offset = 0);
-    Optional<size_t> last_index_of(char, size_t offset = npos);
+    Optional<size_t> index_of(const StringView&, size_t offset = 0) const;
+    Optional<size_t> last_index_of(const StringView&, size_t offset = npos) const;
+    Optional<size_t> index_of(char, size_t offset = 0) const;
+    Optional<size_t> last_index_of(char, size_t offset = npos) const;
 
     String substring(size_t start, size_t length = npos) const;
     StringView substring_view(size_t start, size_t length = npos) const;

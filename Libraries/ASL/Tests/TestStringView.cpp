@@ -64,20 +64,20 @@ TEST_CASE("String View", "[string]")
         String test_string = "aabbcc_xy_ccbbaa";
         StringView test_string_view = test_string.view();
 
-        REQUIRE(test_string_view.find_first_of('b').has_value() == true);
-        REQUIRE(test_string_view.find_first_of('b').value() == 2U);
+        REQUIRE(test_string_view.index_of('b').has_value() == true);
+        REQUIRE(test_string_view.index_of('b').value() == 2U);
 
-        REQUIRE(test_string_view.find_first_of('_').has_value() == true);
-        REQUIRE(test_string_view.find_first_of('_').value() == 6U);
+        REQUIRE(test_string_view.index_of('_').has_value() == true);
+        REQUIRE(test_string_view.index_of('_').value() == 6U);
 
-        REQUIRE(test_string_view.find_first_of("bc").has_value() == true);
-        REQUIRE(test_string_view.find_first_of("bc").value() == 2U);
+        REQUIRE(test_string_view.index_of("bc").has_value() == true);
+        REQUIRE(test_string_view.index_of("bc").value() == 3U);
 
-        REQUIRE(test_string_view.find_first_of("yx").has_value() == true);
-        REQUIRE(test_string_view.find_first_of("yx").value() == 7U);
+        REQUIRE(test_string_view.index_of("xy").has_value() == true);
+        REQUIRE(test_string_view.index_of("xy").value() == 7U);
 
-        REQUIRE(test_string_view.find_first_of('n').has_value() == false);
-        REQUIRE(test_string_view.find_first_of("defg").has_value() == false);
+        REQUIRE(test_string_view.index_of('n').has_value() == false);
+        REQUIRE(test_string_view.index_of("defg").has_value() == false);
     }
 
     SECTION("Find last of")
@@ -85,19 +85,19 @@ TEST_CASE("String View", "[string]")
         String test_string = "aabbcc_xy_ccbbaa";
         StringView test_string_view = test_string.view();
 
-        REQUIRE(test_string_view.find_last_of('b').has_value() == true);
-        REQUIRE(test_string_view.find_last_of('b').value() == 13U);
+        REQUIRE(test_string_view.last_index_of('b').has_value() == true);
+        REQUIRE(test_string_view.last_index_of('b').value() == 13U);
 
-        REQUIRE(test_string_view.find_last_of('_').has_value() == true);
-        REQUIRE(test_string_view.find_last_of('_').value() == 9U);
+        REQUIRE(test_string_view.last_index_of('_').has_value() == true);
+        REQUIRE(test_string_view.last_index_of('_').value() == 9U);
 
-        REQUIRE(test_string_view.find_last_of("bc").has_value() == true);
-        REQUIRE(test_string_view.find_last_of("bc").value() == 13U);
+        REQUIRE(test_string_view.last_index_of("cb").has_value() == true);
+        REQUIRE(test_string_view.last_index_of("cb").value() == 11U);
 
-        REQUIRE(test_string_view.find_last_of("yx").has_value() == true);
-        REQUIRE(test_string_view.find_last_of("yx").value() == 8U);
+        REQUIRE(test_string_view.last_index_of("xy").has_value() == true);
+        REQUIRE(test_string_view.last_index_of("xy").value() == 7U);
 
-        REQUIRE(test_string_view.find_last_of('3').has_value() == false);
-        REQUIRE(test_string_view.find_last_of("fghi").has_value() == false);
+        REQUIRE(test_string_view.last_index_of('3').has_value() == false);
+        REQUIRE(test_string_view.last_index_of("fghi").has_value() == false);
     }
 }

@@ -88,6 +88,58 @@ bool StringView::ends_with(char c) const
     return c == m_characters[m_length - 1];
 }
 
+Optional<size_t> StringView::index_of(const StringView& str, size_t offset) const
+{
+    if (length() < str.length())
+        return {};
+
+    for (size_t i = offset; i < length() - str.length(); ++i)
+        if (str == substring_view(i, str.length()))
+            return i;
+
+    return {};
+}
+
+Optional<size_t> StringView::last_index_of(const StringView& str, size_t offset) const
+{
+    if (length() < str.length())
+        return {};
+
+    if (offset == npos)
+        offset = length();
+
+    size_t i = min(offset, length()) - str.length();
+    while (i--) {
+        if (str == substring_view(i, str.length()))
+            return i;
+    }
+
+    return {};
+}
+
+Optional<size_t> StringView::index_of(char c, size_t offset) const
+{
+    for (size_t i = offset; i < length(); ++i)
+        if (characters_wont()[i] == c)
+            return i;
+
+    return {};
+}
+
+Optional<size_t> StringView::last_index_of(char c, size_t offset) const
+{
+    if (offset == npos)
+        offset = length();
+
+    size_t i = min(offset, length()) - 1;
+    while (i--) {
+        if (characters_wont()[i] == c)
+            return i;
+    }
+
+    return {};
+}
+
 bool StringView::contains(char c) const
 {
     for (char ch : *this) {
@@ -98,54 +150,11 @@ bool StringView::contains(char c) const
     return false;
 }
 
-Optional<size_t> StringView::find_first_of(char c) const
-{
-    for (size_t pos = 0; pos < m_length; ++pos) {
-        if (m_characters[pos] == c)
-            return pos;
-    }
-
-    return {};
-}
-
-Optional<size_t> StringView::find_first_of(const StringView& view) const
-{
-    for (size_t pos = 0; pos < m_length; ++pos) {
-        char c = m_characters[pos];
-        for (char view_char : view) {
-            if (c == view_char)
-                return pos;
-        }
-    }
-
-    return {};
-}
-
-Optional<size_t> StringView::find_last_of(char c) const
-{
-    for (size_t pos = m_length; pos > 0; --pos) {
-        if (m_characters[pos] == c)
-            return pos;
-    }
-
-    return {};
-}
-
-Optional<size_t> StringView::find_last_of(const StringView& view) const
-{
-    for (size_t pos = m_length - 1; pos > 0; --pos) {
-        char c = m_characters[pos];
-        for (char view_char : view) {
-            if (c == view_char)
-                return pos;
-        }
-    }
-
-    return {};
-}
-
 StringView StringView::substring_view(size_t start, size_t length) const
 {
+    if (length == npos)
+        length = m_length - start;
+
     ASSERT(start + length <= m_length);
     return { m_characters + start, length };
 }

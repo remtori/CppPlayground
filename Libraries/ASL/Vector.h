@@ -184,7 +184,7 @@ public:
         return find([&](auto& other) { return value == other; });
     }
 
-    Optional<size_t> find_first_index(const T& value)
+    Optional<size_t> index_of(const T& value)
     {
         for (size_t i = 0; i < m_size; ++i) {
             if (value == at(i))

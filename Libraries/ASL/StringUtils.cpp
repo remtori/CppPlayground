@@ -62,7 +62,7 @@ i32 string_to_int(const StringView& str, bool* ok)
 
 double string_to_double(const StringView& str, bool* ok)
 {
-    auto it = str.find_first_of('.');
+    auto it = str.index_of('.');
     if (!it.has_value()) {
         return string_to_int(str, ok);
     }
