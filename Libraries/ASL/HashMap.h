@@ -84,6 +84,14 @@ public:
         return (*it).value;
     }
 
+    V get_or(const K& key, const V& alternative)
+    {
+        auto it = find(key);
+        if (it == end())
+            return alternative;
+        return (*it).value;
+    }
+
     bool contains(const K& key) const
     {
         return find(key) != end();
