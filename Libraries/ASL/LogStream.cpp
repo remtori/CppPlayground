@@ -21,11 +21,16 @@ void set_process_name(const char* name)
     process_name = String(name);
 }
 
-DebugStream& dbg(const char* name)
+DebugStream dbg(const char* name)
 {
-    static DebugStream* s_instance = new DebugStream();
-    printf("\n[%s][DEBUG]: ", name ? name : process_name.characters());
-    return *s_instance;
+    DebugStream stream;
+    stream << "\033[33;1m[" << (name ? name : process_name.characters()) << "]\033[0m: ";
+    return stream;
+}
+
+DebugStream::~DebugStream()
+{
+    putchar('\n');
 }
 
 DebugStream& DebugStream::operator<<(char c)

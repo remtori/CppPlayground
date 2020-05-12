@@ -9,7 +9,7 @@ namespace ASL {
 class DebugStream {
 public:
     DebugStream() {}
-    ~DebugStream() {}
+    ~DebugStream();
 
     DebugStream& operator<<(char);
     DebugStream& operator<<(const char*);
@@ -34,7 +34,7 @@ public:
     }
 };
 
-DebugStream& dbg(const char* name = nullptr);
+DebugStream dbg(const char* name = nullptr);
 void set_process_name(int argc, char** argv);
 void set_process_name(const char* name);
 
