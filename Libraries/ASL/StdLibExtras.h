@@ -276,14 +276,6 @@ struct __IsIntegerHelper : FalseType {
 };
 
 template<>
-struct __IsIntegerHelper<i8> : TrueType {
-};
-
-template<>
-struct __IsIntegerHelper<u8> : TrueType {
-};
-
-template<>
 struct __IsIntegerHelper<i16> : TrueType {
 };
 
