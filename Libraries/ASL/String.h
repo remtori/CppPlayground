@@ -40,6 +40,11 @@ public:
     {
     }
 
+    String(char c)
+        : m_impl(StringImpl::from_chars(&c, 1))
+    {
+    }
+
     String(const char* cstring)
         : m_impl(StringImpl::from_chars(cstring))
     {
