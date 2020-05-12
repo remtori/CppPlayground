@@ -25,7 +25,7 @@ function make_proj(name, src_dir, proj_kind)
 		proj_kind = 'ConsoleApp'
 	end
 
-	kind(proj_kind or 'SharedLib')
+	kind(proj_kind or 'StaticLib')
 
 	language 'C++'
 	cppdialect 'C++17'
