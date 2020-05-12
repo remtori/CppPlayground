@@ -2,7 +2,10 @@
 
 #include "Types.h"
 
-#ifndef _MSC_VER
+#ifdef _MSC_VER
+#include <limits.h>
+#include <float.h>
+#else
 #    define SCHAR_MAX __SCHAR_MAX__
 #    define SHRT_MAX __SHRT_MAX__
 #    define INT_MAX __INT_MAX__
