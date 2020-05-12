@@ -155,9 +155,9 @@ public:
     ConstIterator end() const { return ConstIterator(*this, m_size); }
 
     template<typename Finder>
-    ConstIterator find(Finder finder) const
+    ConstIterator find(Finder finder, size_t offset = 0) const
     {
-        for (size_t i = 0; i < m_size; ++i) {
+        for (size_t i = offset; i < m_size; ++i) {
             if (finder(at(i)))
                 return ConstIterator(*this, i);
         }
