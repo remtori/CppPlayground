@@ -21,6 +21,7 @@ String extract_field_format(const StringView& fmt, Vector<FieldFormat>& field_fo
 
         size_t start = pos.value();
         if (start < fmt.length() - 1 && fmt[start + 1] == '{') {
+            field_formats.emplace(true, fmt.substring_view(offset, start - offset + 2));
             offset = start + 2;
             continue;
         }
@@ -53,19 +54,17 @@ String extract_field_format(const StringView& fmt, Vector<FieldFormat>& field_fo
         }
 
         bool ok;
-        auto colon_pos = current_format.index_of(':');
+        auto parts = current_format.split_view(':', true);
+        StringView field_index = parts[0];
 
         // Parse field index
-        if (!colon_pos.has_value() || colon_pos.value() > 0) {
-            if (is_automatic_field_index == TriState::True) {
+        if (!field_index.is_empty()) {
+            if (is_automatic_field_index == TriState::True)
                 return "<error>Can not switch from automatic field index to manual field index</error>";
-            }
-
-            if (is_automatic_field_index == TriState::Unknown)
+            else if (is_automatic_field_index == TriState::Unknown)
                 is_automatic_field_index = TriState::False;
 
-            size_t number_length = colon_pos.value_or(current_format.length());
-            arg.field_index = string_to_uint(current_format.substring_view(0, number_length), &ok);
+            arg.field_index = string_to_uint(field_index, &ok);
             if (!ok)
                 return "<error>Can not parse field index</error>";
 
@@ -73,24 +72,26 @@ String extract_field_format(const StringView& fmt, Vector<FieldFormat>& field_fo
             is_automatic_field_index = TriState::True;
         }
 
-        auto dot_pos = current_format.index_of('.');
+        if (parts.size() == 2) {
+            parts = parts[1].split_view('.', true);
+            StringView field_padding = parts[0];
+            StringView field_precision;
+            if (parts.size() == 2)
+                field_precision = parts[1];
 
-        // Parse padding
-        if (colon_pos.has_value()) {
-            size_t padding_start = colon_pos.value() + 1;
-            size_t padding_end = dot_pos.value_or(current_format.length());
-            if (padding_start < padding_end) {
-                arg.padding = string_to_int(current_format.substring_view(padding_start, padding_end - padding_start), &ok);
+            // Parse padding
+            if (!field_padding.is_empty()) {
+                arg.padding = string_to_int(field_padding, &ok);
                 if (!ok)
                     return "<error> Can not parse field padding</error>";
             }
-        }
 
-        // Parse precision
-        if (colon_pos.has_value() && dot_pos.has_value()) {
-            arg.precision = string_to_uint(current_format.substring_view(dot_pos.value() + 1), &ok);
-            if (!ok)
-                return "<error> Can not parse field precision</error>";
+            // Parse precision
+            if (!field_precision.is_empty()) {
+                arg.precision = string_to_uint(field_precision, &ok);
+                if (!ok)
+                    return "<error> Can not parse field precision</error>";
+            }
         }
 
         field_formats.emplace(true, fmt.substring_view(offset, start - offset));

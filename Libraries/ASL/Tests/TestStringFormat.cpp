@@ -43,7 +43,7 @@ TEST_CASE("String Format", "[string]")
 
     SECTION("A complex format")
     {
-        REQUIRE(format("{0} {0} {0}, {1}, I'm quite complexxx, like this number {2:.6} hmm {2:-5.2}", (char*)"yo!", (char*)"Beware", 2.0 / 3.0)
-            == "yo! yo! yo!, Beware, I'm quite complexxx, like this number 0.666667 hmm 0.67 ");
+        REQUIRE(format("{0} {0} {0}, {1}, I'm quite {{complexxx}}, like this number {2:.6} hmm {2:-5.2}", (char*)"yo!", (char*)"Beware", 2.0 / 3.0)
+            == "yo! yo! yo!, Beware, I'm quite {{complexxx}}, like this number 0.666667 hmm 0.67 ");
     }
 }
