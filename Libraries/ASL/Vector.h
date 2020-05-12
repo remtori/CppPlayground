@@ -165,28 +165,28 @@ public:
     }
 
     template<typename Finder>
-    Iterator find(Finder finder)
+    Iterator find(Finder finder, size_t offset = 0)
     {
-        for (size_t i = 0; i < m_size; ++i) {
+        for (size_t i = offset; i < m_size; ++i) {
             if (finder(at(i)))
                 return Iterator(*this, i);
         }
         return end();
     }
 
-    ConstIterator find(const T& value) const
+    ConstIterator find(const T& value, size_t offset = 0) const
     {
-        return find([&](auto& other) { return value == other; });
+        return find([&](auto& other) { return value == other; }, offset);
     }
 
-    Iterator find(const T& value)
+    Iterator find(const T& value, size_t offset = 0)
     {
-        return find([&](auto& other) { return value == other; });
+        return find([&](auto& other) { return value == other; }, offset);
     }
 
-    Optional<size_t> index_of(const T& value)
+    Optional<size_t> index_of(const T& value, size_t offset = 0)
     {
-        for (size_t i = 0; i < m_size; ++i) {
+        for (size_t i = offset; i < m_size; ++i) {
             if (value == at(i))
                 return i;
         }
@@ -227,7 +227,7 @@ public:
     void emplace(Args&&... args)
     {
         grow_capacity(m_size + 1);
-        new (&m_buffer(m_size)) T(forward<Args>(args)...);
+        new (&m_buffer[m_size]) T(forward<Args>(args)...);
         ++m_size;
     }
 
