@@ -328,7 +328,7 @@ struct __IsFloatHelper<long double> : TrueType {
 };
 
 template<typename T>
-struct IsFloat : __IsFloatHelper<typename RemoveCV<T>::Type> {
+struct IsFloatingPoint : __IsFloatHelper<typename RemoveCV<T>::Type> {
 };
 
 } // namespace ASL
