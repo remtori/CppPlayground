@@ -41,26 +41,30 @@ FileSystemPath::FileSystemPath(const StringView& s)
 }
 
 void FileSystemPath::resolve()
-{
+{     
     if (m_string.is_empty())
         return;
 
-    if (m_string[0] == '/') {
+    char seperator = '/';
+    if (!m_string.index_of(seperator).has_value())
+        seperator = '\\';
+
+    if (m_string[0] == seperator) {
         m_is_absolute = true;
-        m_root = "/";
+        m_root = seperator;
     }
 
-    auto parts = m_string.split_view('/');
+    auto parts = m_string.split_view(seperator);
     if (parts.size() > 1) {
         StringBuilder dir_builder;
 
         if (m_is_absolute)
-            dir_builder.append('/');
+            dir_builder.append(seperator);
 
         for (size_t i = 0; i < parts.size() - 1; ++i) {
             dir_builder.append(parts[i]);
             if (i < parts.size() - 2)
-                dir_builder.append('/');
+                dir_builder.append(seperator);
         }
 
         m_dirname = dir_builder.to_string();
