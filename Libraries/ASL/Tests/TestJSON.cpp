@@ -1,6 +1,7 @@
 #include <catch2/catch2.hpp>
 
 #include <ASL/JsonParser.h>
+#include <ASL/StringFormat.h>
 
 TEST_CASE("JSON Parser and Stringify", "[parser]")
 {
@@ -94,8 +95,10 @@ TEST_CASE("JSON Parser and Stringify", "[parser]")
         a.set("bogus", false);
         a.set("meaning", JsonValue());
 
-        JsonParser parser(a.to_string(3));
+        String str_a = a.to_string(3);
+        JsonParser parser(str_a);
         auto clone_a = parser.parse();
+
         REQUIRE(clone_a.equals(a));
     }
 }
