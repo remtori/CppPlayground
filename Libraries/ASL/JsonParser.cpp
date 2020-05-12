@@ -1,9 +1,18 @@
 #include "JsonParser.h"
 
-#include "StdLibExtras.h"
 #include "Vector.h"
 
 namespace ASL {
+
+static inline bool is_whitespace(char c)
+{
+    return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+}
+
+static inline bool is_number(char c)
+{
+    return ('0' <= c && c <= '9') || c == '-' || c == '+' || c == '.' || c == 'e' || c == 'E';
+}
 
 JsonValue JsonParser::parse()
 {
