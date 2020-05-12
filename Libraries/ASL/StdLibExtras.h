@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Forward.h"
 #include "Types.h"
 
 namespace ASL {
@@ -321,6 +322,39 @@ struct __IsFloatHelper<long double> : TrueType {
 
 template<typename T>
 struct IsFloatingPoint : __IsFloatHelper<typename RemoveCV<T>::Type> {
+};
+
+template<typename T>
+struct IsCString {
+    static const bool value = IsSame<char, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value || IsSame<char*, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value || IsSame<char* const, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value;
+};
+
+template<typename T>
+struct __CanConstructStringHelper : IsCString<T> {
+};
+
+template<>
+struct __CanConstructStringHelper<String> : TrueType {
+};
+
+template<>
+struct __CanConstructStringHelper<StringImpl> : TrueType {
+};
+
+template<>
+struct __CanConstructStringHelper<StringImpl*> : TrueType {
+};
+
+template<>
+struct __CanConstructStringHelper<SharedString> : TrueType {
+};
+
+template<>
+struct __CanConstructStringHelper<StringView> : TrueType {
+};
+
+template<typename T>
+struct CanConstructString : __CanConstructStringHelper<typename RemoveReference<typename RemoveCV<T>::Type>::Type> {
 };
 
 } // namespace ASL
