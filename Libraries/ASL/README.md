@@ -21,8 +21,7 @@ My attempt at implementing all STL library, including but not limited to:
 - [x] StringBuilder
 - [x] JsonParser
 - [x] LogStream
-- [ ] StringFormat
-- [ ] DoublyLinkedList
+- [x] StringFormat
 - [ ] WeakPtr
 
 The order above is also the priority of these things

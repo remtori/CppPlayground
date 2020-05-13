@@ -12,23 +12,25 @@ A place where i do for-fun C++ project from scratch
 
 ## Libraries
 
-- [ ] ASL: My little quality of life library for commonly used things
-
-- [ ] LibJS: Javascript with (hopefully) better binding
+- [x] ASL: My little quality of life library for commonly used things
 
 - [ ] LibDebug: For debugging stuff and profiling
 
-- [ ] LibNetwork: Platform independent Networking with socket, tcp and udp
+- [ ] LibJS: Javascript with (hopefully) better binding
 
-- [ ] LibHttp: Parse and send/receive HTTP request
+- [ ] LibPlatform: Cross-platform window creation, handle input event, drawing using OpenGL 3.3
 
-- [ ] LibCrypto: Encryption, Decryption, Encoding, Decoding, and more of those related stuff
-
-- [ ] LibTLS: Transport Layer Security (Network)
+- [ ] LibGfx: Platform independent rendering lib using OpenGL 3.2 with extensions
 
 - [ ] LibGUI: Widgets, Window, Application and stuff
 
-- [ ] LibGfx: Platform independent rendering lib using OpenGL 3.2 with extensions
+- [ ] LibNetwork: Platform independent Networking with socket, tcp and udp
+
+- [ ] LibHttp: Parse and send/receive HTTP(s) request
+
+- [ ] LibCrypto: Encryption, Decryption, Encoding, Decoding, and more of those related stuff
+
+- [ ] LibTLS: Transport Layer Security (Network) for HTTPS
 
 - [ ] LibAudio
 
@@ -41,4 +43,3 @@ A place where i do for-fun C++ project from scratch
 - Prioritize 2D rendering as well as text
 
 - Prioritize performance
-
