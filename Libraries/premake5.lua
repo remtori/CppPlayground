@@ -9,3 +9,9 @@ make_proj('ASL', './ASL')
 	{
 		'./ASL/Tests/**.h', './ASL/Tests/**.cpp'
 	}
+
+make_proj('JS', './LibJS')
+	links
+	{
+		'ASL'
+	}
