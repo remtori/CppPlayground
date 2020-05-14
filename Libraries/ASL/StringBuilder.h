@@ -5,7 +5,7 @@
 
 namespace ASL {
 
-class StringBuilder {
+class LIB_API StringBuilder {
 public:
     StringBuilder(size_t initial_capacity = 16);
     ~StringBuilder() {}

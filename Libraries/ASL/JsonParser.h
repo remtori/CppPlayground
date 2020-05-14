@@ -8,7 +8,7 @@
 
 namespace ASL {
 
-class JsonParser {
+class LIB_API JsonParser {
 public:
     explicit JsonParser(const StringView& input)
         : m_input(input)

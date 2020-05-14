@@ -25,11 +25,11 @@ function make_proj(name, src_dir, proj_kind)
 		proj_kind = 'ConsoleApp'
 	end
 
-	kind(proj_kind or 'StaticLib')
+	kind(proj_kind or 'SharedLib')
 
 	language 'C++'
 	cppdialect 'C++17'
-	staticruntime 'on'
+	staticruntime 'off'
 
 	targetdir(_MAIN_SCRIPT_DIR .. '/bin/' .. outputdir)
 	objdir(_MAIN_SCRIPT_DIR .. '/bin-int/' .. outputdir .. '/%{prj.name}')
@@ -58,13 +58,16 @@ function make_proj(name, src_dir, proj_kind)
 		}
 	end
 
+	filter { 'kind:SharedLib', 'system:Windows' }
+		defines 'COMPILING_DLL'
+
 	filter 'configurations:Debug'
-		defines '_DEBUG'
+		defines 'DEBUG'
 		runtime 'Debug'
 		symbols 'on'
 
 	filter 'configurations:Release'
-		defines '_RELEASE'
+		defines 'RELEASE'
 		runtime 'Release'
 		optimize 'on'
 

@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Assertions.h"
+#include "Forward.h"
 #include "Types.h"
 
 namespace ASL {
 
-class ByteBuffer {
+class LIB_API ByteBuffer {
 public:
     static ByteBuffer from_data(const char*);
     static ByteBuffer from_data(const void* ptr, size_t byte_size);

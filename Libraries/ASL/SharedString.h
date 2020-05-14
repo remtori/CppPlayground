@@ -5,7 +5,7 @@
 
 namespace ASL {
 
-class SharedString {
+class LIB_API SharedString {
 public:
     SharedString() {}
     SharedString(const SharedString& other)

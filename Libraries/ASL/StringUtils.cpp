@@ -92,6 +92,7 @@ double string_to_double(const StringView& str, bool* ok)
 double string_e_to_double(const StringView& str, bool* ok)
 {
     // TODO: Implement
+    ASSERT_NOT_REACHED();
     return 0;
 }
 

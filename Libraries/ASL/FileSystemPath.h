@@ -4,7 +4,7 @@
 
 namespace ASL {
 
-class FileSystemPath {
+class LIB_API FileSystemPath {
 public:
     static FileSystemPath parse(const StringView&);
     static String dirname(const StringView&);

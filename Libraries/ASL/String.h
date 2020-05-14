@@ -12,7 +12,7 @@
 
 namespace ASL {
 
-class String {
+class LIB_API String {
 public:
     using ConstIterator = const char*;
     static const size_t npos = NumericLimits<size_t>::max();
@@ -171,10 +171,10 @@ struct Traits<String> : public GenericTraits<String> {
     static unsigned hash(const String& s) { return s.impl() ? s.impl()->hash() : 0; }
 };
 
-bool operator<(const char*, const String&);
-bool operator>=(const char*, const String&);
-bool operator>(const char*, const String&);
-bool operator<=(const char*, const String&);
+LIB_API bool operator<(const char*, const String&);
+LIB_API bool operator>=(const char*, const String&);
+LIB_API bool operator>(const char*, const String&);
+LIB_API bool operator<=(const char*, const String&);
 
 }; // namespace ASL
 

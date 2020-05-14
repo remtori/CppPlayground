@@ -32,7 +32,7 @@ struct FieldFormat {
 template<typename T>
 static constexpr String format_argument(const T& value, FieldFormat format);
 
-String extract_field_format(const StringView&, Vector<FieldFormat>&);
+LIB_API String extract_field_format(const StringView&, Vector<FieldFormat>&);
 
 template<class... Args>
 String format(const StringView& fmt, const Args&... input_args)

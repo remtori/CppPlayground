@@ -5,7 +5,7 @@
 
 namespace ASL {
 
-class JsonArray {
+class LIB_API JsonArray {
 public:
     JsonArray() {}
     ~JsonArray() {}

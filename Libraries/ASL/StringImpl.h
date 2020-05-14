@@ -7,7 +7,7 @@
 
 namespace ASL {
 
-class StringImpl : public RefCounted<StringImpl> {
+class LIB_API StringImpl : public RefCounted<StringImpl> {
 public:
     static StringImpl& empty();
     static NonnullRefPtr<StringImpl> create_uninitialized(size_t length, char*& buffer);

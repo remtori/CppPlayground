@@ -4,6 +4,6 @@
 
 namespace ASL {
 
-String demangle(const StringView& name);
+LIB_API String demangle(const StringView& name);
 
 } // namespace ASL
