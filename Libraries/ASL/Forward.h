@@ -2,7 +2,7 @@
 
 #include "Platform.h"
 
-#ifdef PLATFORM_WINDOW
+#ifdef PLATFORM_WINDOWS
 #    ifdef COMPILING_DLL
 #        define LIB_API __declspec(dllexport)
 #    else

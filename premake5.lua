@@ -29,7 +29,7 @@ function make_proj(name, src_dir, proj_kind)
 
 	language 'C++'
 	cppdialect 'C++17'
-	staticruntime 'on'
+	staticruntime 'off'
 
 	targetdir(_MAIN_SCRIPT_DIR .. '/bin/' .. outputdir)
 	objdir(_MAIN_SCRIPT_DIR .. '/bin-int/' .. outputdir .. '/%{prj.name}')

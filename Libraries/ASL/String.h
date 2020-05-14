@@ -171,10 +171,10 @@ struct Traits<String> : public GenericTraits<String> {
     static unsigned hash(const String& s) { return s.impl() ? s.impl()->hash() : 0; }
 };
 
-bool operator<(const char*, const String&);
-bool operator>=(const char*, const String&);
-bool operator>(const char*, const String&);
-bool operator<=(const char*, const String&);
+LIB_API bool operator<(const char*, const String&);
+LIB_API bool operator>=(const char*, const String&);
+LIB_API bool operator>(const char*, const String&);
+LIB_API bool operator<=(const char*, const String&);
 
 }; // namespace ASL
 
