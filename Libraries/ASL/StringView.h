@@ -8,7 +8,7 @@
 
 namespace ASL {
 
-class StringView {
+class LIB_API StringView {
 public:
     using ConstIterator = const char*;
     static const size_t npos = NumericLimits<size_t>::max();

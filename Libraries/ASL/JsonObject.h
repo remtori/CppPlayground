@@ -6,7 +6,7 @@
 
 namespace ASL {
 
-class JsonObject {
+class LIB_API JsonObject {
 public:
     JsonObject() {}
     ~JsonObject() {}

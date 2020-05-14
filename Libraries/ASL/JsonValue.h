@@ -6,7 +6,7 @@
 
 namespace ASL {
 
-class JsonValue {
+class LIB_API JsonValue {
 public:
     enum class Type {
         Undefined,

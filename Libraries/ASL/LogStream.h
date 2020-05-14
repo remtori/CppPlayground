@@ -6,7 +6,7 @@
 
 namespace ASL {
 
-class DebugStream {
+class LIB_API DebugStream {
 public:
     DebugStream() {}
     ~DebugStream();
@@ -34,9 +34,9 @@ public:
     }
 };
 
-DebugStream dbg(const char* name = nullptr);
-void set_process_name(int argc, char** argv);
-void set_process_name(const char* name);
+LIB_API DebugStream dbg(const char* name = nullptr);
+LIB_API void set_process_name(int argc, char** argv);
+LIB_API void set_process_name(const char* name);
 
 } // namespace ASL
 

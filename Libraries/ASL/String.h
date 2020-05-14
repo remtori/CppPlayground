@@ -12,7 +12,7 @@
 
 namespace ASL {
 
-class String {
+class LIB_API String {
 public:
     using ConstIterator = const char*;
     static const size_t npos = NumericLimits<size_t>::max();

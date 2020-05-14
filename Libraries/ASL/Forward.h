@@ -1,5 +1,17 @@
 #pragma once
 
+#include "Platform.h"
+
+#ifdef PLATFORM_WINDOW
+#    ifdef COMPILING_DLL
+#        define LIB_API __declspec(dllexport)
+#    else
+#        define LIB_API __declspec(dllimport)
+#    endif
+#else
+#    define LIB_API
+#endif
+
 namespace ASL {
 
 class ByteBuffer;
