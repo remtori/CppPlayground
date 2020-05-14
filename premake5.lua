@@ -78,7 +78,7 @@ end
 group 'Libraries'
 	include './Libraries'
 
--- group 'Applications'
--- 	include './Applications'
+group 'Applications'
+	include './Applications'
 
 group ''
