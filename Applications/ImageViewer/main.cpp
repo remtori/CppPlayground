@@ -1,10 +1,13 @@
-#include <LibPlatform/Window.h>
+#include <LibGUI/Application.h>
+#include <LibGUI/Window.h>
 
-int main()
+int main(int argc, char** argv)
 {
-    CrossPlatform::Window window(100, 100, 480, 600, "Hello!");
+    GUI::Application app(argc, argv);
+    auto window = GUI::Window::construct(100, 100, 480, 600, "Hello!");
+
     while (1) {
-        window.poll_events();
+        window->poll_events();
     }
 
     return 0;

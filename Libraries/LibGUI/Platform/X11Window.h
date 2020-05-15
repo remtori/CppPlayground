@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Window.h"
+#include "../Window.h"
 #include <ASL/String.h>
 #include <X11/Xlib.h>
 
-namespace CrossPlatform {
+namespace GUI {
 
 namespace internal {
 
-class X11Window final : public AbstractWindow {
+class X11Window final : public Window {
 public:
     X11Window(int x, int y, int width, int height, const char* title);
     ~X11Window();
@@ -26,11 +26,9 @@ private:
 
     Rect m_rect;
     String m_title;
-    int m_x11_screen;
-    ::Display* m_x11_display;
     ::Window m_x11_window;
 };
 
 } // namespace internal
 
-} // namespace CrossPlatform
+} // namespace GUI

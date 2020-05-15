@@ -4,12 +4,8 @@ make_proj('TestASL', './ASL/Tests', 'Test')
 make_proj('ASL', './ASL')
 	excludes { './ASL/Tests/**.h', './ASL/Tests/**.cpp' }
 
-make_proj('LibPlatform', './LibPlatform')
+make_proj('GUI', './LibGUI')
 	links { 'ASL' }
 	filter "system:linux"
 		links { 'X11' }
 
-make_proj('LibPlatform', './LibPlatform')
-	links { 'ASL' }
-	filter "system:linux"
-		links { 'X11' }

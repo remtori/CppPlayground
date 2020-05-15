@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Input.h"
+#include <ASL/Forward.h>
 #include <ASL/UtilityStruct.h>
 
-namespace CrossPlatform {
+namespace GUI {
 
-class Event {
+class LIB_API Event {
 public:
     enum class Type {
         Unknown,
@@ -35,9 +36,19 @@ public:
 
     virtual int catergory_flags() const { return EventCatergoryUnknown; }
     virtual Type type() const { return Type::Unknown; }
+
+    void set_event_source(void* source) { m_source = source; }
+    void* source() const { return m_source; }
+
+    void accept() { m_handled = true; }
+    bool is_handled() const { return m_handled; }
+
+private:
+    void* m_source = nullptr;
+    bool m_handled = false;
 };
 
-class InputEvent : public Event {
+class LIB_API InputEvent : public Event {
 public:
     bool shift() const { return m_mods & KeyModShift; }
     bool control() const { return m_mods & KeyModControl; }
@@ -55,7 +66,7 @@ protected:
     int m_mods;
 };
 
-class KeyEvent : public InputEvent {
+class LIB_API KeyEvent : public InputEvent {
 public:
     KeyCode keycode() const { return m_keycode; }
     virtual int catergory_flags() const override { return EventCatergoryInput | EventCatergoryKeyboard; }
@@ -70,7 +81,7 @@ protected:
     KeyCode m_keycode;
 };
 
-class KeyUpEvent : public KeyEvent {
+class LIB_API KeyUpEvent : public KeyEvent {
 public:
     KeyUpEvent(KeyCode c, int mods)
         : KeyEvent(c, mods)
@@ -80,7 +91,7 @@ public:
     virtual Type type() const override { return Type::KeyUp; }
 };
 
-class KeyDownEvent : public KeyEvent {
+class LIB_API KeyDownEvent : public KeyEvent {
 public:
     KeyDownEvent(KeyCode c, int mods)
         : KeyEvent(c, mods)
@@ -90,7 +101,7 @@ public:
     virtual Type type() const override { return Type::KeyDown; }
 };
 
-class MouseMoveEvent : public InputEvent {
+class LIB_API MouseMoveEvent : public InputEvent {
 public:
     MouseMoveEvent(float x, float y, int mods = 0)
         : InputEvent(mods)
@@ -109,7 +120,7 @@ private:
     FPosition m_pos;
 };
 
-class MouseUpEvent : public InputEvent {
+class LIB_API MouseUpEvent : public InputEvent {
 public:
     MouseUpEvent(MouseButton btn, int mods = 0)
         : InputEvent(mods)
@@ -126,7 +137,7 @@ private:
     MouseButton m_button;
 };
 
-class MouseDownEvent : public InputEvent {
+class LIB_API MouseDownEvent : public InputEvent {
 public:
     MouseDownEvent(MouseButton btn, int mods = 0)
         : InputEvent(mods)
@@ -143,7 +154,7 @@ private:
     MouseButton m_button;
 };
 
-class MouseScrollEvent : public InputEvent {
+class LIB_API MouseScrollEvent : public InputEvent {
 public:
     MouseScrollEvent(int offset_x, int offset_y, int mods = 0)
         : InputEvent(mods)
@@ -160,4 +171,4 @@ private:
     Position m_offset;
 };
 
-} // namespace CrossPlatform
+} // namespace GUI

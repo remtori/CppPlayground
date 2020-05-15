@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CrossPlatform {
+namespace GUI {
 
 #define _FOR_EVERY_KEY_CODE \
     __KEY(Space)            \
@@ -144,53 +144,10 @@ enum class MouseButton {
     Middle,
 };
 
-const char* to_string(KeyCode code)
-{
-    switch (code) {
-#define __KEY(x)     \
-    case KeyCode::x: \
-        return #x;
-        _FOR_EVERY_KEY_CODE
-#undef __KEY
-    default:
-        return "Unknown KeyCode";
-    }
-}
+const char* to_string(KeyCode code);
+const char* to_string(KeyMod mods);
+const char* to_string(MouseButton btn);
 
-const char* to_string(KeyMod mods)
-{
-    switch (mods) {
-    case KeyModShift:
-        return "Shift";
-    case KeyModControl:
-        return "Control";
-    case KeyModAlt:
-        return "Alt";
-    case KeyModSuper:
-        return "Super";
-    case KeyModCapsLock:
-        return "CapsLock";
-    case KeyModNumLock:
-        return "NumLock";
-    default:
-        return "Unknown Modifer Key";
-    }
-}
+} // namespace GUI
 
-const char* to_string(MouseButton btn)
-{
-    switch (btn) {
-    case MouseButton::Left:
-        return "LeftMouseButton";
-    case MouseButton::Right:
-        return "RightMouseButton";
-    case MouseButton::Middle:
-        return "MiddleMouseButton";
-    default:
-        return "Unknown Mouse Button";
-    }
-}
-
-} // namespace CrossPlatform
-
-using CrossPlatform::to_string;
+using GUI::to_string;

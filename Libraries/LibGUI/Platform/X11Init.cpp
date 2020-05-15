@@ -1,23 +1,25 @@
-#include "X11Window.h"
-
-#include "Input.h"
-#include <ASL/Types.h>
+#include "X11Init.h"
 
 #include <X11/keysym.h>
+#include <stdlib.h>
 
-namespace CrossPlatform {
+namespace GUI {
 
 namespace internal {
 
-static bool x11_initialized = false;
 static int* x11_keycodes;
 static int* x11_scancodes;
 
-int translate_state(int state);
-KeyCode translate_keysyms(KeySym* keysym, int width);
+KeyCode translate_keysyms(KeySym* keysyms, int width);
 
-void x11_init(::Display* display)
+void init(void*& data_ptr)
 {
+    Display* display = XOpenDisplay(nullptr);
+    X11Data* data = new X11Data;
+    data->display = display;
+    data->screen = DefaultScreen(display);
+    data_ptr = data;
+
     int scancode_min, scancode_max;
     XDisplayKeycodes(display, &scancode_min, &scancode_max);
 
@@ -36,100 +38,9 @@ void x11_init(::Display* display)
     free(keysyms);
 }
 
-X11Window::X11Window(int x, int y, int width, int height, const char* title)
+KeyCode translate_keycode(int scancode)
 {
-    m_x11_display = XOpenDisplay(NULL);
-    ASSERT(m_x11_display);
-    if (!x11_initialized)
-        x11_init(m_x11_display);
-
-    m_x11_screen = DefaultScreen(m_x11_display);
-
-    m_x11_window = XCreateSimpleWindow(
-        m_x11_display,
-        RootWindow(m_x11_display, m_x11_screen),
-        x, y, width, height,
-        1,
-        BlackPixel(m_x11_display, m_x11_screen),
-        WhitePixel(m_x11_display, m_x11_screen));
-
-    set_title(title);
-
-    XSelectInput(
-        m_x11_display, m_x11_window,
-        ExposureMask | KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask
-            | PointerMotionMask);
-    XMapWindow(m_x11_display, m_x11_window);
-}
-
-X11Window::~X11Window()
-{
-    if (m_x11_display)
-        XCloseDisplay(m_x11_display);
-}
-
-void X11Window::set_title(const char* title)
-{
-    XStoreName(m_x11_display, m_x11_window, title);
-    XSetIconName(m_x11_display, m_x11_window, title);
-    m_title = title;
-}
-
-void X11Window::set_window_rect(Rect r)
-{
-    if (r.x == -1)
-        r.x = m_rect.x;
-    if (r.y == -1)
-        r.y = m_rect.y;
-    if (r.width == -1)
-        r.width = m_rect.width;
-    if (r.height == -1)
-        r.height = m_rect.height;
-
-    XMoveResizeWindow(m_x11_display, m_x11_window, r.x, r.y, r.width, r.height);
-}
-
-void X11Window::process_event(XEvent& event)
-{
-    switch (event.type) {
-    case Expose: {
-        auto gc = DefaultGC(m_x11_display, m_x11_screen);
-        XDrawString(m_x11_display, m_x11_window, gc, 200, 200, "Hello", 6);
-    }
-    case KeyPress: {
-        int key = x11_keycodes[event.xkey.keycode];
-        int mods = translate_state(event.xkey.state);
-        KeyDownEvent key_event((KeyCode)key, mods);
-    }
-
-    case KeyRelease: {
-        // Handle Repeated key
-        if (XEventsQueued(m_x11_display, QueuedAfterReading)) {
-            XEvent next_event;
-            XPeekEvent(m_x11_display, &next_event);
-
-            if (next_event.type == KeyPress
-                && next_event.xkey.time == event.xkey.time
-                && next_event.xkey.keycode == event.xkey.keycode) {
-                // Ignore repeated key release
-                return;
-            }
-        }
-    }
-    }
-}
-
-void X11Window::poll_events()
-{
-    XPending(m_x11_display);
-
-    while (QLength(m_x11_display)) {
-        XEvent xevent;
-        XNextEvent(m_x11_display, &xevent);
-        process_event(xevent);
-    }
-
-    XFlush(m_x11_display);
+    return (KeyCode)x11_keycodes[scancode];
 }
 
 int translate_state(int state)
@@ -444,4 +355,4 @@ KeyCode translate_keysyms(KeySym* keysyms, int width)
 
 } // namespace internal
 
-} // namespace CrossPlatform
+} // namespace GUI
