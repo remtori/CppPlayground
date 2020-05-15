@@ -15,3 +15,6 @@ make_proj('Crypto', './LibCrypto')
 
 make_proj('TestCrypto', './LibCrypto/Tests', 'Test')
 	links { 'ASL', 'Crypto' }
+
+make_proj('Loader', './LibLoader')
+	links { 'ASL', 'Crypto' }
