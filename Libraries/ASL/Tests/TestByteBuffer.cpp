@@ -46,4 +46,12 @@ TEST_CASE("ByteBuffer", "[container]")
         a.overwrite((void*)"abc", 3, 1);
         REQUIRE(String(a) == "aabc");
     }
+
+    SECTION("Sub Equals")
+    {
+        ByteBuffer a = ByteBuffer::from_data("abcdef");
+        REQUIRE(a.sub_equals("abc", 3));
+        REQUIRE(a.sub_equals("bcdef", 5, 1));
+        REQUIRE(a.sub_equals("cd", 2, 2));
+    }
 }

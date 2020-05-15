@@ -47,6 +47,14 @@ void ByteBuffer::clear()
     m_size = 0;
 }
 
+bool ByteBuffer::sub_equals(const void* other, size_t other_size, size_t offset) const
+{
+    if (offset + other_size > m_size)
+        return false;
+
+    return !memcmp(&m_buffer[offset], other, other_size);
+}
+
 void ByteBuffer::append(const void* ptr, size_t byte_size)
 {
     if (byte_size == 0)
