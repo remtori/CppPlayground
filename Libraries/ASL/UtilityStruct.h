@@ -10,16 +10,16 @@ struct BasePosition {
 
 template<typename T>
 struct BaseSize {
-    T x = 0;
-    T y = 0;
+    T width = 0;
+    T height = 0;
 };
 
 template<typename T>
 struct BaseRect {
     T x = 0;
     T y = 0;
-    T x = 0;
-    T y = 0;
+    T width = 0;
+    T height = 0;
 };
 
 using Position = BasePosition<int>;
