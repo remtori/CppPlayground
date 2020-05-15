@@ -56,4 +56,6 @@ class JsonValue;
 class JsonObject;
 class JsonArray;
 
+class Bitmap;
+
 } // namespace ASL
