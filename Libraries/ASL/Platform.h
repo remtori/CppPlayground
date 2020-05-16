@@ -26,12 +26,6 @@
 #    error "Unknown platform!"
 #endif
 
-#if defined(__GNUC__) && defined(__BYTE_ORDER__)
-#    define __BYTE_ORDER __BYTE_ORDER__
-#else
-#    include <bits/endian.h>
-#endif
-
 #if defined(PLATFORM_LINUX)
 
 #    include <endian.h>
