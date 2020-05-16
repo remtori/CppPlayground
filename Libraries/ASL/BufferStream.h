@@ -1,4 +1,4 @@
-#pragma
+#pragma once
 
 #include "ByteBuffer.h"
 #include "NonnullOwnPtr.h"
