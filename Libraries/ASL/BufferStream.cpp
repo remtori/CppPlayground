@@ -11,7 +11,7 @@ BufferStream& BufferStream::operator<<(i8 value)
     return *this;
 }
 
-BufferStream& BufferStream::operator>>(i8& value)
+const BufferStream& BufferStream::operator>>(i8& value) const
 {
     if (m_offset + sizeof(value) > m_buffer->size()) {
         m_read_failure = true;
@@ -31,7 +31,7 @@ BufferStream& BufferStream::operator<<(u8 value)
     return *this;
 }
 
-BufferStream& BufferStream::operator>>(u8& value)
+const BufferStream& BufferStream::operator>>(u8& value) const
 {
     if (m_offset + sizeof(value) > m_buffer->size()) {
         m_read_failure = true;
@@ -51,7 +51,7 @@ BufferStream& BufferStream::operator<<(bool value)
     return *this;
 }
 
-BufferStream& BufferStream::operator>>(bool& value)
+const BufferStream& BufferStream::operator>>(bool& value) const
 {
     if (m_offset + sizeof(value) > m_buffer->size()) {
         m_read_failure = true;
@@ -76,7 +76,7 @@ BufferStream& BufferStream::operator<<(float value)
     return *this << u.as_u32;
 }
 
-BufferStream& BufferStream::operator>>(float& value)
+const BufferStream& BufferStream::operator>>(float& value) const
 {
     union bits {
         float as_float;
@@ -102,7 +102,7 @@ BufferStream& BufferStream::operator<<(u16 value)
     return *this;
 }
 
-BufferStream& BufferStream::operator>>(u16& value)
+const BufferStream& BufferStream::operator>>(u16& value) const
 {
     if (m_offset + sizeof(value) > m_buffer->size()) {
         m_read_failure = true;
@@ -128,7 +128,7 @@ BufferStream& BufferStream::operator<<(i16 value)
     return *this;
 }
 
-BufferStream& BufferStream::operator>>(i16& value)
+const BufferStream& BufferStream::operator>>(i16& value) const
 {
     if (m_offset + sizeof(value) > m_buffer->size()) {
         m_read_failure = true;
@@ -154,7 +154,7 @@ BufferStream& BufferStream::operator<<(u32 value)
     return *this;
 }
 
-BufferStream& BufferStream::operator>>(u32& value)
+const BufferStream& BufferStream::operator>>(u32& value) const
 {
     if (m_offset + sizeof(value) > m_buffer->size()) {
         m_read_failure = true;
@@ -180,7 +180,7 @@ BufferStream& BufferStream::operator<<(i32 value)
     return *this;
 }
 
-BufferStream& BufferStream::operator>>(i32& value)
+const BufferStream& BufferStream::operator>>(i32& value) const
 {
     if (m_offset + sizeof(value) > m_buffer->size()) {
         m_read_failure = true;
@@ -206,7 +206,7 @@ BufferStream& BufferStream::operator<<(u64 value)
     return *this;
 }
 
-BufferStream& BufferStream::operator>>(u64& value)
+const BufferStream& BufferStream::operator>>(u64& value) const
 {
     if (m_offset + sizeof(value) > m_buffer->size()) {
         m_read_failure = true;
@@ -232,7 +232,7 @@ BufferStream& BufferStream::operator<<(i64 value)
     return *this;
 }
 
-BufferStream& BufferStream::operator>>(i64& value)
+const BufferStream& BufferStream::operator>>(i64& value) const
 {
     if (m_offset + sizeof(value) > m_buffer->size()) {
         m_read_failure = true;
@@ -272,20 +272,7 @@ BufferStream& BufferStream::operator<<(const ByteBuffer& value)
     return *this;
 }
 
-BufferStream& BufferStream::read_raw(u8* raw_data, size_t size)
-{
-    if (m_offset + size > m_buffer->size()) {
-        m_read_failure = true;
-        return *this;
-    }
-
-    memcpy(raw_data, m_buffer->data() + m_offset, size);
-    m_offset += size;
-
-    return *this;
-};
-
-BufferStream& BufferStream::operator>>(String& str)
+const BufferStream& BufferStream::operator>>(String& str) const
 {
     if (m_offset >= m_buffer->size()) {
         m_read_failure = true;
@@ -302,5 +289,16 @@ BufferStream& BufferStream::operator>>(String& str)
 
     return *this;
 }
+
+void BufferStream::read_raw(u8* raw_data, size_t size) const
+{
+    if (m_offset + size > m_buffer->size()) {
+        m_read_failure = true;
+        return;
+    }
+
+    memcpy(raw_data, m_buffer->data() + m_offset, size);
+    m_offset += size;
+};
 
 } // namespace ASL

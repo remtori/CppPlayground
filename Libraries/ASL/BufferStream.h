@@ -34,7 +34,7 @@ public:
             m_buffer.leak_ptr();
     }
 
-    BufferStream& skip(size_t amount)
+    const BufferStream& skip(size_t amount) const
     {
         if (m_offset + amount > m_buffer->size()) {
             m_read_failure = true;
@@ -52,7 +52,7 @@ public:
         return m_offset == m_buffer->size();
     }
 
-    u8 peek()
+    u8 peek() const
     {
         if (m_offset >= m_buffer->size()) {
             m_read_failure = true;
@@ -62,7 +62,7 @@ public:
         return at(m_offset);
     }
 
-    void reset()
+    void reset() const
     {
         m_offset = 0;
         m_read_failure = false;
@@ -70,7 +70,7 @@ public:
 
     bool read_failed() const { return m_read_failure; }
 
-    bool handle_read_failure()
+    bool handle_read_failure() const
     {
         bool old = m_read_failure;
         m_read_failure = false;
@@ -78,38 +78,38 @@ public:
     }
 
     BufferStream& operator<<(i8 value);
-    BufferStream& operator>>(i8& value);
+    const BufferStream& operator>>(i8& value) const;
     BufferStream& operator<<(u8 value);
-    BufferStream& operator>>(u8& value);
+    const BufferStream& operator>>(u8& value) const;
     BufferStream& operator<<(bool value);
-    BufferStream& operator>>(bool& value);
+    const BufferStream& operator>>(bool& value) const;
     BufferStream& operator<<(float value);
-    BufferStream& operator>>(float& value);
+    const BufferStream& operator>>(float& value) const;
     BufferStream& operator<<(u16 value);
-    BufferStream& operator>>(u16& value);
+    const BufferStream& operator>>(u16& value) const;
     BufferStream& operator<<(i16 value);
-    BufferStream& operator>>(i16& value);
+    const BufferStream& operator>>(i16& value) const;
     BufferStream& operator<<(u32 value);
-    BufferStream& operator>>(u32& value);
+    const BufferStream& operator>>(u32& value) const;
     BufferStream& operator<<(i32 value);
-    BufferStream& operator>>(i32& value);
+    const BufferStream& operator>>(i32& value) const;
     BufferStream& operator<<(u64 value);
-    BufferStream& operator>>(u64& value);
+    const BufferStream& operator>>(u64& value) const;
     BufferStream& operator<<(i64 value);
-    BufferStream& operator>>(i64& value);
+    const BufferStream& operator>>(i64& value) const;
     BufferStream& operator<<(const char* value);
     BufferStream& operator<<(const StringView& value);
     BufferStream& operator<<(const ByteBuffer& value);
-    BufferStream& read_raw(u8* raw_data, size_t size);
-    BufferStream& operator>>(String& str);
+    const BufferStream& operator>>(String& str) const;
+    void read_raw(u8* raw_data, size_t size) const;
 
 private:
     inline u8& at(size_t offset) { return (*m_buffer)[offset]; }
     inline const u8& at(size_t offset) const { return (*m_buffer)[offset]; }
 
     NonnullOwnPtr<ByteBuffer> m_buffer;
-    size_t m_offset = 0;
-    bool m_read_failure = false;
+    mutable size_t m_offset = 0;
+    mutable bool m_read_failure = false;
     bool m_allow_growth = false;
     bool m_is_wrapper = false;
 };
