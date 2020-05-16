@@ -33,6 +33,12 @@ public:
         return m_buffer[index];
     }
 
+    const u8& operator[](size_t index) const
+    {
+        ASSERT(index < m_size);
+        return m_buffer[index];
+    }
+
     void read(void* other, size_t byte_size, size_t offset = 0) const;
     bool sub_equals(const void* other, size_t byte_size, size_t offset = 0) const;
 
