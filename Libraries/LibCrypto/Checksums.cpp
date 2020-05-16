@@ -1,6 +1,26 @@
-#include "CRC.h"
+#include "Checksums.h"
 
-namespace Codec {
+namespace Crypto {
+
+u32 update_adler32(u32 adler, const void* data, size_t length)
+{
+    static const u16 M = 65521;
+    u32 A = adler & 0xffff;
+    u32 B = (adler >> 16) & 0xffff;
+
+    u8* bytes = (u8*)data;
+    for (size_t i = 0; i < length; ++i) {
+        A = (A + bytes[i]) % M;
+        B = (B + A) % M;
+    }
+
+    return (B << 16) | A;
+}
+
+u32 compute_adler32(const void* data, size_t length)
+{
+    return update_adler32(1L, data, length);
+}
 
 static u32* crc_table = nullptr;
 
@@ -22,7 +42,7 @@ void generate_crc_table()
     }
 }
 
-u32 compute_crc_32(const void* data, size_t length)
+u32 compute_crc32(const void* data, size_t length)
 {
     if (crc_table == nullptr)
         generate_crc_table();
@@ -39,4 +59,4 @@ u32 compute_crc_32(const void* data, size_t length)
     return crc32;
 }
 
-} // namespace Codec
+} // namespace Crypto
