@@ -9,12 +9,9 @@ make_proj('GUI', './LibGUI')
 	filter "system:linux"
 		links { 'X11' }
 
-make_proj('Crypto', './LibCrypto')
+make_proj('Codec', './LibCodec')
 	links { 'ASL' }
-	excludes { './LibCrypto/Tests/**.cpp' }
+	excludes { './LibCodec/Tests/**.cpp' }
 
-make_proj('TestCrypto', './LibCrypto/Tests', 'Test')
-	links { 'ASL', 'Crypto' }
-
-make_proj('Loader', './LibLoader')
-	links { 'ASL', 'Crypto' }
+make_proj('TestCodec', './LibCodec/Tests', 'Test')
+	links { 'ASL', 'Codec' }

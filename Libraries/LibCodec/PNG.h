@@ -4,7 +4,7 @@
 #include <ASL/ByteBuffer.h>
 #include <ASL/RefPtr.h>
 
-namespace Loader {
+namespace Codec {
 
 class PNGLoader {
 public:
@@ -13,4 +13,4 @@ public:
     static RefPtr<Bitmap> load_from_file(const char* file_path);
 };
 
-} // namespace Loader
+} // namespace Codec

@@ -1,6 +1,6 @@
 #include "CRC.h"
 
-namespace Crypto {
+namespace Codec {
 
 static u32* crc_table = nullptr;
 
@@ -39,4 +39,4 @@ u32 compute_crc_32(const void* data, size_t length)
     return crc32;
 }
 
-} // namespace Crypto
+} // namespace Codec
