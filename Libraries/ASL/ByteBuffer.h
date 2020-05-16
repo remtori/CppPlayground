@@ -33,7 +33,8 @@ public:
         return m_buffer[index];
     }
 
-    bool sub_equals(const void* other, size_t other_size, size_t offset = 0) const;
+    void read(void* other, size_t byte_size, size_t offset = 0) const;
+    bool sub_equals(const void* other, size_t byte_size, size_t offset = 0) const;
 
     void append(const void* data, size_t byte_size);
     void overwrite(const void* data, size_t byte_size, size_t offset = 0);

@@ -54,4 +54,14 @@ TEST_CASE("ByteBuffer", "[container]")
         REQUIRE(a.sub_equals("bcdef", 5, 1));
         REQUIRE(a.sub_equals("cd", 2, 2));
     }
+
+    SECTION("Read")
+    {
+        ByteBuffer a = ByteBuffer::from_data("abcdef");
+        char str[3];
+        a.read(str, 3);
+        REQUIRE(String(str) == "abc");
+        a.read(str, 3, 2);
+        REQUIRE(String(str) == "cde");
+    }
 }
