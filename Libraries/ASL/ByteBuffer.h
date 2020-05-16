@@ -49,6 +49,13 @@ public:
     void grow(size_t growth_size, bool fill_null_space = true);
     void ensure_capacity(size_t new_capacity, bool fill_null_space = true);
 
+    // Note: Trim do not reallocate
+    void trim(size_t size)
+    {
+        ASSERT(size <= m_size);
+        m_size = size;
+    }
+
 private:
     size_t m_size = 0;
     u8* m_buffer = nullptr;
