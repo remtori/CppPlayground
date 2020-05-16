@@ -64,7 +64,24 @@ void X11Window::process_event(XEvent& event)
     switch (event.type) {
     case Expose: {
         auto gc = DefaultGC(data->display, data->screen);
-        XDrawString(data->display, m_x11_window, gc, 200, 200, "Hello", 6);
+        u8* pixels = new u8[200 * 200 * 4];
+        for (int i = 0; i < 200 * 200; ++i) {
+            pixels[i * 4 + 0] = i % 255;
+            pixels[i * 4 + 1] = 0;
+            pixels[i * 4 + 2] = i % 128;
+            pixels[i * 4 + 3] = 255;
+        }
+
+        Visual* visual = DefaultVisual(data->display, data->screen);
+
+        XImage* img = XCreateImage(
+            data->display,
+            visual,
+            DefaultDepth(data->display, data->screen),
+            ZPixmap, 0,
+            (char*)pixels, 200, 200, 32, 0);
+
+        XPutImage(data->display, m_x11_window, gc, img, 0, 0, 0, 0, 200, 200);
         break;
     }
     case KeyPress: {
