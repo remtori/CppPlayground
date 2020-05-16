@@ -19,9 +19,9 @@ function make_proj(name, src_dir, proj_kind)
 	location(src_dir)
 	warnings 'Extra'
 
-	local isTest = false
+	local istest = false
 	if (proj_kind == 'Test') then
-		isTest = true
+		istest = true
 		proj_kind = 'ConsoleApp'
 	end
 
@@ -45,7 +45,7 @@ function make_proj(name, src_dir, proj_kind)
 		_MAIN_SCRIPT_DIR .. '/Libraries',
 	}
 
-	if (isTest) then
+	if (istest) then
 		files
 		{
 			_MAIN_SCRIPT_DIR .. '/third_party/catch2/include/catch2/catch2.hpp',

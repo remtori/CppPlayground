@@ -1,0 +1,15 @@
+language: cpp
+sudo: required
+dist: bionic
+compiler:
+  - gcc
+os:
+  - linux
+before_install:
+  - ./third_party/premake5/premake5 gmake2
+script:
+  - make
+  - ./run_all_tests.sh
+branches:
+  only:
+  - master
