@@ -34,6 +34,13 @@ public:
             m_buffer.leak_ptr();
     }
 
+    // Stop growing the buffer
+    void freeze()
+    {
+        m_buffer->trim(m_offset);
+        m_allow_growth = false;
+    }
+
     const BufferStream& skip(size_t amount) const
     {
         if (m_offset + amount > m_buffer->size()) {
@@ -101,7 +108,12 @@ public:
     BufferStream& operator<<(const StringView& value);
     BufferStream& operator<<(const ByteBuffer& value);
     const BufferStream& operator>>(String& str) const;
+
     void read_raw(u8* raw_data, size_t size) const;
+    void write_raw(const u8* raw_data, size_t size);
+
+    const u8* data() const { return m_buffer->data(); }
+    u8* data() { return m_buffer->data(); }
 
 private:
     inline u8& at(size_t offset) { return (*m_buffer)[offset]; }

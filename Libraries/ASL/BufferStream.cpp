@@ -297,8 +297,17 @@ void BufferStream::read_raw(u8* raw_data, size_t size) const
         return;
     }
 
-    memcpy(raw_data, m_buffer->data() + m_offset, size);
+    m_buffer->read(raw_data, size, m_offset);
     m_offset += size;
 };
+
+void BufferStream::write_raw(const u8* raw_data, size_t size)
+{
+    if (m_allow_growth)
+        m_buffer->ensure_capacity(m_offset + size);
+
+    m_buffer->overwrite(raw_data, size, m_offset);
+    m_offset += size;
+}
 
 } // namespace ASL
