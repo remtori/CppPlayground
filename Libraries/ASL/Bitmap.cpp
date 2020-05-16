@@ -19,9 +19,13 @@ Bitmap::~Bitmap()
     free(m_data);
 }
 
-void Bitmap::set_data(u8* data)
+void Bitmap::set_data(u8* data, size_t length, size_t offset)
 {
-    memcpy(m_data, data, m_width * m_height);
+    if (length == npos)
+        length = m_width * m_height;
+
+    ASSERT(offset + length <= m_width * m_height);
+    memcpy(&m_data[offset], data, length);
 }
 
 } // namespace ASL

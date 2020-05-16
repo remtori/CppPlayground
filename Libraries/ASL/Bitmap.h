@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NonnullRefPtr.h"
+#include "NumericLimits.h"
 #include "RefCounted.h"
 #include "Types.h"
 
@@ -8,6 +9,8 @@ namespace ASL {
 
 class Bitmap : public RefCounted<Bitmap> {
 public:
+    static const size_t npos = NumericLimits<size_t>::max();
+
     static NonnullRefPtr<Bitmap> create(u32 width, u32 height)
     {
         return adopt(*new Bitmap(width, height));
@@ -32,7 +35,7 @@ public:
 
     ~Bitmap();
 
-    void set_data(u8*);
+    void set_data(u8*, size_t length = npos, size_t offset = 0);
 
     inline const u8* data() const { return m_data; }
     inline u8* data() { return m_data; }
