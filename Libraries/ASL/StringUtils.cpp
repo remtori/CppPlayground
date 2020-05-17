@@ -1,6 +1,6 @@
 #include "StringUtils.h"
 
-#include <math.h>
+#include <stdlib.h>
 
 namespace ASL {
 
@@ -115,7 +115,7 @@ double string_e_to_double(const StringView& str, bool* ok)
         return 0;
     }
 
-    return v * powf64(10, power);
+    return v * pow(10, power);
 }
 
 } // namespace ASL
