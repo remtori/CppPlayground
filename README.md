@@ -4,6 +4,8 @@ A place where i do for-fun C++ project from scratch
 
 ## Applications
 
+- [ ] ImageViewer: An Simplistic image viewer with pan and zoom, maybe even rotate
+
 - [ ] js: cli wrapper for LibJS
 
 - [ ] proxy: a network proxy server
@@ -16,19 +18,19 @@ A place where i do for-fun C++ project from scratch
 
 - [ ] LibDebug: For debugging stuff and profiling
 
-- [ ] LibJS: Javascript with (hopefully) better binding
+- [ ] LibCrypto: Encrypt, Decrypt and more of those related stuff
 
-- [ ] LibPlatform: Cross-platform window creation, handle input event, drawing using OpenGL 3.3
+- [ ] LibCodec: For Encode and Decode files and those stuff
+
+- [ ] LibGUI: Widgets, Window, Application and stuff
 
 - [ ] LibGfx: Platform independent rendering lib using OpenGL 3.2 with extensions
 
-- [ ] LibGUI: Widgets, Window, Application and stuff
+- [ ] LibJS: Javascript with (hopefully) better binding
 
 - [ ] LibNetwork: Platform independent Networking with socket, tcp and udp
 
 - [ ] LibHttp: Parse and send/receive HTTP(s) request
-
-- [ ] LibCrypto: Encryption, Decryption, Encoding, Decoding, and more of those related stuff
 
 - [ ] LibTLS: Transport Layer Security (Network) for HTTPS
 
