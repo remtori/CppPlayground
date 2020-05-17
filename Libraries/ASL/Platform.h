@@ -32,7 +32,7 @@
 
 #elif defined(PLATFORM_WINDOWS)
 
-#    include <windows.h>
+#include "Types.h"
 
 #    if defined(__GNUC__) || defined(__clang__)
 static inline uint16_t __bswap16(uint16_t x) { return __builtin_bswap16(x); }
