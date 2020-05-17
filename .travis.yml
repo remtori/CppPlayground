@@ -1,20 +1,18 @@
 language: cpp
 
-os:
-  - linux
-  - windows
-
-compiler:
-  - gcc
-
-install:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then ./third_party/premake5/premake5 gmake2
-  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then ./third_party/premake5/premake5.exe vs2019
-
-script:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make
-  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then msbuild.exe
-  - ./run_all_tests.sh
+jobs:
+  inclue:
+    - os: linux
+      dist: bionic
+      install: ./third_party/premake5/premake5 gmake2
+      script:
+        - make
+        - ./run_all_tests.sh
+    - os: windows
+      install: ./third_party/premake5/premake5.exe vs2019
+      script:
+        - msbuild.exe
+        - ./run_all_tests.sh
 
 branches:
   only:
