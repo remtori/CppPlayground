@@ -3,7 +3,7 @@
 #include <ASL/Platform.h>
 
 #ifdef PLATFORM_LINUX
-#    include "./Platform/X11Window.h"
+#    include "./Platform/X11/X11Window.h"
 #endif
 
 namespace GUI {

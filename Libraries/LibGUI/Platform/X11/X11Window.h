@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Window.h"
+#include "../../Window.h"
 #include <ASL/String.h>
 #include <X11/Xlib.h>
 

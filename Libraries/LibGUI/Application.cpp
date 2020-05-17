@@ -4,7 +4,7 @@
 #include <ASL/Platform.h>
 
 #ifdef PLATFORM_LINUX
-#    include "./Platform/X11Init.h"
+#    include "./Platform/X11/X11Init.h"
 #endif
 
 namespace GUI {

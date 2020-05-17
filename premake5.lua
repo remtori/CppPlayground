@@ -1,4 +1,4 @@
-workspace 'RemePlayground'
+workspace 'CppPlayground'
 	architecture 'x86_64'
 
 	configurations
@@ -36,8 +36,8 @@ function make_proj(name, src_dir, proj_kind)
 
 	files
 	{
-		src_dir .. '/**.h',
-		src_dir .. '/**.cpp',
+		src_dir .. '/*.h',
+		src_dir .. '/*.cpp',
 	}
 
 	includedirs
