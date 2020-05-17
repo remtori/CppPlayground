@@ -17,3 +17,5 @@ jobs:
 branches:
   only:
   - master
+
+cache: bin-int
