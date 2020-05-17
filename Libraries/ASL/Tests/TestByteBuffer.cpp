@@ -60,8 +60,8 @@ TEST_CASE("ByteBuffer", "[container]")
         ByteBuffer a = ByteBuffer::from_data("abcdef");
         char str[3];
         a.read(str, 3);
-        REQUIRE(String(str) == "abc");
+        REQUIRE(String(str, 3) == "abc");
         a.read(str, 3, 2);
-        REQUIRE(String(str) == "cde");
+        REQUIRE(String(str, 3) == "cde");
     }
 }
