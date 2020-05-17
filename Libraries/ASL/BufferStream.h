@@ -11,7 +11,7 @@ namespace ASL {
 /**
  * BufferStream to read and write data using **big endian**
  */
-class BufferStream {
+class LIB_API BufferStream {
 public:
     explicit BufferStream(ByteBuffer& buffer, bool allow_growth = false)
         : m_buffer(adopt_own(buffer))
