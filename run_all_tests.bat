@@ -1,0 +1,1 @@
+for /f "delims=" %%i in ('dir /s/b bin\\Test*.exe') do "%%i"

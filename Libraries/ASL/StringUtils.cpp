@@ -1,7 +1,5 @@
 #include "StringUtils.h"
 
-#include <stdlib.h>
-
 namespace ASL {
 
 inline void set(bool* ok, bool val)
@@ -109,13 +107,23 @@ double string_e_to_double(const StringView& str, bool* ok)
         return 0;
     }
 
-    double power = string_to_int(str.substring_view(it.value() + 1), &alright);
+    i32 power = string_to_int(str.substring_view(it.value() + 1), &alright);
     if (!alright) {
         set(ok, alright);
         return 0;
     }
 
-    return v * pow(10, power);
+    while (power > 0) {
+        v *= 10;
+        --power;
+    }
+
+    while (power < 0) {
+        v /= 10;
+        ++power;
+    }
+
+    return v;
 }
 
 } // namespace ASL
