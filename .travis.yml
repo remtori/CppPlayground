@@ -11,11 +11,11 @@ jobs:
     - os: windows
       install: ./third_party/premake5/premake5.exe vs2017
       script:
-        - cmd /C "c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe"
-        - bash run_all_tests.sh
+        - 'c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe'
+        - run_all_tests.bat
 
 branches:
   only:
-  - master
+    - master
 
 cache: bin-int
