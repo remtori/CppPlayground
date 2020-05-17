@@ -1,5 +1,7 @@
 #include "StringUtils.h"
 
+#include <math.h>
+
 namespace ASL {
 
 inline void set(bool* ok, bool val)
@@ -91,9 +93,29 @@ double string_to_double(const StringView& str, bool* ok)
 
 double string_e_to_double(const StringView& str, bool* ok)
 {
-    // TODO: Implement
-    ASSERT_NOT_REACHED();
-    return 0;
+    auto it = str.index_of('e');
+    if (!it.has_value())
+        it = str.index_of('E');
+
+    if (!it.has_value()) {
+        set(ok, false);
+        return 0;
+    }
+
+    bool alright;
+    double v = string_to_double(str.substring_view(0, it.value()), &alright);
+    if (!alright) {
+        set(ok, alright);
+        return 0;
+    }
+
+    double power = string_to_int(str.substring_view(it.value() + 1), &alright);
+    if (!alright) {
+        set(ok, alright);
+        return 0;
+    }
+
+    return v * powf64(10, power);
 }
 
 } // namespace ASL

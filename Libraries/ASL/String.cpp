@@ -98,6 +98,11 @@ double String::to_double(bool* ok) const
     return string_to_double(*this, ok);
 }
 
+double String::to_double_as_exponent(bool* ok) const
+{
+    return string_e_to_double(*this, ok);
+}
+
 String::String(const StringView& view)
 {
     if (view.m_impl)

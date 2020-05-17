@@ -146,6 +146,9 @@ TEST_CASE("String", "[string]")
         REQUIRE(String("-34343").to_int() == -34343);
         REQUIRE(String("12334343").to_int() == 12334343);
         REQUIRE(String("-3.14").to_double() == -3.14);
+        REQUIRE(String("1.234e2").to_double_as_exponent() == 1.234e2);
+        REQUIRE(String("1.23E-2").to_double_as_exponent() == 1.23E-2);
+        REQUIRE(String("-1.234E5").to_double_as_exponent() == -1.234E5);
 
         bool ok;
 
@@ -162,6 +165,15 @@ TEST_CASE("String", "[string]")
         REQUIRE(!ok);
 
         String("-3-4.234").to_double(&ok);
+        REQUIRE(!ok);
+
+        String("-32e4.2").to_double_as_exponent(&ok);
+        REQUIRE(!ok);
+
+        String("-32fe42g").to_double_as_exponent(&ok);
+        REQUIRE(!ok);
+
+        String("-32ee4.2").to_double_as_exponent(&ok);
         REQUIRE(!ok);
     }
 
