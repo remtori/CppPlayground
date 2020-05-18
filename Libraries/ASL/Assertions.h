@@ -3,9 +3,21 @@
 #include "assert.h"
 
 #ifdef _MSC_VER
-#define ASSERT(x) if(!(x)) { __debugbreak(); assert(false); }
+#    define DEBUG_BREAK __debugbreak
 #else
-#define ASSERT assert
+#    define DEBUG_BREAK()
+#endif
+
+#ifndef DISABLE_ASSERT
+
+#    define ASSERT(x)      \
+        if (!(x)) {        \
+            assert((x));   \
+            DEBUG_BREAK(); \
+        }
+
+#else
+#    define ASSERT(x)
 #endif
 
 #define ASSERT_NOT_REACHED() ASSERT(false)

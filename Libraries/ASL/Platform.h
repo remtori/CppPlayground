@@ -1,5 +1,6 @@
 #pragma once
 
+// Platform detection
 #ifdef _WIN32
 #    define PLATFORM_WINDOWS
 #    ifdef _WIN64
@@ -26,13 +27,14 @@
 #    error "Unknown platform!"
 #endif
 
+// Endian bitswap
 #if defined(PLATFORM_LINUX)
 
 #    include <endian.h>
 
 #elif defined(PLATFORM_WINDOWS)
 
-#include "Types.h"
+#    include "Types.h"
 
 #    if defined(__GNUC__) || defined(__clang__)
 static inline uint16_t __bswap16(uint16_t x) { return __builtin_bswap16(x); }

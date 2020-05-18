@@ -58,8 +58,17 @@ function make_proj(name, src_dir, proj_kind)
 		}
 	end
 
-	filter { 'kind:SharedLib', 'system:Windows' }
+	filter { 'kind:SharedLib', 'system:windows' }
 		defines 'COMPILING_DLL'
+
+	filter { 'system:linux', 'configuration:Debug' }
+		linkoptions { '-rdynamic' }
+
+	filter 'system:linux'
+		toolset 'gcc'
+
+	filter 'system:windows'
+		toolset 'msc'
 
 	filter 'configurations:Debug'
 		defines 'DEBUG'
