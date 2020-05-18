@@ -24,7 +24,7 @@ struct ImageMetadata {
     u8 interlace_method;
 };
 
-bool PNGLoader::is_png_image(const ByteBuffer& buffer)
+bool is_png_image(const ByteBuffer& buffer)
 {
     if (buffer.size() <= 8)
         return false;
@@ -35,7 +35,7 @@ bool PNGLoader::is_png_image(const ByteBuffer& buffer)
 size_t decode_PLTE_chunk(BufferStream& buffer, size_t chunk_length, RefPtr<Bitmap> image);
 size_t decode_IDAT_chunk(BufferStream& buffer, size_t chunk_length, RefPtr<Bitmap> image);
 
-RefPtr<Bitmap> PNGLoader::load_from_data(ByteBuffer& buffer)
+RefPtr<Bitmap> load_png_from_data(ByteBuffer& buffer)
 {
     if (!is_png_image(buffer))
         return nullptr;
@@ -125,7 +125,7 @@ RefPtr<Bitmap> PNGLoader::load_from_data(ByteBuffer& buffer)
     dbg() << "PNG Decoder: The image does not have a graceful IEND chunk but its ok :)";
 }
 
-RefPtr<Bitmap> PNGLoader::load_from_file(const char* file_path)
+RefPtr<Bitmap> load_png_from_file(const char* file_path)
 {
     // TODO: Use Platform dependent ways to get the file size
     // And then maybe make a general FileReader/FileWriter to abstract thing away
@@ -142,7 +142,7 @@ RefPtr<Bitmap> PNGLoader::load_from_file(const char* file_path)
     fread(buffer.data(), 1, size, f);
     fclose(f);
 
-    return load_from_data(buffer);
+    return load_png_from_data(buffer);
 }
 
 size_t decode_PLTE_chunk(const BufferStream& stream, size_t chunk_length, RefPtr<Bitmap> image)
