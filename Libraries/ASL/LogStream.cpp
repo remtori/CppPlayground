@@ -33,6 +33,12 @@ DebugStream::~DebugStream()
     putchar('\n');
 }
 
+DebugStream& DebugStream::operator<<(bool b)
+{
+    printf(b ? "true" : "false");
+    return *this;
+}
+
 DebugStream& DebugStream::operator<<(char c)
 {
     printf("%c", c);

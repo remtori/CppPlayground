@@ -11,6 +11,7 @@ public:
     DebugStream() {}
     ~DebugStream();
 
+    DebugStream& operator<<(bool);
     DebugStream& operator<<(char);
     DebugStream& operator<<(const char*);
     DebugStream& operator<<(int);
