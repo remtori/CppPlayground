@@ -15,6 +15,11 @@ workspace 'CppPlayground'
 outputdir = '%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}'
 
 function make_proj(name, src_dir, proj_kind)
+
+	if (src_dir == nil) then
+		src_dir = name
+	end
+
 	project(name)
 	location(src_dir)
 	warnings 'Extra'

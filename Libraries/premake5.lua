@@ -1,21 +1,20 @@
-make_proj('ASL', './ASL')
+make_proj('ASL')
 	filter "system:windows"
 		links { 'Dbghelp' }
 	make_proj('TestASL', './ASL/Tests', 'Test')
 		links { 'ASL' }
 
-make_proj('Codec', './LibCodec')
-	links { 'ASL', 'Crypto' }
+make_proj('LibCodec')
+	links { 'ASL', 'LibCrypto' }
 	make_proj('TestCodec', './LibCodec/Tests', 'Test')
-		links { 'ASL', 'Codec', 'Crypto' }
+		links { 'ASL', 'LibCodec', 'LibCrypto' }
 
-make_proj('Crypto', './LibCrypto')
+make_proj('LibCrypto')
 	links { 'ASL' }
 	make_proj('TestCrypto', './LibCrypto/Tests', 'Test')
-		links { 'ASL', 'Crypto' }
+		links { 'ASL', 'LibCrypto' }
 
-
-make_proj('GUI', './LibGUI')
+make_proj('LibGUI')
 	links { 'ASL' }
 	filter "system:linux"
 		links { 'X11' }
@@ -23,5 +22,5 @@ make_proj('GUI', './LibGUI')
 	filter "system:windows"
 		files { './LibGUI/Platform/Windows/*.h', './LibGUI/Platform/Windows/*.cpp' }
 
-make_proj('JS', './LibJS')
+make_proj('LibJS')
 	links { 'ASL' }
