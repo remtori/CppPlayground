@@ -22,3 +22,6 @@ make_proj('GUI', './LibGUI')
 		files { './LibGUI/Platform/X11/*.h', './LibGUI/Platform/X11/*.cpp' }
 	filter "system:windows"
 		files { './LibGUI/Platform/Windows/*.h', './LibGUI/Platform/Windows/*.cpp' }
+
+make_proj('JS', './LibJS')
+	links { 'ASL' }
