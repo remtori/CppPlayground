@@ -1,2 +1,5 @@
 make_proj('ImageViewer', './ImageViewer', 'ConsoleApp')
-	links { 'LibGUI', 'ASL' }
+	links { 'ASL', 'LibGUI', }
+
+make_proj('JS', './JS', 'ConsoleApp')
+	links { 'ASL', 'LibJS', }

@@ -9,6 +9,12 @@
 
 namespace JS {
 
+template<class T, typename... Args>
+static inline NonnullRefPtr<T> create_ast_node(Args&&... args)
+{
+    return adopt(*new T(forward<Args>(args)...));
+}
+
 class ASTNode : public RefCounted<ASTNode> {
 public:
     virtual ~ASTNode() {}
@@ -21,7 +27,7 @@ class Expression : public ASTNode {
 
 class Program final : public Expression {
 public:
-    Program();
+    Program() {}
 
     void add_body(RefPtr<Expression> body)
     {
@@ -37,7 +43,7 @@ public:
 
     virtual JSValue run(Interpreter& interpreter) override
     {
-        m_body->run(interpreter);
+        return m_body->run(interpreter);
     };
 
     virtual const char* class_name() override { return "Program"; }

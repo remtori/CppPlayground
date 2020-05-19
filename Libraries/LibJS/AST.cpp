@@ -1,6 +1,7 @@
 #include "AST.h"
 
 #include "Interpreter.h"
+#include <ASL/LogStream.h>
 
 namespace JS {
 
@@ -21,6 +22,7 @@ JSValue BinaryExpression::run(Interpreter& interpreter)
 {
     JSValue left = m_left->run(interpreter);
     JSValue right = m_right->run(interpreter);
+
     switch (m_op) {
     case BinaryOp::Plus:
         return left + right;
