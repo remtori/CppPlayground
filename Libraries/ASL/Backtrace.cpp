@@ -2,6 +2,8 @@
 
 #include "Demangle.h"
 #include "LogStream.h"
+#include "String.h"
+#include <string.h>
 
 #ifdef PLATFORM_LINUX
 #    include <cxxabi.h>
@@ -47,7 +49,7 @@ void print_backtrace(int signal)
             *offset_begin++ = '\0';
             *offset_end++ = '\0';
 
-            dbg() << "[callstack]: (" << i << ") " << messages[i] << ": " << demangle(mangled_name);
+            dbg() << "[callstack]: (" << i << ") " << demangle(mangled_name);
         } else {
             dbg() << "[callstack]: (" << i << ") " << messages[i];
         }

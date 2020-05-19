@@ -2,6 +2,7 @@
 
 #include "ByteBuffer.h"
 #include "Forward.h"
+#include "StringFormat.h"
 
 namespace ASL {
 
@@ -24,6 +25,12 @@ public:
     void append_repeated(const StringView&, u32 times);
     void append_repeated(char, u32 times);
 
+    template<typename... Args>
+    void append_formatted(const StringView& fmt, Args&&... args)
+    {
+        append(format(fmt, forward<Args>(args)...));
+    }
+
 private:
     inline void will_append(size_t);
 
@@ -32,3 +39,5 @@ private:
 };
 
 } // namespace ASL
+
+using ASL::StringBuilder;

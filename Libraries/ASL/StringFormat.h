@@ -4,7 +4,6 @@
 #include "HashMap.h"
 #include "StdLibExtras.h"
 #include "String.h"
-#include "StringBuilder.h"
 #include "StringView.h"
 #include "TryToString.h"
 #include "Vector.h"
@@ -33,6 +32,7 @@ template<typename T>
 static constexpr String format_argument(const T& value, FieldFormat format);
 
 LIB_API String extract_field_format(const StringView&, Vector<FieldFormat>&);
+LIB_API String build_result(Vector<FieldFormat> field_formats, HashMap<size_t, String> field_values);
 
 template<class... Args>
 String format(const StringView& fmt, const Args&... input_args)
@@ -64,28 +64,7 @@ String format(const StringView& fmt, const Args&... input_args)
 
     (resolve(input_args), ...);
 
-    StringBuilder builder;
-
-    for (size_t i = 0; i < field_formats.size(); ++i) {
-        auto field = field_formats[i];
-        if (!field.is_raw) {
-            String value = field_values.get_or(i, "Invalid index");
-
-            int space_count = abs(field.padding) - value.length();
-            if (space_count > 0 && field.padding > 0)
-                builder.append_repeated(' ', space_count);
-
-            builder.append(value);
-
-            if (space_count > 0 && field.padding < 0)
-                builder.append_repeated(' ', space_count);
-
-        } else {
-            builder.append(field.string);
-        }
-    }
-
-    return builder.to_string();
+    return build_result(field_formats, field_values);
 }
 
 template<typename T>

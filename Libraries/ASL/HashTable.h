@@ -267,7 +267,8 @@ public:
 
     void ensure_capacity(size_t new_capacity)
     {
-        ASSERT(new_capacity > m_size);
+        if (new_capacity < m_size)
+            return;
 
         new_capacity *= 2;
         auto* new_buckets = new Bucket[new_capacity];

@@ -4,7 +4,7 @@
 #include "Forward.h"
 #include "StdLibExtras.h"
 #include "String.h"
-#include "StringBuilder.h"
+#include <stdio.h>
 
 namespace ASL {
 
@@ -32,11 +32,10 @@ String try_to_string(const T& any)
     if (!result.is_empty())
         return result;
 
-    StringBuilder builder(96);
-    builder.append("<error>class ");
-    builder.append(demangle(typeid(T).name()));
-    builder.append(" is missing ::to_string() method</error>");
-    return builder.to_string();
+    static char buf[96];
+    String class_name = demangle(typeid(T).name());
+    size_t size = snprintf(buf, 96, "<error>Can not stringify %s </error>", class_name.characters());
+    return { buf, size };
 }
 
 } // namespace ASL
