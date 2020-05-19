@@ -52,7 +52,7 @@ public:
 
     template<typename U>
     NonnullRefPtr(const NonnullRefPtr<U>& other)
-        : m_ptr(other.m_ptr)
+        : m_ptr(const_cast<U*>(other.ptr()))
     {
         ref(m_ptr);
     }
