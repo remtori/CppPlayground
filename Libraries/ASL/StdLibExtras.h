@@ -316,7 +316,7 @@ struct IsFloatingPoint : __IsFloatHelper<typename RemoveCV<T>::Type> {
 
 template<typename T>
 struct IsCString {
-    static const bool value = IsSame<char, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value || IsSame<char*, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value || IsSame<char* const, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value;
+    static const bool value = IsSame<char, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value || IsSame<char*, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value || IsSame<char* const, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value || IsSame<const char*, typename RemoveReference<typename RemoveCV<T>::Type>::Type>::value;
 };
 
 template<typename T>
