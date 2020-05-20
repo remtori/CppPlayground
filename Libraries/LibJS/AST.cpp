@@ -75,6 +75,11 @@ Value AssignmentExpression::run(Interpreter& interpreter) const
     return value;
 }
 
+Value ExpressionStatement::run(Interpreter& interpreter) const
+{
+    return m_expression->run(interpreter);
+}
+
 void space(int indent)
 {
     putchar('\n');
@@ -177,6 +182,12 @@ void AssignmentExpression::dump(int indent) const
 {
     ASTNode::dump(indent);
     m_identifier->dump(indent + 2);
+    m_expression->dump(indent + 2);
+}
+
+void ExpressionStatement::dump(int indent) const
+{
+    ASTNode::dump(indent);
     m_expression->dump(indent + 2);
 }
 

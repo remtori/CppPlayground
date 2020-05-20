@@ -32,16 +32,14 @@ class Expression : public ASTNode {
 class Statement : public ASTNode {
 };
 
-// Declaration is more of a Statement than an Expression
-// However this has to do for now
-class Declaration : public Expression {
+class Declaration : public Statement {
 };
 
 class Program final : public Expression {
 public:
     Program() {}
 
-    void append(NonnullRefPtr<Expression> body)
+    void append(NonnullRefPtr<Statement> body)
     {
         m_statements.append(body);
     }
@@ -65,7 +63,7 @@ public:
     void dump(int indent) const override;
 
 private:
-    Vector<NonnullRefPtr<Expression>> m_statements;
+    Vector<NonnullRefPtr<Statement>> m_statements;
     String m_error;
 };
 
@@ -217,6 +215,21 @@ public:
 
 private:
     NonnullRefPtr<Identifier> m_identifier;
+    NonnullRefPtr<Expression> m_expression;
+};
+
+class ExpressionStatement : public Statement {
+public:
+    explicit ExpressionStatement(NonnullRefPtr<Expression> expression)
+        : m_expression(expression)
+    {
+    }
+
+    Value run(Interpreter&) const override;
+    const char* class_name() const override { return "ExpressionStatement"; }
+    void dump(int indent) const override;
+
+private:
     NonnullRefPtr<Expression> m_expression;
 };
 

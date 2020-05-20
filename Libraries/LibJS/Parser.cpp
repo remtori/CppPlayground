@@ -146,10 +146,35 @@ Associativity Parser::operator_associativity(TokenType type) const
 NonnullRefPtr<Program> Parser::parse_program()
 {
     auto program = create_ast_node<Program>();
-    while (m_current_token.type() != TokenType::Eof)
-        program->append(parse_expression(0));
+    while (!done()) {
+        if (match_statement()) {
+            program->append(parse_statement());
+        } else {
+            expected("statement");
+            break;
+        }
+    }
 
     return program;
+}
+
+NonnullRefPtr<Statement> Parser::parse_statement()
+{
+    switch (m_current_token.type()) {
+    case TokenType::Var:
+    case TokenType::Let:
+    case TokenType::Const:
+        return parse_variable_declaration();
+    default: {
+        if (match_expression()) {
+            auto expression = parse_expression(0);
+            consume_semicolon();
+            return create_ast_node<ExpressionStatement>(expression);
+        } else {
+            expected("statement");
+        }
+    }
+    }
 }
 
 NonnullRefPtr<Expression> Parser::parse_expression(int min_precedence, Associativity associativity)
@@ -183,31 +208,8 @@ NonnullRefPtr<Expression> Parser::parse_primary_expression()
     }
     case TokenType::NumericLiteral:
         return create_ast_node<NumericLiteral>(consume().double_value());
-    case TokenType::Var:
-    case TokenType::Let:
-    case TokenType::Const:
-        return parse_variable_declaration();
-    case TokenType::Identifier: {
-        auto identifier = create_ast_node<Identifier>(consume().value());
-
-        if (m_current_token.type() == TokenType::Equals) {
-            // Assignment Expression
-            consume();
-            auto assignment_expression = create_ast_node<AssignmentExpression>(
-                identifier,
-                parse_expression(0));
-
-            if (m_current_token.type() == TokenType::Semicolon)
-                consume();
-
-            return assignment_expression;
-        } else if (match_secondary_expression()) {
-            return parse_secondary_expression(identifier, 0);
-        } else {
-            expected("Equals");
-        }
-        break;
-    }
+    case TokenType::Identifier:
+        return create_ast_node<Identifier>(consume().value());
     default:
         expected("primary expression (missing switch case)");
         consume();
@@ -229,6 +231,14 @@ NonnullRefPtr<Expression> Parser::parse_secondary_expression(NonnullRefPtr<Expre
     case TokenType::Slash:
         consume();
         return create_ast_node<BinaryExpression>(BinaryOp::Div, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::Equals:
+        consume();
+        if (!lhs->is_identifier()) {
+            dbg() << "Illegal assignment expression";
+            ASSERT_NOT_REACHED();
+        }
+        return create_ast_node<AssignmentExpression>(move(lhs), parse_expression(min_precedence, associativity));
+
     default:
         expected("secondary expression (missing switch case)");
         consume();
@@ -273,28 +283,25 @@ NonnullRefPtr<VariableDeclaration> Parser::parse_variable_declaration()
         ASSERT_NOT_REACHED();
     }
 
+    static const int min_precedence = operator_precedence(TokenType::Comma) + 1;
+
     for (;;) {
-        auto identifier_token = consume(TokenType::Identifier);
+        auto id = consume(TokenType::Identifier).value();
+        RefPtr<Expression> init;
         if (m_current_token.type() == TokenType::Equals) {
             consume();
-            declarators.append(
-                create_ast_node<VariableDeclarator>(
-                    create_ast_node<Identifier>(identifier_token.value()), parse_expression(0)));
-        } else {
-            declarators.append(
-                create_ast_node<VariableDeclarator>(
-                    create_ast_node<Identifier>(identifier_token.value())));
+            init = parse_expression(min_precedence);
         }
 
-        if (m_current_token.type() == TokenType::Comma) {
+        declarators.append(create_ast_node<VariableDeclarator>(create_ast_node<Identifier>(id), init));
+
+        if (m_current_token.type() == TokenType::Comma)
             consume();
-        } else {
+        else
             break;
-        }
     }
 
-    if (m_current_token.type() == TokenType::Semicolon)
-        consume();
+    consume_semicolon();
 
     return create_ast_node<VariableDeclaration>(declaration_kind, declarators);
 }
@@ -329,27 +336,67 @@ void Parser::syntax_error(const String& message, size_t line, size_t column)
     ASSERT_NOT_REACHED();
 }
 
+void Parser::consume_semicolon()
+{
+    if (m_current_token.type() == TokenType::Semicolon) {
+        consume();
+        return;
+    }
+
+    // Assume semicolon if...
+    // ...token is preceeded by a new line
+    if (m_current_token.trivia().contains('\n'))
+        return;
+
+    // ...token match a closing curly bracket
+    if (m_current_token.type() == TokenType::CurlyClose)
+        return;
+
+    // ...its the last token
+    if (m_current_token.type() == TokenType::Eof)
+        return;
+
+    expected("semicolon");
+}
+
 bool Parser::done() const
 {
     return m_current_token.type() == TokenType::Eof;
 }
 
+bool Parser::match_statement() const
+{
+    auto type = m_current_token.type();
+    return match_expression()
+        || type == TokenType::Var
+        || type == TokenType::Let
+        || type == TokenType::Const;
+}
+
 bool Parser::match_expression() const
 {
     auto type = m_current_token.type();
-    return match_unary_expression() || type == TokenType::ParenOpen || type == TokenType::NumericLiteral;
+    return match_unary_expression()
+        || type == TokenType::ParenOpen
+        || type == TokenType::NumericLiteral
+        || type == TokenType::Identifier;
 }
 
 bool Parser::match_unary_expression() const
 {
     auto type = m_current_token.type();
-    return type == TokenType::Plus || type == TokenType::Minus;
+    return type == TokenType::Plus
+        || type == TokenType::Minus;
 }
 
 bool Parser::match_secondary_expression() const
 {
     auto type = m_current_token.type();
-    return type == TokenType::Plus || type == TokenType::Minus || type == TokenType::Asterisk || type == TokenType::Slash;
+    return type == TokenType::Plus
+        || type == TokenType::Minus
+        || type == TokenType::Asterisk
+        || type == TokenType::Slash
+        || type == TokenType::Equals;
 }
 
 } // namespace JS
