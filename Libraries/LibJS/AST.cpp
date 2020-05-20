@@ -5,9 +5,9 @@
 
 namespace JS {
 
-JSValue UnaryExpression::run(Interpreter& interpreter)
+Value UnaryExpression::run(Interpreter& interpreter) const
 {
-    JSValue value = m_expression->run(interpreter);
+    Value value = m_expression->run(interpreter);
     switch (m_op) {
     case UnaryOp::Plus:
         return value;
@@ -18,10 +18,10 @@ JSValue UnaryExpression::run(Interpreter& interpreter)
     }
 }
 
-JSValue BinaryExpression::run(Interpreter& interpreter)
+Value BinaryExpression::run(Interpreter& interpreter) const
 {
-    JSValue left = m_left->run(interpreter);
-    JSValue right = m_right->run(interpreter);
+    Value left = m_left->run(interpreter);
+    Value right = m_right->run(interpreter);
 
     switch (m_op) {
     case BinaryOp::Plus:
@@ -37,6 +37,44 @@ JSValue BinaryExpression::run(Interpreter& interpreter)
     }
 }
 
+Value Identifier::run(Interpreter& interpreter) const
+{
+    auto value = interpreter.get_variable(string());
+    // if (!value) {
+    //     dbg() << "Identifier '" << string() << "' not known";
+    //     ASSERT_NOT_REACHED();
+    // }
+
+    return value;
+}
+
+Value VariableDeclarator::run(Interpreter& interpreter) const
+{
+    // Note: Everything is handled by VariableDeclaration
+    ASSERT_NOT_REACHED();
+    return 0;
+}
+
+Value VariableDeclaration::run(Interpreter& interpreter) const
+{
+    for (auto& declarator : m_declarations) {
+        if (auto* init = declarator->init()) {
+            auto initializer_result = init->run(interpreter);
+            auto variable_name = declarator->id().string();
+            interpreter.set_variable(variable_name, initializer_result);
+        }
+    }
+
+    return 0;
+}
+
+Value AssignmentExpression::run(Interpreter& interpreter) const
+{
+    auto value = m_expression->run(interpreter);
+    interpreter.set_variable(m_identifier->string(), value);
+    return value;
+}
+
 void space(int indent)
 {
     putchar('\n');
@@ -44,19 +82,20 @@ void space(int indent)
         putchar(' ');
 }
 
-void ASTNode::dump(int indent)
+void ASTNode::dump(int indent) const
 {
     space(indent);
     printf("%s ", class_name());
 }
 
-void Program::dump(int indent)
+void Program::dump(int indent) const
 {
     ASTNode::dump(indent);
-    m_body->dump(indent + 2);
+    for (const auto& statement : m_statements)
+        statement->dump(indent + 2);
 }
 
-void UnaryExpression::dump(int indent)
+void UnaryExpression::dump(int indent) const
 {
     ASTNode::dump(indent);
 
@@ -72,7 +111,7 @@ void UnaryExpression::dump(int indent)
     m_expression->dump(indent + 2);
 }
 
-void BinaryExpression::dump(int indent)
+void BinaryExpression::dump(int indent) const
 {
     ASTNode::dump(indent);
 
@@ -95,10 +134,50 @@ void BinaryExpression::dump(int indent)
     m_right->dump(indent + 2);
 }
 
-void NumericLiteral::dump(int indent)
+void NumericLiteral::dump(int indent) const
 {
     ASTNode::dump(indent);
     printf("%lf", m_value);
+}
+
+void Identifier::dump(int indent) const
+{
+    ASTNode::dump(indent);
+    printf(" \"%s\"", m_string.characters());
+}
+
+void VariableDeclarator::dump(int indent) const
+{
+    ASTNode::dump(indent);
+    m_id->dump(indent + 2);
+    if (!m_init.is_null())
+        m_init->dump(indent + 2);
+}
+
+void VariableDeclaration::dump(int indent) const
+{
+    ASTNode::dump(indent);
+    switch (m_declaration_kind) {
+    case DeclarationKind::Const:
+        printf("const");
+        break;
+    case DeclarationKind::Let:
+        printf("let");
+        break;
+    case DeclarationKind::Var:
+        printf("var");
+        break;
+    }
+
+    for (const auto& d : m_declarations)
+        d->dump(indent + 2);
+}
+
+void AssignmentExpression::dump(int indent) const
+{
+    ASTNode::dump(indent);
+    m_identifier->dump(indent + 2);
+    m_expression->dump(indent + 2);
 }
 
 } // namespace JS

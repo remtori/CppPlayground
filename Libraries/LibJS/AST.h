@@ -4,6 +4,7 @@
 
 #include <ASL/NonnullRefPtr.h>
 #include <ASL/RefCounted.h>
+#include <ASL/SharedString.h>
 #include <ASL/String.h>
 #include <ASL/Types.h>
 
@@ -18,23 +19,31 @@ static inline NonnullRefPtr<T> create_ast_node(Args&&... args)
 class ASTNode : public RefCounted<ASTNode> {
 public:
     virtual ~ASTNode() {}
-    virtual JSValue run(Interpreter&) = 0;
-    virtual const char* class_name() = 0;
-    virtual void dump(int indent);
+    virtual Value run(Interpreter&) const = 0;
+    virtual const char* class_name() const = 0;
+    virtual void dump(int indent) const;
+
+    virtual bool is_identifier() const { return false; }
 };
 
 class Expression : public ASTNode {
+};
+
+class Statement : public ASTNode {
+};
+
+// Declaration is more of a Statement than an Expression
+// However this has to do for now
+class Declaration : public Expression {
 };
 
 class Program final : public Expression {
 public:
     Program() {}
 
-    void dump(int indent) override;
-
-    void add_body(RefPtr<Expression> body)
+    void append(NonnullRefPtr<Expression> body)
     {
-        m_body = body;
+        m_statements.append(body);
     }
 
     void add_error(const String& err)
@@ -44,15 +53,19 @@ public:
 
     bool has_error() const { return !m_error.is_empty(); }
 
-    virtual JSValue run(Interpreter& interpreter) override
+    virtual Value run(Interpreter& interpreter) const override
     {
-        return m_body->run(interpreter);
+        Value value;
+        for (const auto& statement : m_statements)
+            value = statement->run(interpreter);
+        return value;
     };
 
-    virtual const char* class_name() override { return "Program"; }
+    virtual const char* class_name() const override { return "Program"; }
+    void dump(int indent) const override;
 
 private:
-    RefPtr<Expression> m_body;
+    Vector<NonnullRefPtr<Expression>> m_statements;
     String m_error;
 };
 
@@ -69,9 +82,9 @@ public:
     {
     }
 
-    virtual JSValue run(Interpreter&) override;
-    virtual const char* class_name() override { return "UnaryExpression"; }
-    void dump(int indent) override;
+    virtual Value run(Interpreter&) const override;
+    virtual const char* class_name() const override { return "UnaryExpression"; }
+    void dump(int indent) const override;
 
 private:
     UnaryOp m_op;
@@ -94,9 +107,9 @@ public:
     {
     }
 
-    virtual JSValue run(Interpreter&) override;
-    virtual const char* class_name() override { return "BinaryExpression"; }
-    void dump(int indent) override;
+    virtual Value run(Interpreter&) const override;
+    virtual const char* class_name() const override { return "BinaryExpression"; }
+    void dump(int indent) const override;
 
 private:
     BinaryOp m_op;
@@ -114,12 +127,97 @@ public:
         m_value = value;
     }
 
-    virtual JSValue run(Interpreter&) override { return m_value; }
-    virtual const char* class_name() override { return "NumericLiteral"; }
-    void dump(int indent) override;
+    virtual Value run(Interpreter&) const override { return m_value; }
+    virtual const char* class_name() const override { return "NumericLiteral"; }
+    void dump(int indent) const override;
 
 private:
     double m_value = 0;
+};
+
+class Identifier final : public Expression {
+public:
+    explicit Identifier(const SharedString& str)
+        : m_string(str)
+    {
+    }
+
+    const SharedString& string() const { return m_string; }
+
+    virtual Value run(Interpreter&) const override;
+    virtual const char* class_name() const override { return "Identifier"; }
+    void dump(int indent) const override;
+
+    bool is_identifier() const override { return true; }
+
+private:
+    SharedString m_string;
+};
+
+class VariableDeclarator final : public Expression {
+public:
+    explicit VariableDeclarator(NonnullRefPtr<Identifier> id, RefPtr<Expression> init = nullptr)
+        : m_id(id)
+        , m_init(init)
+    {
+    }
+
+    const Identifier& id() const { return *m_id; }
+    const Expression* init() const { return m_init.ptr(); }
+
+    Value run(Interpreter&) const override;
+    const char* class_name() const override { return "VariableDeclarator"; }
+    void dump(int indent) const override;
+
+private:
+    NonnullRefPtr<Identifier> m_id;
+    RefPtr<Expression> m_init;
+};
+
+enum class DeclarationKind {
+    Var,
+    Let,
+    Const,
+};
+
+class VariableDeclaration : public Declaration {
+public:
+    explicit VariableDeclaration(DeclarationKind declaration_kind, Vector<NonnullRefPtr<VariableDeclarator>> declarators)
+        : m_declaration_kind(declaration_kind)
+        , m_declarations(move(declarators))
+    {
+    }
+
+    DeclarationKind declaration_kind() const { return m_declaration_kind; }
+    const Vector<NonnullRefPtr<VariableDeclarator>>& declarations() const { return m_declarations; }
+
+    virtual Value run(Interpreter&) const override;
+    virtual const char* class_name() const override { return "VariableDeclaration"; }
+    virtual void dump(int indent) const override;
+
+private:
+    DeclarationKind m_declaration_kind;
+    Vector<NonnullRefPtr<VariableDeclarator>> m_declarations;
+};
+
+class AssignmentExpression final : public Expression {
+public:
+    explicit AssignmentExpression(NonnullRefPtr<Identifier> identifier, NonnullRefPtr<Expression> expression)
+        : m_identifier(identifier)
+        , m_expression(expression)
+    {
+    }
+
+    const Identifier& identifier() const { return *m_identifier; }
+    const Expression* expression() const { return m_expression.ptr(); }
+
+    Value run(Interpreter&) const override;
+    const char* class_name() const override { return "AssignmentExpression"; }
+    void dump(int indent) const override;
+
+private:
+    NonnullRefPtr<Identifier> m_identifier;
+    NonnullRefPtr<Expression> m_expression;
 };
 
 } // namespace JS

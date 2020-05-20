@@ -20,6 +20,7 @@ public:
     NonnullRefPtr<Expression> parse_primary_expression();
     NonnullRefPtr<Expression> parse_secondary_expression(NonnullRefPtr<Expression>, int min_precedence, Associativity associate = Associativity::Right);
     NonnullRefPtr<UnaryExpression> parse_unary_expression();
+    NonnullRefPtr<VariableDeclaration> parse_variable_declaration();
 
 private:
     Token consume();

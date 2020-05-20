@@ -146,7 +146,9 @@ Associativity Parser::operator_associativity(TokenType type) const
 NonnullRefPtr<Program> Parser::parse_program()
 {
     auto program = create_ast_node<Program>();
-    program->add_body(parse_expression(0));
+    while (m_current_token.type() != TokenType::Eof)
+        program->append(parse_expression(0));
+
     return program;
 }
 
@@ -181,6 +183,31 @@ NonnullRefPtr<Expression> Parser::parse_primary_expression()
     }
     case TokenType::NumericLiteral:
         return create_ast_node<NumericLiteral>(consume().double_value());
+    case TokenType::Var:
+    case TokenType::Let:
+    case TokenType::Const:
+        return parse_variable_declaration();
+    case TokenType::Identifier: {
+        auto identifier = create_ast_node<Identifier>(consume().value());
+
+        if (m_current_token.type() == TokenType::Equals) {
+            // Assignment Expression
+            consume();
+            auto assignment_expression = create_ast_node<AssignmentExpression>(
+                identifier,
+                parse_expression(0));
+
+            if (m_current_token.type() == TokenType::Semicolon)
+                consume();
+
+            return assignment_expression;
+        } else if (match_secondary_expression()) {
+            return parse_secondary_expression(identifier, 0);
+        } else {
+            expected("Equals");
+        }
+        break;
+    }
     default:
         expected("primary expression (missing switch case)");
         consume();
@@ -223,6 +250,55 @@ NonnullRefPtr<UnaryExpression> Parser::parse_unary_expression()
     }
 }
 
+NonnullRefPtr<VariableDeclaration> Parser::parse_variable_declaration()
+{
+    Vector<NonnullRefPtr<VariableDeclarator>> declarators;
+    DeclarationKind declaration_kind;
+
+    switch (m_current_token.type()) {
+    case TokenType::Var:
+        consume();
+        declaration_kind = DeclarationKind::Var;
+        break;
+    case TokenType::Let:
+        consume();
+        declaration_kind = DeclarationKind::Let;
+        break;
+    case TokenType::Const:
+        consume();
+        declaration_kind = DeclarationKind::Const;
+        break;
+
+    default:
+        ASSERT_NOT_REACHED();
+    }
+
+    for (;;) {
+        auto identifier_token = consume(TokenType::Identifier);
+        if (m_current_token.type() == TokenType::Equals) {
+            consume();
+            declarators.append(
+                create_ast_node<VariableDeclarator>(
+                    create_ast_node<Identifier>(identifier_token.value()), parse_expression(0)));
+        } else {
+            declarators.append(
+                create_ast_node<VariableDeclarator>(
+                    create_ast_node<Identifier>(identifier_token.value())));
+        }
+
+        if (m_current_token.type() == TokenType::Comma) {
+            consume();
+        } else {
+            break;
+        }
+    }
+
+    if (m_current_token.type() == TokenType::Semicolon)
+        consume();
+
+    return create_ast_node<VariableDeclaration>(declaration_kind, declarators);
+}
+
 Token Parser::consume(TokenType token)
 {
     if (m_current_token.type() != token)
@@ -239,7 +315,7 @@ Token Parser::consume()
 
 void Parser::expected(const char* what)
 {
-    syntax_error(String::format("Unexpected token {}. Expected {}", m_current_token.name(), what));
+    syntax_error(String::format("Unexpected token {}. Expected {}", Token::name(m_current_token.type()), what));
 }
 
 void Parser::syntax_error(const String& message, size_t line, size_t column)
