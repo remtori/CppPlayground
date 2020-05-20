@@ -8,11 +8,11 @@ jobs:
       script:
         - make
         - ./run_all_tests.sh
-    - os: windows
-      install: ./third_party/premake5/premake5.exe vs2017
-      script:
-        - '"c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe"'
-        - run_all_tests.bat
+    # - os: windows
+    #   install: ./third_party/premake5/premake5.exe vs2017
+    #   script:
+    #     - '"c:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin\MSBuild.exe"'
+    #     - run_all_tests.bat
 
 branches:
   only:
