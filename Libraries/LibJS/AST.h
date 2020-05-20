@@ -20,6 +20,7 @@ public:
     virtual ~ASTNode() {}
     virtual JSValue run(Interpreter&) = 0;
     virtual const char* class_name() = 0;
+    virtual void dump(int indent);
 };
 
 class Expression : public ASTNode {
@@ -28,6 +29,8 @@ class Expression : public ASTNode {
 class Program final : public Expression {
 public:
     Program() {}
+
+    void dump(int indent) override;
 
     void add_body(RefPtr<Expression> body)
     {
@@ -68,6 +71,7 @@ public:
 
     virtual JSValue run(Interpreter&) override;
     virtual const char* class_name() override { return "UnaryExpression"; }
+    void dump(int indent) override;
 
 private:
     UnaryOp m_op;
@@ -92,6 +96,7 @@ public:
 
     virtual JSValue run(Interpreter&) override;
     virtual const char* class_name() override { return "BinaryExpression"; }
+    void dump(int indent) override;
 
 private:
     BinaryOp m_op;
@@ -110,8 +115,8 @@ public:
     }
 
     virtual JSValue run(Interpreter&) override { return m_value; }
-
     virtual const char* class_name() override { return "NumericLiteral"; }
+    void dump(int indent) override;
 
 private:
     double m_value = 0;
