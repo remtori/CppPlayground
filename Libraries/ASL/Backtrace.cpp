@@ -52,10 +52,11 @@ void print_backtrace(int signal)
         } else {
             dbg() << "[callstack]: (" << i << ") " << messages[i];
         }
+    }
 #elif defined(PLATFORM_WINDOWS)
 
 #endif
-    }
-} // namespace ASL
+    exit(1);
+}
 
 } // namespace ASL
