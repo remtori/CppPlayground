@@ -1,3 +1,4 @@
+#include <ASL/File.h>
 #include <ASL/HookMain.h>
 #include <ASL/LogStream.h>
 #include <LibJS/AST.h>
@@ -7,22 +8,28 @@
 
 ASL_MAIN()
 {
-    String source = "(4 + 3) * 5 - 2 / 2 * 3";
-    StringView source_view = source.view();
-
     auto interpreter = JS::Interpreter::create();
 
-    // JS::Lexer lexer(source);
-    // JS::Token token = lexer.next_token();
-    // while (token.type() != JS::TokenType::Eof) {
-    //     dbg() << JS::Token::name(token.type()) << ' ' << token.value();
-    //     token = lexer.next_token();
-    // }
+    if (argc < 2)
+        return 0;
+
+    File source_file(argv[1]);
+    if (!source_file.open(File::Read)) {
+        dbg() << "Can not open file " << source_file.filename();
+        return 0;
+    }
+
+    String source(source_file.read_all());
+    StringView source_view = source.view();
 
     JS::Parser parser(source_view);
     auto program = parser.parse_program();
     dbg() << interpreter->run(*program);
-    program->dump(0);
+
+    if (argc > 2) {
+        program->dump(0);
+        printf("\n");
+    }
 
     return 0;
 }
