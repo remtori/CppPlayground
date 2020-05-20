@@ -1,7 +1,6 @@
 #include <catch2/catch2.hpp>
 
 #include <ASL/JsonParser.h>
-#include <ASL/StringFormat.h>
 
 TEST_CASE("JSON Parser and Stringify", "[parser]")
 {

@@ -2,7 +2,6 @@
 
 #include "Forward.h"
 #include "String.h"
-#include "TryToString.h"
 
 namespace ASL {
 
@@ -27,12 +26,6 @@ public:
     DebugStream& operator<<(const StringView&);
     DebugStream& operator<<(const SharedString&);
     DebugStream& operator<<(const String&);
-
-    template<typename T>
-    DebugStream& operator<<(const T& any)
-    {
-        return *this << try_to_string(any);
-    }
 };
 
 LIB_API DebugStream dbg(const char* name = nullptr);

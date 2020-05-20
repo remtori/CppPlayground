@@ -1,7 +1,9 @@
 #pragma once
 
 #include "ByteBuffer.h"
+#include "Demangle.h"
 #include "Forward.h"
+#include "HashMap.h"
 #include "NumericLimits.h"
 #include "Optional.h"
 #include "RefPtr.h"
@@ -9,6 +11,7 @@
 #include "StringView.h"
 #include "Traits.h"
 #include "Vector.h"
+#include <stdio.h>
 
 namespace ASL {
 
@@ -26,6 +29,8 @@ public:
     static String number(long long);
     static String number(double);
     static String repeated(char, size_t count);
+    template<class... Args>
+    static String format(const StringView& fmt, const Args&... input_args);
 
     String() {}
     ~String() {}
@@ -176,6 +181,112 @@ LIB_API bool operator<(const char*, const String&);
 LIB_API bool operator>=(const char*, const String&);
 LIB_API bool operator>(const char*, const String&);
 LIB_API bool operator<=(const char*, const String&);
+
+////////////////////////// String format implementation //////////////////////////////
+
+struct FieldFormat {
+    bool is_raw = false;
+    int padding = 0;
+    int precision = 4;
+    size_t field_index = -1;
+    StringView string;
+
+    FieldFormat() {}
+    ~FieldFormat() {}
+
+    FieldFormat(bool raw, const StringView& str)
+        : is_raw(raw)
+        , string(str)
+    {
+    }
+};
+
+LIB_API String extract_field_format(const StringView&, Vector<FieldFormat>&);
+LIB_API String build_result(Vector<FieldFormat> field_formats, HashMap<size_t, String> field_values);
+
+template<class T>
+constexpr auto call_to_string_if_present(const T& obj, String& result) -> decltype(obj.to_string(), TrueType {})
+{
+    result = obj.to_string();
+    return {};
+}
+
+constexpr auto call_to_string_if_present(...) -> FalseType { return {}; }
+
+template<typename T>
+String try_to_string(const T& any)
+{
+    if constexpr (CanConstructString<T>::value)
+        return any;
+
+    String result;
+    if constexpr (IsPointer<T>::value)
+        call_to_string_if_present(*any, result);
+    else
+        call_to_string_if_present(any, result);
+
+    if (!result.is_empty())
+        return result;
+
+    static char buf[96];
+    String class_name = demangle(typeid(T).name());
+    size_t size = snprintf(buf, 96, "<error>Can not stringify %s </error>", class_name.characters());
+    return { buf, size };
+}
+
+template<typename T>
+static constexpr String format_argument(const T& value, FieldFormat format)
+{
+    if constexpr (IsInteger<T>::value)
+        return String::number(value);
+
+    if constexpr (IsSame<T, float>::value) {
+        char buf[32];
+        int size = sprintf(buf, "%.*f", format.precision, value);
+        return String(buf, size);
+    }
+
+    if constexpr (IsSame<T, double>::value) {
+        char buf[32];
+        int size = sprintf(buf, "%.*lf", format.precision, value);
+        return String(buf, size);
+    }
+
+    return try_to_string(value);
+}
+
+template<class... Args>
+String String::format(const StringView& fmt, const Args&... input_args)
+{
+    // TODO: Maybe we can also format value to hex or binary format
+    Vector<FieldFormat> field_formats;
+
+    String error = extract_field_format(fmt, field_formats);
+    if (!error.is_empty())
+        return error;
+
+    HashMap<size_t, String> field_values;
+
+    size_t input_arg_count = 0;
+    auto index_finder = [&input_arg_count](const FieldFormat& f) {
+        return f.field_index == input_arg_count;
+    };
+
+    auto resolve = [&](auto&& arg) {
+        auto it = field_formats.find(index_finder);
+
+        while (it != field_formats.end()) {
+            field_values.set(it.index(), format_argument(arg, *it));
+            it = field_formats.find(index_finder, it.index() + 1);
+        }
+
+        ++input_arg_count;
+    };
+
+    (resolve(input_args), ...);
+
+    return build_result(field_formats, field_values);
+}
 
 }; // namespace ASL
 

@@ -2,7 +2,7 @@
 
 #include "ByteBuffer.h"
 #include "Forward.h"
-#include "StringFormat.h"
+#include "String.h"
 
 namespace ASL {
 
@@ -28,7 +28,7 @@ public:
     template<typename... Args>
     void append_formatted(const StringView& fmt, Args&&... args)
     {
-        append(format(fmt, forward<Args>(args)...));
+        append(String::format(fmt, forward<Args>(args)...));
     }
 
 private:

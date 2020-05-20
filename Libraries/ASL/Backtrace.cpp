@@ -2,7 +2,6 @@
 
 #include "Demangle.h"
 #include "LogStream.h"
-#include "String.h"
 #include <string.h>
 
 #ifdef PLATFORM_LINUX
