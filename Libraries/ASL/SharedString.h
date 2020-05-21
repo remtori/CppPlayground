@@ -17,6 +17,7 @@ public:
     {
     }
 
+    SharedString(const StringImpl*);
     SharedString(const String&);
     SharedString(const StringView&);
     SharedString(const char*);

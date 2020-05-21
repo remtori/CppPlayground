@@ -94,3 +94,5 @@ inline constexpr u32 string_hash(const char* characters, size_t length)
 }
 
 } // namespace ASL
+
+using ASL::StringImpl;

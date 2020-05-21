@@ -40,6 +40,24 @@ void SharedString::will_destroy_impl(StringImpl* ptr)
     shared_impls().remove(ptr);
 }
 
+SharedString::SharedString(const StringImpl* impl)
+{
+    if (impl->is_shared()) {
+        m_impl = impl;
+        return;
+    }
+
+    auto it = shared_impls().find(const_cast<StringImpl*>(impl));
+    if (it == shared_impls().end()) {
+        shared_impls().set(const_cast<StringImpl*>(impl));
+        impl->set_shared(true);
+        m_impl = impl;
+    } else {
+        ASSERT((*it)->is_shared());
+        m_impl = *it;
+    }
+}
+
 SharedString::SharedString(const String& string)
 {
     if (string.is_null())
