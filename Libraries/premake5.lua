@@ -24,3 +24,4 @@ make_proj('LibGUI')
 
 make_proj('LibJS')
 	links { 'ASL' }
+	files { './LibJS/Runtime/*.h', './LibJS/Runtime/*.cpp' }

@@ -3,6 +3,7 @@
 #include "Object.h"
 #include <ASL/LogStream.h>
 #include <ASL/StdLibExtras.h>
+#include <ASL/String.h>
 #include <ASL/StringBuilder.h>
 
 namespace JS {
@@ -36,7 +37,13 @@ Value::~Value()
     clear();
 }
 
-Value Value::to_primitive()
+Object Value::as_object() const
+{
+    ASSERT(is_object());
+    return *m_value.as_object;
+}
+
+Value Value::to_primitive() const
 {
     // TODO: Implement this properly
     if (is_object())
@@ -45,7 +52,7 @@ Value Value::to_primitive()
     return Value(*this);
 }
 
-bool Value::to_bool()
+bool Value::to_bool() const
 {
     if (is_bool())
         return m_value.as_bool;
@@ -64,7 +71,7 @@ bool Value::to_bool()
     return false;
 }
 
-Value Value::to_number()
+Value Value::to_number() const
 {
     if (is_undefined())
         return js_nan();
@@ -88,7 +95,7 @@ Value Value::to_number()
     return Value(+0.0);
 }
 
-i32 Value::to_i32()
+i32 Value::to_i32() const
 {
     auto result = to_number();
     if (result.is_nan())
@@ -102,12 +109,12 @@ i32 Value::to_i32()
     return ASL::sign(number) * floor(abs(number));
 }
 
-u32 Value::to_u32()
+u32 Value::to_u32() const
 {
     return (u32)to_i32();
 }
 
-SharedString Value::to_string()
+String Value::to_string() const
 {
     if (is_undefined())
         return "undefined";
@@ -141,7 +148,7 @@ SharedString Value::to_string()
     return String::number(as_double());
 }
 
-Object Value::to_object()
+Object Value::to_object() const
 {
     if (is_undefined() || is_null()) {
         // TODO: Throw TypeError exception
@@ -162,6 +169,12 @@ void Value::clear()
     if (m_type == Type::String) {
         m_value.as_string->unref();
     }
+}
+
+const ASL::DebugStream& operator<<(const ASL::DebugStream& stream, const Value& value)
+{
+    stream << value.to_string();
+    return stream;
 }
 
 } // namespace JS

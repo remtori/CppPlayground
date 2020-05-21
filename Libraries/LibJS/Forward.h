@@ -2,10 +2,8 @@
 
 namespace JS {
 
-namespace Runtime {
 class Value;
 class Object;
-} // namespace Runtime
 
 class Interpreter;
 class Lexer;

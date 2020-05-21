@@ -15,6 +15,7 @@
 namespace ASL {
 
 class ByteBuffer;
+class DebugStream;
 
 template<typename>
 class Function;

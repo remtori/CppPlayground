@@ -10,8 +10,9 @@ ASL_MAIN()
 {
     auto interpreter = JS::Interpreter::create();
 
-    if (argc < 2)
-        return 0;
+    if (argc < 2) {
+        argv[1] = (char*)"./Applications/JS/simple.js";
+    }
 
     File source_file(argv[1]);
     if (!source_file.open(File::Read)) {
@@ -24,12 +25,13 @@ ASL_MAIN()
 
     JS::Parser parser(source_view);
     auto program = parser.parse_program();
-    dbg() << interpreter->run(*program);
 
     if (argc > 2) {
         program->dump(0);
         printf("\n");
     }
+
+    dbg() << interpreter->run(*program);
 
     return 0;
 }

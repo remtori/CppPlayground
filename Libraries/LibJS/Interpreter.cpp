@@ -14,7 +14,7 @@ void Interpreter::set_variable(const SharedString& identifier, Value value)
 
 Value Interpreter::get_variable(const SharedString& identifier)
 {
-    return m_variables.get_or(identifier, 0.0);
+    return m_variables.get_or(identifier, js_undefined());
 }
 
 } // namespace JS

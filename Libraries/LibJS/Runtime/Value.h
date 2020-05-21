@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Forward.h"
-#include <ASL/RefCounted.h>
+#include <ASL/Forward.h>
 #include <ASL/SharedString.h>
 #include <ASL/StringImpl.h>
 #include <ASL/Types.h>
@@ -9,7 +9,7 @@
 
 namespace JS {
 
-class Value : public RefCounted<Value> {
+class Value {
 public:
     enum class Type {
         Undefined,
@@ -20,6 +20,8 @@ public:
         Object,
     };
 
+    Value() {}
+
     Value(Type type)
         : m_type(type)
     {
@@ -28,6 +30,7 @@ public:
     explicit Value(double value);
     explicit Value(bool value);
     Value(const SharedString& string);
+    ~Value();
 
     Type type() const { return m_type; }
 
@@ -68,21 +71,15 @@ public:
         return m_value.as_string;
     }
 
-    Object as_object() const
-    {
-        ASSERT(is_object());
-        return *m_value.as_object;
-    }
+    Object as_object() const;
 
-    Value to_primitive();
-    bool to_bool();
-    Value to_number();
-    i32 to_i32();
-    u32 to_u32();
-    SharedString to_string();
-    Object to_object();
-
-    ~Value();
+    Value to_primitive() const;
+    bool to_bool() const;
+    Value to_number() const;
+    i32 to_i32() const;
+    u32 to_u32() const;
+    String to_string() const;
+    Object to_object() const;
 
 private:
     void clear();
@@ -97,29 +94,31 @@ private:
     } m_value;
 };
 
-Value js_undefined()
+inline Value js_undefined()
 {
     return Value(Value::Type::Undefined);
 }
 
-Value js_null()
+inline Value js_null()
 {
     return Value(Value::Type::Null);
 }
 
-Value js_nan()
+inline Value js_nan()
 {
     return Value(::nan(""));
 }
 
-Value js_positive_infinity()
+inline Value js_positive_infinity()
 {
     return Value(INFINITY);
 }
 
-Value js_negative_infinity()
+inline Value js_negative_infinity()
 {
     return Value(-INFINITY);
 }
+
+const ASL::DebugStream& operator<<(const ASL::DebugStream& stream, const Value& value);
 
 } // namespace JS

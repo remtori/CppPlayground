@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Forward.h"
-
 #include <ASL/NonnullRefPtr.h>
 #include <ASL/RefCounted.h>
 #include <ASL/SharedString.h>
@@ -51,13 +50,7 @@ public:
 
     bool has_error() const { return !m_error.is_empty(); }
 
-    virtual Value run(Interpreter& interpreter) const override
-    {
-        Value value;
-        for (const auto& statement : m_statements)
-            value = statement->run(interpreter);
-        return value;
-    };
+    virtual Value run(Interpreter& interpreter) const override;
 
     virtual const char* class_name() const override { return "Program"; }
     void dump(int indent) const override;
@@ -127,7 +120,7 @@ public:
 
     bool value() const { return m_value; }
 
-    virtual Value run(Interpreter&) const override { return m_value; }
+    virtual Value run(Interpreter&) const override;
     virtual const char* class_name() const override { return "BoolLiteral"; }
     void dump(int indent) const override;
 
@@ -144,7 +137,7 @@ public:
 
     double value() const { return m_value; }
 
-    virtual Value run(Interpreter&) const override { return m_value; }
+    virtual Value run(Interpreter&) const override;
     virtual const char* class_name() const override { return "NumericLiteral"; }
     void dump(int indent) const override;
 

@@ -1,39 +1,50 @@
 #include "AST.h"
 
 #include "Interpreter.h"
+#include "Runtime/Value.h"
 #include <ASL/LogStream.h>
 
 namespace JS {
 
+Value Program::run(Interpreter& interpreter) const
+{
+    Value value;
+    for (const auto& statement : m_statements)
+        value = statement->run(interpreter);
+    return value;
+};
+
 Value UnaryExpression::run(Interpreter& interpreter) const
 {
     Value value = m_expression->run(interpreter);
+    auto number = value.to_number().as_double();
+
     switch (m_op) {
     case UnaryOp::Plus:
-        return value;
+        return Value(number);
     case UnaryOp::Minus:
-        return -value;
+        return Value(-number);
     default:
-        return 0;
+        return js_undefined();
     }
 }
 
 Value BinaryExpression::run(Interpreter& interpreter) const
 {
-    Value left = m_left->run(interpreter);
-    Value right = m_right->run(interpreter);
+    double left = m_left->run(interpreter).to_number().as_double();
+    double right = m_right->run(interpreter).to_number().as_double();
 
     switch (m_op) {
     case BinaryOp::Plus:
-        return left + right;
+        return Value(left + right);
     case BinaryOp::Minus:
-        return left - right;
+        return Value(left - right);
     case BinaryOp::Mult:
-        return left * right;
+        return Value(left * right);
     case BinaryOp::Div:
-        return left / right;
+        return Value(left / right);
     default:
-        return 0;
+        return js_undefined();
     }
 }
 
@@ -48,11 +59,21 @@ Value Identifier::run(Interpreter& interpreter) const
     return value;
 }
 
-Value VariableDeclarator::run(Interpreter& interpreter) const
+Value BoolLiteral::run(Interpreter&) const
+{
+    return Value(m_value);
+}
+
+Value NumericLiteral::run(Interpreter&) const
+{
+    return Value(m_value);
+}
+
+Value VariableDeclarator::run(Interpreter&) const
 {
     // Note: Everything is handled by VariableDeclaration
     ASSERT_NOT_REACHED();
-    return 0;
+    return js_undefined();
 }
 
 Value VariableDeclaration::run(Interpreter& interpreter) const
@@ -65,7 +86,7 @@ Value VariableDeclaration::run(Interpreter& interpreter) const
         }
     }
 
-    return 0;
+    return js_undefined();
 }
 
 Value AssignmentExpression::run(Interpreter& interpreter) const
@@ -82,7 +103,7 @@ Value ExpressionStatement::run(Interpreter& interpreter) const
 
 Value ConditionalExpression::run(Interpreter& interpreter) const
 {
-    if (m_test->run(interpreter))
+    if (m_test->run(interpreter).to_bool())
         return m_consequent->run(interpreter);
     else
         return m_alternate->run(interpreter);
@@ -208,17 +229,14 @@ void ExpressionStatement::dump(int indent) const
 void ConditionalExpression::dump(int indent) const
 {
     ASTNode::dump(indent);
-    printf("\n");
     space(indent + 1);
     printf("test:");
     m_test->dump(indent + 4);
 
-    printf("\n");
     space(indent + 1);
     printf("consequent:");
     m_consequent->dump(indent + 4);
 
-    printf("\n");
     space(indent + 1);
     printf("alternate:");
     m_alternate->dump(indent + 4);

@@ -2,6 +2,7 @@
 
 #include "AST.h"
 #include "Forward.h"
+#include "Runtime/Value.h"
 #include <ASL/Forward.h>
 #include <ASL/HashMap.h>
 #include <ASL/NonnullOwnPtr.h>
