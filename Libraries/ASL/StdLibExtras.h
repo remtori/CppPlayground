@@ -6,6 +6,12 @@
 namespace ASL {
 
 template<typename T>
+int sign(T val)
+{
+    return (T(0) < val) - (val < T(0));
+}
+
+template<typename T>
 inline constexpr T min(const T& a, const T& b)
 {
     return a < b ? a : b;
@@ -355,4 +361,5 @@ using ASL::forward;
 using ASL::max;
 using ASL::min;
 using ASL::move;
+using ASL::sign;
 using ASL::swap;
