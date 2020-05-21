@@ -33,100 +33,100 @@ DebugStream::~DebugStream()
     putchar('\n');
 }
 
-DebugStream& DebugStream::operator<<(bool b)
+const DebugStream& operator<<(const DebugStream& stream, bool b)
 {
     printf(b ? "true" : "false");
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(char c)
+const DebugStream& operator<<(const DebugStream& stream, char c)
 {
     printf("%c", c);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(const char* cstring)
+const DebugStream& operator<<(const DebugStream& stream, const char* cstring)
 {
     printf("%s", cstring);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(int v)
+const DebugStream& operator<<(const DebugStream& stream, int v)
 {
     printf("%d", v);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(unsigned v)
+const DebugStream& operator<<(const DebugStream& stream, unsigned v)
 {
     printf("%u", v);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(long v)
+const DebugStream& operator<<(const DebugStream& stream, long v)
 {
     printf("%ld", v);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(long unsigned int v)
+const DebugStream& operator<<(const DebugStream& stream, long unsigned int v)
 {
     printf("%lu", v);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(long long v)
+const DebugStream& operator<<(const DebugStream& stream, long long v)
 {
     printf("%lld", v);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(long long unsigned int v)
+const DebugStream& operator<<(const DebugStream& stream, long long unsigned int v)
 {
     printf("%llu", v);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(float v)
+const DebugStream& operator<<(const DebugStream& stream, float v)
 {
     printf("%.4f", v);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(double v)
+const DebugStream& operator<<(const DebugStream& stream, double v)
 {
     printf("%.4lf", v);
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(const StringImpl& s)
+const DebugStream& operator<<(const DebugStream& stream, const StringImpl& s)
 {
     printf("%s", s.characters());
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(const StringImpl* s)
+const DebugStream& operator<<(const DebugStream& stream, const StringImpl* s)
 {
     printf("%s", s->characters());
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(const StringView& s)
+const DebugStream& operator<<(const DebugStream& stream, const StringView& s)
 {
     printf("%.*s", (int)s.length(), s.characters_wont());
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(const SharedString& s)
+const DebugStream& operator<<(const DebugStream& stream, const SharedString& s)
 {
     printf("%s", s.characters());
-    return *this;
+    return stream;
 }
 
-DebugStream& DebugStream::operator<<(const String& s)
+const DebugStream& operator<<(const DebugStream& stream, const String& s)
 {
     printf("%s", s.characters());
-    return *this;
+    return stream;
 }
 
 } // namespace ASL
