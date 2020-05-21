@@ -208,6 +208,8 @@ NonnullRefPtr<Expression> Parser::parse_primary_expression()
     }
     case TokenType::NumericLiteral:
         return create_ast_node<NumericLiteral>(consume().double_value());
+    case TokenType::BoolLiteral:
+        return create_ast_node<BoolLiteral>(consume().bool_value());
     case TokenType::Identifier:
         return create_ast_node<Identifier>(consume().value());
     default:
@@ -238,7 +240,13 @@ NonnullRefPtr<Expression> Parser::parse_secondary_expression(NonnullRefPtr<Expre
             ASSERT_NOT_REACHED();
         }
         return create_ast_node<AssignmentExpression>(move(lhs), parse_expression(min_precedence, associativity));
-
+    case TokenType::QuestionMark: {
+        consume();
+        auto consequence = parse_expression(min_precedence, associativity);
+        consume(TokenType::Colon);
+        auto alternate = parse_expression(min_precedence, associativity);
+        return create_ast_node<ConditionalExpression>(move(lhs), move(consequence), move(alternate));
+    }
     default:
         expected("secondary expression (missing switch case)");
         consume();
@@ -379,6 +387,7 @@ bool Parser::match_expression() const
     return match_unary_expression()
         || type == TokenType::ParenOpen
         || type == TokenType::NumericLiteral
+        || type == TokenType::BoolLiteral
         || type == TokenType::Identifier;
 }
 
@@ -396,7 +405,8 @@ bool Parser::match_secondary_expression() const
         || type == TokenType::Minus
         || type == TokenType::Asterisk
         || type == TokenType::Slash
-        || type == TokenType::Equals;
+        || type == TokenType::Equals
+        || type == TokenType::QuestionMark;
 }
 
 } // namespace JS

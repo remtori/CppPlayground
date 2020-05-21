@@ -118,12 +118,31 @@ private:
 class Literal : public Expression {
 };
 
+class BoolLiteral final : public Literal {
+public:
+    explicit BoolLiteral(bool value)
+        : m_value(value)
+    {
+    }
+
+    bool value() const { return m_value; }
+
+    virtual Value run(Interpreter&) const override { return m_value; }
+    virtual const char* class_name() const override { return "BoolLiteral"; }
+    void dump(int indent) const override;
+
+private:
+    bool m_value;
+};
+
 class NumericLiteral final : public Literal {
 public:
     explicit NumericLiteral(double value)
     {
         m_value = value;
     }
+
+    double value() const { return m_value; }
 
     virtual Value run(Interpreter&) const override { return m_value; }
     virtual const char* class_name() const override { return "NumericLiteral"; }
@@ -231,6 +250,25 @@ public:
 
 private:
     NonnullRefPtr<Expression> m_expression;
+};
+
+class ConditionalExpression : public Expression {
+public:
+    explicit ConditionalExpression(NonnullRefPtr<Expression> test, NonnullRefPtr<Expression> consequent, NonnullRefPtr<Expression> alternate)
+        : m_test(test)
+        , m_consequent(consequent)
+        , m_alternate(alternate)
+    {
+    }
+
+    Value run(Interpreter&) const override;
+    const char* class_name() const override { return "ConditionalExpression"; }
+    void dump(int indent) const override;
+
+private:
+    NonnullRefPtr<Expression> m_test;
+    NonnullRefPtr<Expression> m_consequent;
+    NonnullRefPtr<Expression> m_alternate;
 };
 
 } // namespace JS

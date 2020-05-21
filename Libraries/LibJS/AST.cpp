@@ -80,6 +80,14 @@ Value ExpressionStatement::run(Interpreter& interpreter) const
     return m_expression->run(interpreter);
 }
 
+Value ConditionalExpression::run(Interpreter& interpreter) const
+{
+    if (m_test->run(interpreter))
+        return m_consequent->run(interpreter);
+    else
+        return m_alternate->run(interpreter);
+}
+
 void space(int indent)
 {
     putchar('\n');
@@ -139,6 +147,12 @@ void BinaryExpression::dump(int indent) const
     m_right->dump(indent + 2);
 }
 
+void BoolLiteral::dump(int indent) const
+{
+    ASTNode::dump(indent);
+    printf(m_value ? "true" : "false");
+}
+
 void NumericLiteral::dump(int indent) const
 {
     ASTNode::dump(indent);
@@ -189,6 +203,25 @@ void ExpressionStatement::dump(int indent) const
 {
     ASTNode::dump(indent);
     m_expression->dump(indent + 2);
+}
+
+void ConditionalExpression::dump(int indent) const
+{
+    ASTNode::dump(indent);
+    printf("\n");
+    space(indent + 1);
+    printf("test:");
+    m_test->dump(indent + 4);
+
+    printf("\n");
+    space(indent + 1);
+    printf("consequent:");
+    m_consequent->dump(indent + 4);
+
+    printf("\n");
+    space(indent + 1);
+    printf("alternate:");
+    m_alternate->dump(indent + 4);
 }
 
 } // namespace JS
