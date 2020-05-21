@@ -2,7 +2,14 @@
 
 namespace JS {
 
-using Value = double; // Since we hasn't have JSValue
+namespace Runtime {
+class Value;
+class Object;
+} // namespace Runtime
+
 class Interpreter;
+class Lexer;
+class Parser;
+class Token;
 
 } // namespace JS
