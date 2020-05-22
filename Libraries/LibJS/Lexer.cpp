@@ -274,9 +274,9 @@ Token Lexer::next_token()
         }
 
         bool found_three_char_token = false;
-        if (!found_four_char_token && m_position + 2 < m_source.length()) {
-            auto it = g_three_char_tokens.find(
-                m_source.substring_view(m_position, 3));
+        if (!found_four_char_token && m_position + 1 < m_source.length()) {
+            char key[] = { m_current_char, m_source[m_position], m_source[m_position + 1], 0 };
+            auto it = g_three_char_tokens.find(key);
 
             if (it != g_three_char_tokens.end()) {
                 found_three_char_token = true;
@@ -288,9 +288,9 @@ Token Lexer::next_token()
         }
 
         bool found_two_char_token = false;
-        if (!found_four_char_token && !found_three_char_token && m_position + 1 < m_source.length()) {
-            auto it = g_two_char_tokens.find(
-                m_source.substring_view(m_position, 2));
+        if (!found_four_char_token && !found_three_char_token && m_position < m_source.length()) {
+            char key[] = { m_current_char, m_source[m_position], 0 };
+            auto it = g_two_char_tokens.find(key);
 
             if (it != g_two_char_tokens.end()) {
                 found_two_char_token = true;
