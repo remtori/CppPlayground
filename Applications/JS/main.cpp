@@ -23,6 +23,14 @@ ASL_MAIN()
     String source(source_file.read_all());
     StringView source_view = source.view();
 
+    // StringView t = "12 ** 14";
+    // JS::Lexer lexer(t);
+    // auto next = lexer.next_token();
+    // while (next.type() != JS::TokenType::Eof) {
+    //     dbg() << JS::Token::name(next.type());
+    //     next = lexer.next_token();
+    // }
+
     JS::Parser parser(source_view);
     auto program = parser.parse_program();
 

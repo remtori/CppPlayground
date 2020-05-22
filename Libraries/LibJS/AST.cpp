@@ -2,6 +2,7 @@
 
 #include "Interpreter.h"
 #include "Runtime/Value.h"
+#include "Runtime/ValueOperators.h"
 #include <ASL/LogStream.h>
 
 namespace JS {
@@ -9,21 +10,60 @@ namespace JS {
 Value Program::run(Interpreter& interpreter) const
 {
     Value value;
-    for (const auto& statement : m_statements)
+    for (const auto& statement : m_statements) {
         value = statement->run(interpreter);
+        dbg() << value;
+    }
+
     return value;
 };
 
 Value UnaryExpression::run(Interpreter& interpreter) const
 {
     Value value = m_expression->run(interpreter);
-    auto number = value.to_number().as_double();
 
     switch (m_op) {
     case UnaryOp::Plus:
-        return Value(number);
+        return u_op_plus(value);
     case UnaryOp::Minus:
-        return Value(-number);
+        return u_op_minus(value);
+    case UnaryOp::Void:
+        return u_op_void(value);
+    case UnaryOp::Typeof:
+        return u_op_typeof(value);
+    case UnaryOp::BitNot:
+        return u_op_bit_not(value);
+    case UnaryOp::Not:
+        return u_op_not(value);
+    case UnaryOp::PrefixIncrement: {
+        ASSERT(m_expression->is_identifier());
+        auto old_var = value.as_double();
+        auto new_var = Value(old_var + 1);
+        interpreter.set_variable(static_cast<const Identifier*>(m_expression.ptr())->string(), new_var);
+        return new_var;
+    }
+    case UnaryOp::PrefixDecrement: {
+        ASSERT(m_expression->is_identifier());
+        auto old_var = value.as_double();
+        auto new_var = Value(old_var - 1);
+        interpreter.set_variable(static_cast<const Identifier*>(m_expression.ptr())->string(), new_var);
+        return new_var;
+    }
+    case UnaryOp::PostfixIncrement: {
+        ASSERT(m_expression->is_identifier());
+        auto old_var = value.as_double();
+        auto new_var = Value(old_var + 1);
+        interpreter.set_variable(static_cast<const Identifier*>(m_expression.ptr())->string(), new_var);
+        return value;
+    }
+    case UnaryOp::PostfixDecrement: {
+        ASSERT(m_expression->is_identifier());
+        auto old_var = value.as_double();
+        auto new_var = Value(old_var - 1);
+        interpreter.set_variable(static_cast<const Identifier*>(m_expression.ptr())->string(), new_var);
+        return value;
+    }
+
     default:
         return js_undefined();
     }
@@ -31,20 +71,58 @@ Value UnaryExpression::run(Interpreter& interpreter) const
 
 Value BinaryExpression::run(Interpreter& interpreter) const
 {
-    double left = m_left->run(interpreter).to_number().as_double();
-    double right = m_right->run(interpreter).to_number().as_double();
-
     switch (m_op) {
-    case BinaryOp::Plus:
-        return Value(left + right);
-    case BinaryOp::Minus:
-        return Value(left - right);
-    case BinaryOp::Mult:
-        return Value(left * right);
-    case BinaryOp::Div:
-        return Value(left / right);
+    case BinaryOp::Addition:
+        return b_op_add(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::Subtraction:
+        return b_op_sub(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::Multiplication:
+        return b_op_mult(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::Division:
+        return b_op_div(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::Modulo:
+        return b_op_mod(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::Exponentiation:
+        return b_op_pow(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::LeftShift:
+        return b_op_left_shift(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::RightShift:
+        return b_op_right_shift(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::UnsignedRightShift:
+        return b_op_unsigned_right_shift(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::Equals:
+        return b_op_equals(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::StrictEquals:
+        return b_op_strict_equals(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::LessThan:
+        return b_op_less_than(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::GreaterThan:
+        return b_op_greater_than(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::LessThanOrEquals:
+        return b_op_less_than_or_equals(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::GreaterThanOrEquals:
+        return b_op_greater_than_or_equals(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::BitwiseAnd:
+        return b_op_bit_and(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::BitwiseOr:
+        return b_op_bit_or(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::BitwiseXor:
+        return b_op_bit_xor(m_left->run(interpreter), m_right->run(interpreter));
+    case BinaryOp::And: {
+        auto left = m_left->run(interpreter);
+        if (!left.to_bool())
+            return left;
+        return m_right->run(interpreter);
+    }
+    case BinaryOp::Or: {
+        auto left = m_left->run(interpreter);
+        if (left.to_bool())
+            return left;
+        return m_right->run(interpreter);
+    }
     default:
-        return js_undefined();
+        dbg() << "Unknown operator " << (int)m_op;
+        ASSERT_NOT_REACHED();
     }
 }
 
@@ -92,7 +170,85 @@ Value VariableDeclaration::run(Interpreter& interpreter) const
 Value AssignmentExpression::run(Interpreter& interpreter) const
 {
     auto value = m_expression->run(interpreter);
-    interpreter.set_variable(m_identifier->string(), value);
+    auto var_str = m_identifier->string();
+
+    switch (m_op) {
+    case AssignmentOp::Assignment:
+        interpreter.set_variable(var_str, value);
+        return value;
+    case AssignmentOp::AdditionAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_add(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::SubtractionAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_sub(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::MultiplicationAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_mult(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::DivisionAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_div(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::ModuloAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_mod(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::ExponentiationAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_pow(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::BitwiseAndAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_bit_and(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::BitwiseOrAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_bit_or(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::BitwiseXorAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_bit_xor(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::LeftShiftAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_left_shift(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::RightShiftAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_right_shift(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    case AssignmentOp::UnsignedRightShiftAssignment: {
+        auto var = interpreter.get_variable(var_str);
+        var = b_op_unsigned_right_shift(var, value);
+        interpreter.set_variable(var_str, var);
+        return var;
+    }
+    }
     return value;
 }
 
@@ -135,10 +291,34 @@ void UnaryExpression::dump(int indent) const
 
     switch (m_op) {
     case UnaryOp::Plus:
-        putchar('+');
+        printf("Plus");
         break;
     case UnaryOp::Minus:
-        putchar('-');
+        printf("Minus");
+        break;
+    case UnaryOp::Void:
+        printf("Void");
+        break;
+    case UnaryOp::Typeof:
+        printf("Typeof");
+        break;
+    case UnaryOp::BitNot:
+        printf("BitNot");
+        break;
+    case UnaryOp::Not:
+        printf("Not");
+        break;
+    case UnaryOp::PostfixIncrement:
+        printf("PostfixIncrement");
+        break;
+    case UnaryOp::PostfixDecrement:
+        printf("PostfixDecrement");
+        break;
+    case UnaryOp::PrefixIncrement:
+        printf("PrefixIncrement");
+        break;
+    case UnaryOp::PrefixDecrement:
+        printf("PrefixIncrement");
         break;
     }
 
@@ -150,17 +330,65 @@ void BinaryExpression::dump(int indent) const
     ASTNode::dump(indent);
 
     switch (m_op) {
-    case BinaryOp::Plus:
-        putchar('+');
+    case BinaryOp::Addition:
+        printf("Addition");
         break;
-    case BinaryOp::Minus:
-        putchar('-');
+    case BinaryOp::Subtraction:
+        printf("Subtraction");
         break;
-    case BinaryOp::Mult:
-        putchar('*');
+    case BinaryOp::Multiplication:
+        printf("Multiplication");
         break;
-    case BinaryOp::Div:
-        putchar('/');
+    case BinaryOp::Division:
+        printf("Division");
+        break;
+    case BinaryOp::Modulo:
+        printf("Modulo");
+        break;
+    case BinaryOp::Exponentiation:
+        printf("Exponentiation");
+        break;
+    case BinaryOp::LeftShift:
+        printf("LeftShift");
+        break;
+    case BinaryOp::RightShift:
+        printf("RightShift");
+        break;
+    case BinaryOp::UnsignedRightShift:
+        printf("UnsignedRightShift");
+        break;
+    case BinaryOp::Equals:
+        printf("Equals");
+        break;
+    case BinaryOp::StrictEquals:
+        printf("StrictEquals");
+        break;
+    case BinaryOp::LessThan:
+        printf("LessThan");
+        break;
+    case BinaryOp::GreaterThan:
+        printf("GreaterThan");
+        break;
+    case BinaryOp::LessThanOrEquals:
+        printf("LessThanOrEquals");
+        break;
+    case BinaryOp::GreaterThanOrEquals:
+        printf("GreaterThanOrEquals");
+        break;
+    case BinaryOp::BitwiseAnd:
+        printf("BitwiseAnd");
+        break;
+    case BinaryOp::BitwiseOr:
+        printf("BitwiseOr");
+        break;
+    case BinaryOp::BitwiseXor:
+        printf("BitwiseXor");
+        break;
+    case BinaryOp::And:
+        printf("And");
+        break;
+    case BinaryOp::Or:
+        printf("Or");
         break;
     }
 

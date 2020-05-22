@@ -63,6 +63,14 @@ private:
 enum class UnaryOp {
     Plus,
     Minus,
+    Void,
+    Typeof,
+    BitNot,
+    Not,
+    PrefixIncrement,
+    PrefixDecrement,
+    PostfixIncrement,
+    PostfixDecrement,
 };
 
 class UnaryExpression final : public Expression {
@@ -83,10 +91,26 @@ private:
 };
 
 enum class BinaryOp {
-    Plus,
-    Minus,
-    Mult,
-    Div,
+    Addition,
+    Subtraction,
+    Multiplication,
+    Division,
+    Modulo,
+    Exponentiation,
+    LeftShift,
+    RightShift,
+    UnsignedRightShift,
+    Equals,
+    StrictEquals,
+    LessThan,
+    GreaterThan,
+    LessThanOrEquals,
+    GreaterThanOrEquals,
+    BitwiseAnd,
+    BitwiseOr,
+    BitwiseXor,
+    And,
+    Or,
 };
 
 class BinaryExpression final : public Expression {
@@ -210,10 +234,27 @@ private:
     Vector<NonnullRefPtr<VariableDeclarator>> m_declarations;
 };
 
+enum class AssignmentOp {
+    Assignment,
+    AdditionAssignment,
+    SubtractionAssignment,
+    MultiplicationAssignment,
+    DivisionAssignment,
+    ModuloAssignment,
+    ExponentiationAssignment,
+    BitwiseAndAssignment,
+    BitwiseOrAssignment,
+    BitwiseXorAssignment,
+    LeftShiftAssignment,
+    RightShiftAssignment,
+    UnsignedRightShiftAssignment,
+};
+
 class AssignmentExpression final : public Expression {
 public:
-    explicit AssignmentExpression(NonnullRefPtr<Identifier> identifier, NonnullRefPtr<Expression> expression)
-        : m_identifier(identifier)
+    explicit AssignmentExpression(AssignmentOp op, NonnullRefPtr<Identifier> identifier, NonnullRefPtr<Expression> expression)
+        : m_op(op)
+        , m_identifier(identifier)
         , m_expression(expression)
     {
     }
@@ -226,6 +267,7 @@ public:
     void dump(int indent) const override;
 
 private:
+    AssignmentOp m_op;
     NonnullRefPtr<Identifier> m_identifier;
     NonnullRefPtr<Expression> m_expression;
 };

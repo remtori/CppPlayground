@@ -223,23 +223,103 @@ NonnullRefPtr<Expression> Parser::parse_secondary_expression(NonnullRefPtr<Expre
     switch (m_current_token.type()) {
     case TokenType::Plus:
         consume();
-        return create_ast_node<BinaryExpression>(BinaryOp::Plus, move(lhs), parse_expression(min_precedence, associativity));
+        return create_ast_node<BinaryExpression>(BinaryOp::Addition, move(lhs), parse_expression(min_precedence, associativity));
     case TokenType::Minus:
         consume();
-        return create_ast_node<BinaryExpression>(BinaryOp::Minus, move(lhs), parse_expression(min_precedence, associativity));
+        return create_ast_node<BinaryExpression>(BinaryOp::Subtraction, move(lhs), parse_expression(min_precedence, associativity));
     case TokenType::Asterisk:
         consume();
-        return create_ast_node<BinaryExpression>(BinaryOp::Mult, move(lhs), parse_expression(min_precedence, associativity));
+        return create_ast_node<BinaryExpression>(BinaryOp::Multiplication, move(lhs), parse_expression(min_precedence, associativity));
     case TokenType::Slash:
         consume();
-        return create_ast_node<BinaryExpression>(BinaryOp::Div, move(lhs), parse_expression(min_precedence, associativity));
+        return create_ast_node<BinaryExpression>(BinaryOp::Division, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::Percent:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::Modulo, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::DoubleAsterisk:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::Exponentiation, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::ShiftLeft:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::LeftShift, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::ShiftRight:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::RightShift, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::UnsignedShiftRight:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::UnsignedRightShift, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::EqualsEquals:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::Equals, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::EqualsEqualsEquals:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::StrictEquals, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::LessThan:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::LessThan, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::GreaterThan:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::GreaterThan, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::LessThanEquals:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::LessThanOrEquals, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::GreaterThanEquals:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::GreaterThanOrEquals, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::Ampersand:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::BitwiseAnd, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::Pipe:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::BitwiseOr, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::Caret:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::BitwiseXor, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::DoubleAmpersand:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::And, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::DoublePipe:
+        consume();
+        return create_ast_node<BinaryExpression>(BinaryOp::Or, move(lhs), parse_expression(min_precedence, associativity));
     case TokenType::Equals:
         consume();
-        if (!lhs->is_identifier()) {
-            dbg() << "Illegal assignment expression";
-            ASSERT_NOT_REACHED();
-        }
-        return create_ast_node<AssignmentExpression>(move(lhs), parse_expression(min_precedence, associativity));
+        return parse_assignment_expression(AssignmentOp::Assignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::PlusEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::AdditionAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::MinusEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::SubtractionAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::AsteriskEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::MultiplicationAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::SlashEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::DivisionAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::DoubleAsteriskEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::ExponentiationAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::PercentEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::ModuloAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::AmpersandEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::BitwiseAndAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::PipeEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::BitwiseOrAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::CaretEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::BitwiseXorAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::ShiftLeftEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::LeftShiftAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::ShiftRightEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::RightShiftAssignment, move(lhs), parse_expression(min_precedence, associativity));
+    case TokenType::UnsignedShiftRightEquals:
+        consume();
+        return parse_assignment_expression(AssignmentOp::UnsignedRightShiftAssignment, move(lhs), parse_expression(min_precedence, associativity));
     case TokenType::QuestionMark: {
         consume();
         auto consequence = parse_expression(min_precedence, associativity);
@@ -247,10 +327,29 @@ NonnullRefPtr<Expression> Parser::parse_secondary_expression(NonnullRefPtr<Expre
         auto alternate = parse_expression(min_precedence, associativity);
         return create_ast_node<ConditionalExpression>(move(lhs), move(consequence), move(alternate));
     }
+    // Unary postfix increment/decrement
+    case TokenType::PlusPlus:
+        consume();
+        if (!lhs->is_identifier())
+            expected("identifier");
+        return create_ast_node<UnaryExpression>(UnaryOp::PostfixIncrement, move(lhs));
+    case TokenType::MinusMinus:
+        consume();
+        if (!lhs->is_identifier())
+            expected("identifier");
+        return create_ast_node<UnaryExpression>(UnaryOp::PostfixDecrement, move(lhs));
     default:
         expected("secondary expression (missing switch case)");
         consume();
     }
+}
+
+NonnullRefPtr<AssignmentExpression> Parser::parse_assignment_expression(AssignmentOp op, NonnullRefPtr<Expression> lhs, NonnullRefPtr<Expression> rhs)
+{
+    if (!lhs->is_identifier())
+        expected("identifier");
+
+    return create_ast_node<AssignmentExpression>(op, move(lhs), move(rhs));
 }
 
 NonnullRefPtr<UnaryExpression> Parser::parse_unary_expression()
@@ -262,6 +361,34 @@ NonnullRefPtr<UnaryExpression> Parser::parse_unary_expression()
     case TokenType::Minus:
         consume();
         return create_ast_node<UnaryExpression>(UnaryOp::Minus, parse_expression(0));
+    case TokenType::Void:
+        consume();
+        return create_ast_node<UnaryExpression>(UnaryOp::Void, parse_expression(0));
+    case TokenType::Typeof:
+        consume();
+        return create_ast_node<UnaryExpression>(UnaryOp::Typeof, parse_expression(0));
+    case TokenType::Tilde:
+        consume();
+        return create_ast_node<UnaryExpression>(UnaryOp::BitNot, parse_expression(0));
+    case TokenType::ExclamationMark:
+        consume();
+        return create_ast_node<UnaryExpression>(UnaryOp::Not, parse_expression(0));
+    case TokenType::PlusPlus: {
+        consume();
+        auto identifier = parse_expression(0);
+        if (!identifier->is_identifier())
+            expected("identifier");
+
+        return create_ast_node<UnaryExpression>(UnaryOp::PrefixIncrement, identifier);
+    }
+    case TokenType::MinusMinus: {
+        consume();
+        auto identifier = parse_expression(0);
+        if (!identifier->is_identifier())
+            expected("identifier");
+
+        return create_ast_node<UnaryExpression>(UnaryOp::PrefixDecrement, identifier);
+    }
     default:
         expected("unary expression (missing switch case)");
         consume();
@@ -295,6 +422,7 @@ NonnullRefPtr<VariableDeclaration> Parser::parse_variable_declaration()
 
     for (;;) {
         auto id = consume(TokenType::Identifier).value();
+
         RefPtr<Expression> init;
         if (m_current_token.type() == TokenType::Equals) {
             consume();
@@ -395,7 +523,13 @@ bool Parser::match_unary_expression() const
 {
     auto type = m_current_token.type();
     return type == TokenType::Plus
-        || type == TokenType::Minus;
+        || type == TokenType::Minus
+        || type == TokenType::Void
+        || type == TokenType::Typeof
+        || type == TokenType::Tilde
+        || type == TokenType::ExclamationMark
+        || type == TokenType::PlusPlus
+        || type == TokenType::MinusMinus;
 }
 
 bool Parser::match_secondary_expression() const
@@ -405,8 +539,38 @@ bool Parser::match_secondary_expression() const
         || type == TokenType::Minus
         || type == TokenType::Asterisk
         || type == TokenType::Slash
+        || type == TokenType::Percent
+        || type == TokenType::DoubleAsterisk
+        || type == TokenType::ShiftLeft
+        || type == TokenType::ShiftRight
+        || type == TokenType::UnsignedShiftRight
+        || type == TokenType::EqualsEquals
+        || type == TokenType::EqualsEqualsEquals
+        || type == TokenType::LessThan
+        || type == TokenType::GreaterThan
+        || type == TokenType::LessThanEquals
+        || type == TokenType::GreaterThanEquals
+        || type == TokenType::Ampersand
+        || type == TokenType::Pipe
+        || type == TokenType::Caret
+        || type == TokenType::DoubleAmpersand
+        || type == TokenType::DoublePipe
         || type == TokenType::Equals
-        || type == TokenType::QuestionMark;
+        || type == TokenType::PlusEquals
+        || type == TokenType::MinusEquals
+        || type == TokenType::AsteriskEquals
+        || type == TokenType::SlashEquals
+        || type == TokenType::PercentEquals
+        || type == TokenType::DoubleAsteriskEquals
+        || type == TokenType::AmpersandEquals
+        || type == TokenType::PipeEquals
+        || type == TokenType::CaretEquals
+        || type == TokenType::ShiftLeftEquals
+        || type == TokenType::ShiftRightEquals
+        || type == TokenType::UnsignedShiftRightEquals
+        || type == TokenType::QuestionMark
+        || type == TokenType::PlusPlus
+        || type == TokenType::MinusMinus;
 }
 
 } // namespace JS
