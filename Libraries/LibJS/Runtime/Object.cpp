@@ -13,12 +13,12 @@ Object::~Object()
     clear();
 }
 
-Value Object::get_property(const SharedString& property_name)
+Value Object::get_own_property(const SharedString& property_name)
 {
     return m_properties.get_or(property_name, js_undefined());
 }
 
-void Object::set_property(const SharedString& property_name, const Value& value)
+void Object::put_own_property(const SharedString& property_name, const Value& value)
 {
     m_properties.set(property_name, value);
 }

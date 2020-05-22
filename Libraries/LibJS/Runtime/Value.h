@@ -32,6 +32,7 @@ public:
     explicit Value(i32 value);
     explicit Value(u32 value);
     Value(const SharedString& string);
+    Value(const Object* obj);
     ~Value();
 
     Type type() const { return m_type; }

@@ -44,6 +44,13 @@ Value::Value(const SharedString& string)
     m_value.as_string->ref();
 }
 
+Value::Value(const Object* obj)
+    : m_type(Type::Object)
+{
+    m_value.as_object = const_cast<Object*>(obj);
+    m_value.as_object->ref();
+}
+
 Value::~Value()
 {
     clear();
@@ -203,9 +210,10 @@ bool Value::equals(const Value& other) const
 
 void Value::clear()
 {
-    if (m_type == Type::String) {
+    if (m_type == Type::String)
         m_value.as_string->unref();
-    }
+    else if (m_type == Type::Object)
+        m_value.as_object->unref();
 }
 
 const ASL::DebugStream& operator<<(const ASL::DebugStream& stream, const Value& value)

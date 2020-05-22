@@ -8,14 +8,15 @@
 
 namespace JS {
 
-class Object : RefCounted<Object> {
+class Object : public RefCounted<Object> {
 public:
     Object();
     ~Object();
 
-    Value get_property(const SharedString& property_name);
-    void set_property(const SharedString& property_name, const Value& value);
+    Value get_own_property(const SharedString& property_name);
+    void put_own_property(const SharedString& property_name, const Value& value);
 
+    virtual Value call(Interpreter& interpreter) { return js_undefined(); };
     virtual bool is_function() const { return false; }
 
     String to_string() const;
