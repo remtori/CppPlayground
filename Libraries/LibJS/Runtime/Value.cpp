@@ -20,6 +20,18 @@ Value::Value(bool value)
     m_value.as_bool = value;
 }
 
+Value::Value(i32 value)
+    : m_type(Type::Number)
+{
+    m_value.as_number = value;
+}
+
+Value::Value(u32 value)
+    : m_type(Type::Number)
+{
+    m_value.as_number = value;
+}
+
 Value::Value(const SharedString& string)
 {
     if (string.is_null()) {
@@ -43,11 +55,11 @@ Object Value::as_object() const
     return *m_value.as_object;
 }
 
-Value Value::to_primitive() const
+Value Value::to_primitive(PreferredType preferred_type) const
 {
     // TODO: Implement this properly
     if (is_object())
-        return Value("[Object object]");
+        return Value("[object Object]");
 
     return Value(*this);
 }
@@ -162,6 +174,31 @@ Object Value::to_object() const
     // TODO: Implement String, Number and Boolean object
     // then we can implement this
     ASSERT_NOT_REACHED();
+}
+
+bool Value::equals(const Value& other) const
+{
+    if (type() != other.type())
+        return false;
+
+    if (is_bool())
+        return as_bool() == other.as_bool();
+
+    if (is_string())
+        return as_string() == other.as_string();
+
+    if (is_nan() || other.is_nan())
+        return false;
+
+    if (is_number())
+        return as_double() == other.as_double();
+
+    // Compare pointer, because same object should point to the same memory
+    if (is_object())
+        return m_value.as_object == other.m_value.as_object;
+
+    // The remaining type is null and undefined
+    return true;
 }
 
 void Value::clear()

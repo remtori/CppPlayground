@@ -29,6 +29,8 @@ public:
 
     explicit Value(double value);
     explicit Value(bool value);
+    explicit Value(i32 value);
+    explicit Value(u32 value);
     Value(const SharedString& string);
     ~Value();
 
@@ -73,13 +75,21 @@ public:
 
     Object as_object() const;
 
-    Value to_primitive() const;
+    enum class PreferredType {
+        None,
+        Number,
+        String,
+    };
+
+    Value to_primitive(PreferredType preferred_type = PreferredType::None) const;
     bool to_bool() const;
     Value to_number() const;
     i32 to_i32() const;
     u32 to_u32() const;
     String to_string() const;
     Object to_object() const;
+
+    bool equals(const Value& other) const;
 
 private:
     void clear();
