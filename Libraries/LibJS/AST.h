@@ -169,6 +169,29 @@ private:
     double m_value = 0;
 };
 
+class StringLiteral : public Literal {
+public:
+    explicit StringLiteral(const SharedString& string)
+        : m_string(string)
+    {
+    }
+
+    virtual Value run(Interpreter&) const override;
+    virtual const char* class_name() const override { return "StringLiteral"; }
+    void dump(int indent) const override;
+
+private:
+    SharedString m_string;
+};
+
+class NullLiteral : public Literal {
+public:
+    NullLiteral() {}
+
+    virtual Value run(Interpreter&) const override;
+    virtual const char* class_name() const override { return "NullLiteral"; }
+};
+
 class Identifier final : public Expression {
 public:
     explicit Identifier(const SharedString& str)
@@ -304,6 +327,28 @@ private:
     NonnullRefPtr<Expression> m_test;
     NonnullRefPtr<Expression> m_consequent;
     NonnullRefPtr<Expression> m_alternate;
+};
+
+struct ObjectProperty {
+    NonnullRefPtr<Identifier> key;
+    NonnullRefPtr<Expression> value;
+};
+
+class ObjectExpression : public Expression {
+public:
+    explicit ObjectExpression(Vector<ObjectProperty> properties)
+        : m_properties(move(properties))
+    {
+    }
+
+    const Vector<ObjectProperty>& properties() const { return m_properties; }
+
+    virtual Value run(Interpreter&) const override;
+    virtual const char* class_name() const override { return "ObjectExpression"; }
+    virtual void dump(int) const override;
+
+private:
+    Vector<ObjectProperty> m_properties;
 };
 
 } // namespace JS

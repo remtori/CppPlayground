@@ -25,6 +25,7 @@ public:
     NonnullRefPtr<AssignmentExpression> parse_assignment_expression(AssignmentOp op, NonnullRefPtr<Expression> lhs, NonnullRefPtr<Expression> rhs);
     NonnullRefPtr<UnaryExpression> parse_unary_expression();
     NonnullRefPtr<VariableDeclaration> parse_variable_declaration();
+    NonnullRefPtr<ObjectExpression> parse_object_expression();
 
 private:
     bool done() const;

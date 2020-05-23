@@ -210,6 +210,13 @@ NonnullRefPtr<Expression> Parser::parse_primary_expression()
         return create_ast_node<NumericLiteral>(consume().double_value());
     case TokenType::BoolLiteral:
         return create_ast_node<BoolLiteral>(consume().bool_value());
+    case TokenType::NullLiteral:
+        consume();
+        return create_ast_node<NullLiteral>();
+    case TokenType::StringLiteral:
+        return create_ast_node<StringLiteral>(consume().string_value());
+    case TokenType::CurlyOpen:
+        return parse_object_expression();
     case TokenType::Identifier:
         return create_ast_node<Identifier>(consume().value());
     default:
@@ -442,6 +449,16 @@ NonnullRefPtr<VariableDeclaration> Parser::parse_variable_declaration()
     return create_ast_node<VariableDeclaration>(declaration_kind, declarators);
 }
 
+NonnullRefPtr<ObjectExpression> Parser::parse_object_expression()
+{
+    consume(TokenType::CurlyOpen);
+    Vector<ObjectProperty> props;
+    // TODO: Parse property properly
+    auto object = create_ast_node<ObjectExpression>(move(props));
+    consume(TokenType::CurlyClose);
+    return object;
+}
+
 Token Parser::consume(TokenType token)
 {
     if (m_current_token.type() != token)
@@ -516,6 +533,9 @@ bool Parser::match_expression() const
         || type == TokenType::ParenOpen
         || type == TokenType::NumericLiteral
         || type == TokenType::BoolLiteral
+        || type == TokenType::NullLiteral
+        || type == TokenType::StringLiteral
+        || type == TokenType::CurlyOpen
         || type == TokenType::Identifier;
 }
 

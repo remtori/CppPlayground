@@ -259,6 +259,23 @@ Token Lexer::next_token()
             consume();
     } else if (m_current_char == '\'' || m_current_char == '"') {
 
+        char quote = m_current_char;
+        consume();
+
+        while (m_current_char != quote && m_current_char != '\n' && !is_eof()) {
+            if (m_current_char == '\\')
+                consume();
+
+            consume();
+        }
+
+        if (m_current_char != quote) {
+            token_type = TokenType::UnterminatedStringLiteral;
+        } else {
+            consume();
+            token_type = TokenType::StringLiteral;
+        }
+
     } else if (m_current_char == EOF) {
         token_type = TokenType::Eof;
     } else {

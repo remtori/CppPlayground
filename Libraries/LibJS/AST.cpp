@@ -1,6 +1,7 @@
 #include "AST.h"
 
 #include "Interpreter.h"
+#include "Runtime/Object.h"
 #include "Runtime/Value.h"
 #include "Runtime/ValueOperators.h"
 #include <ASL/LogStream.h>
@@ -145,6 +146,21 @@ Value BoolLiteral::run(Interpreter&) const
 Value NumericLiteral::run(Interpreter&) const
 {
     return Value(m_value);
+}
+
+Value StringLiteral::run(Interpreter&) const
+{
+    return Value(m_string);
+}
+
+Value NullLiteral::run(Interpreter&) const
+{
+    return js_null();
+}
+
+Value ObjectExpression::run(Interpreter& interpreter) const
+{
+    return js_undefined();
 }
 
 Value VariableDeclarator::run(Interpreter&) const
@@ -406,6 +422,23 @@ void NumericLiteral::dump(int indent) const
 {
     ASTNode::dump(indent);
     printf("%lf", m_value);
+}
+
+void StringLiteral::dump(int indent) const
+{
+    ASTNode::dump(indent);
+    printf("`%s`", m_string.characters());
+}
+
+void ObjectExpression::dump(int indent) const
+{
+    ASTNode::dump(indent);
+    for (auto& prop : m_properties) {
+        space(indent);
+        printf("Key Value:");
+        prop.key->dump(indent + 2);
+        prop.value->dump(indent + 2);
+    }
 }
 
 void Identifier::dump(int indent) const

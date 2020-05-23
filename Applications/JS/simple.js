@@ -26,3 +26,7 @@ b |= 1;
 b <<= 3;
 b >>= 1;
 b >>>= 1;
+x = {};
+x = "abcdef"
+x = 'ghijk'
+x = null
