@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Backtrace.h"
-#include "LogStream.h"
+#include <ASL/Backtrace.h>
+#include <ASL/LogStream.h>
 
 #define ASL_MAIN()                              \
     int __user_defined_main(int, char**);       \

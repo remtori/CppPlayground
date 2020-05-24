@@ -1,6 +1,6 @@
 #pragma once
 
-#include "assert.h"
+#include <assert.h>
 
 #ifdef _MSC_VER
 #    define DEBUG_BREAK __debugbreak

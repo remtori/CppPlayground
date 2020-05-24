@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Assertions.h"
-#include "SinglyLinkedList.h"
-#include "Traits.h"
+#include <ASL/Assertions.h>
+#include <ASL/SinglyLinkedList.h>
+#include <ASL/Traits.h>
 
 namespace ASL {
 

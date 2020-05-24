@@ -1,7 +1,7 @@
-#include "FileSystemPath.h"
+#include <ASL/FileSystemPath.h>
 
-#include "StringBuilder.h"
-#include "Vector.h"
+#include <ASL/StringBuilder.h>
+#include <ASL/Vector.h>
 
 namespace ASL {
 
@@ -41,7 +41,7 @@ FileSystemPath::FileSystemPath(const StringView& s)
 }
 
 void FileSystemPath::resolve()
-{     
+{
     if (m_string.is_empty())
         return;
 

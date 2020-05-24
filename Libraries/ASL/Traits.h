@@ -1,7 +1,7 @@
 #pragma once
 
-#include "HashFunctions.h"
-#include "Types.h"
+#include <ASL/HashFunctions.h>
+#include <ASL/Types.h>
 
 namespace ASL {
 

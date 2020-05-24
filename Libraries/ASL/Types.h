@@ -23,6 +23,10 @@ static_assert(sizeof(u64) == 8);
 
 using FlatPtr = intptr_t;
 
+constexpr unsigned KB = 1024;
+constexpr unsigned MB = KB * KB;
+constexpr unsigned GB = KB * KB * KB;
+
 namespace std {
 using nullptr_t = decltype(nullptr);
 }

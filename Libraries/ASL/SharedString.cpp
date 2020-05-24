@@ -1,9 +1,9 @@
-#include "SharedString.h"
+#include <ASL/SharedString.h>
 
-#include "HashTable.h"
-#include "String.h"
-#include "StringView.h"
-#include "Traits.h"
+#include <ASL/HashTable.h>
+#include <ASL/String.h>
+#include <ASL/StringView.h>
+#include <ASL/Traits.h>
 #include <string.h>
 
 namespace ASL {

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Forward.h"
-#include "Types.h"
+#include <ASL/Forward.h>
+#include <ASL/Types.h>
 
 namespace ASL {
 

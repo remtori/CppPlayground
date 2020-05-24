@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Platform.h"
+#include <ASL/Platform.h>
 
 #ifdef PLATFORM_WINDOWS
 #    ifdef COMPILING_DLL
