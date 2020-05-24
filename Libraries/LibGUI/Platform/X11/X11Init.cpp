@@ -1,4 +1,4 @@
-#include "X11Init.h"
+#include <LibGUI/Platform/X11/X11Init.h>
 
 #include <X11/keysym.h>
 #include <stdlib.h>

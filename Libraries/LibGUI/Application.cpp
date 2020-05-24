@@ -1,10 +1,10 @@
-#include "Application.h"
+#include <LibGUI/Application.h>
 
 #include <ASL/LogStream.h>
 #include <ASL/Platform.h>
 
 #ifdef PLATFORM_LINUX
-#    include "./Platform/X11/X11Init.h"
+#    include <LibGUI/Platform/X11/X11Init.h>
 #endif
 
 namespace GUI {

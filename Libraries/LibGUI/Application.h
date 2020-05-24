@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Events.h"
 #include <ASL/Assertions.h>
 #include <ASL/Forward.h>
+#include <LibGUI/Events.h>
 
 namespace GUI {
 

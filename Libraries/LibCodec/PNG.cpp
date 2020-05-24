@@ -1,4 +1,4 @@
-#include "PNG.h"
+#include <LibCodec/PNG.h>
 
 #include <ASL/BufferStream.h>
 #include <ASL/LogStream.h>

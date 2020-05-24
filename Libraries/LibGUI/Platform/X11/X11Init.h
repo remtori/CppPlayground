@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Input.h"
+#include <LibGUI/Input.h>
 #include <X11/Xlib.h>
 
 namespace GUI {

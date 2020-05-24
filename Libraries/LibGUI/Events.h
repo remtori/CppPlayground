@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Input.h"
 #include <ASL/Forward.h>
 #include <ASL/UtilityStruct.h>
+#include <LibGUI/Input.h>
 
 namespace GUI {
 

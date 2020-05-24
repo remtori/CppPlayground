@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../Window.h"
 #include <ASL/String.h>
+#include <LibGUI/Window.h>
 #include <X11/Xlib.h>
 
 namespace GUI {

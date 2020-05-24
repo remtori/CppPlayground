@@ -1,8 +1,8 @@
-#include "X11Window.h"
+#include <LibGUI/Platform/X11/X11Window.h>
 
-#include "../../Application.h"
-#include "../../Input.h"
-#include "X11Init.h"
+#include <LibGUI/Application.h>
+#include <LibGUI/Input.h>
+#include <LibGUI/Platform/X11/X11Init.h>
 
 namespace GUI {
 

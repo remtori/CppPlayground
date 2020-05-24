@@ -1,4 +1,4 @@
-#include "Input.h"
+#include <LibGUI/Input.h>
 
 namespace GUI {
 
