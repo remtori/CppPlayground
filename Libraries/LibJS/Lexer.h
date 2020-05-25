@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Token.h"
+#include <LibJS/Token.h>
 
 namespace JS {
 

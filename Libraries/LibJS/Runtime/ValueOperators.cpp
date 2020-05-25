@@ -1,5 +1,5 @@
-#include "ValueOperators.h"
-#include "Object.h"
+#include <LibJS/Runtime/Object.h>
+#include <LibJS/Runtime/ValueOperators.h>
 
 #include <ASL/LogStream.h>
 

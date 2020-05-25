@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Forward.h"
 #include <ASL/NonnullRefPtr.h>
 #include <ASL/RefCounted.h>
 #include <ASL/SharedString.h>
 #include <ASL/String.h>
 #include <ASL/Types.h>
+#include <LibJS/Forward.h>
 
 namespace JS {
 
@@ -23,6 +23,7 @@ public:
     virtual void dump(int indent) const;
 
     virtual bool is_identifier() const { return false; }
+    virtual bool is_program() const { return false; }
 };
 
 class Expression : public ASTNode {
@@ -34,30 +35,29 @@ class Statement : public ASTNode {
 class Declaration : public Statement {
 };
 
-class Program final : public Expression {
+class ScopeNode : public Statement {
 public:
-    Program() {}
+    ScopeNode() {}
 
-    void append(NonnullRefPtr<Statement> body)
-    {
-        m_statements.append(body);
-    }
+    void append(NonnullRefPtr<Statement> statement) { m_statements.append(move(statement)); }
 
-    void add_error(const String& err)
-    {
-        m_error = err;
-    }
-
-    bool has_error() const { return !m_error.is_empty(); }
+    const Vector<NonnullRefPtr<Statement>> statements() const { return m_statements; };
 
     virtual Value run(Interpreter& interpreter) const override;
-
-    virtual const char* class_name() const override { return "Program"; }
+    virtual const char* class_name() const override { return "ScopeNode"; }
     void dump(int indent) const override;
 
 private:
     Vector<NonnullRefPtr<Statement>> m_statements;
-    String m_error;
+};
+
+class Program final : public ScopeNode {
+public:
+    Program() {}
+
+    virtual bool is_program() const { return true; }
+
+    virtual const char* class_name() const override { return "Program"; }
 };
 
 enum class UnaryOp {

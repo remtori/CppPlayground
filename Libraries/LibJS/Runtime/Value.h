@@ -90,6 +90,8 @@ public:
     String to_string() const;
     Object to_object() const;
 
+    void visit();
+
     bool equals(const Value& other) const;
 
 private:

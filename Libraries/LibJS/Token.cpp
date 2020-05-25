@@ -1,4 +1,4 @@
-#include "Token.h"
+#include <LibJS/Token.h>
 
 #include <ASL/StringUtils.h>
 

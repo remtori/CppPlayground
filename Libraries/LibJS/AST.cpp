@@ -1,23 +1,21 @@
-#include "AST.h"
+#include <LibJS/AST.h>
 
-#include "Interpreter.h"
-#include "Runtime/Object.h"
-#include "Runtime/Value.h"
 #include "Runtime/ValueOperators.h"
 #include <ASL/LogStream.h>
+#include <LibJS/Interpreter.h>
+#include <LibJS/Runtime/Object.h>
+#include <LibJS/Runtime/Value.h>
 
 namespace JS {
 
-Value Program::run(Interpreter& interpreter) const
+Value ScopeNode::run(Interpreter& interpreter) const
 {
     Value value;
     for (const auto& statement : m_statements) {
         value = statement->run(interpreter);
-        dbg() << value;
     }
-
     return value;
-};
+}
 
 Value UnaryExpression::run(Interpreter& interpreter) const
 {
@@ -160,7 +158,12 @@ Value NullLiteral::run(Interpreter&) const
 
 Value ObjectExpression::run(Interpreter& interpreter) const
 {
-    return js_undefined();
+    auto obj = interpreter.heap().allocate<Object>();
+    for (const auto& kv : m_properties) {
+        obj->put_own_property(kv.key->run(interpreter).to_string(), kv.value->run(interpreter));
+    }
+
+    return Value(obj);
 }
 
 Value VariableDeclarator::run(Interpreter&) const
@@ -294,7 +297,7 @@ void ASTNode::dump(int indent) const
     printf("%s ", class_name());
 }
 
-void Program::dump(int indent) const
+void ScopeNode::dump(int indent) const
 {
     ASTNode::dump(indent);
     for (const auto& statement : m_statements)

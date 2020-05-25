@@ -11,7 +11,7 @@ ASL_MAIN()
     auto interpreter = JS::Interpreter::create();
 
     if (argc < 2) {
-        argv[1] = (char*)"./Applications/JS/simple.js";
+        argv[1] = (char*)"./Applications/JS/garbage.js";
     }
 
     File source_file(argv[1]);

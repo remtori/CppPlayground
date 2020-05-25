@@ -1,10 +1,10 @@
-#include "Value.h"
+#include <LibJS/Runtime/Value.h>
 
-#include "Object.h"
 #include <ASL/LogStream.h>
 #include <ASL/StdLibExtras.h>
 #include <ASL/String.h>
 #include <ASL/StringBuilder.h>
+#include <LibJS/Runtime/Object.h>
 
 namespace JS {
 
@@ -48,7 +48,6 @@ Value::Value(const Object* obj)
     : m_type(Type::Object)
 {
     m_value.as_object = const_cast<Object*>(obj);
-    m_value.as_object->ref();
 }
 
 Value::~Value()
@@ -212,8 +211,12 @@ void Value::clear()
 {
     if (m_type == Type::String)
         m_value.as_string->unref();
-    else if (m_type == Type::Object)
-        m_value.as_object->unref();
+}
+
+void Value::visit()
+{
+    if (is_object())
+        as_object().visit();
 }
 
 const ASL::DebugStream& operator<<(const ASL::DebugStream& stream, const Value& value)

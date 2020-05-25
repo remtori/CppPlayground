@@ -1,8 +1,8 @@
 #pragma once
 
-#include "AST.h"
-#include "Lexer.h"
 #include <ASL/String.h>
+#include <LibJS/AST.h>
+#include <LibJS/Lexer.h>
 
 namespace JS {
 

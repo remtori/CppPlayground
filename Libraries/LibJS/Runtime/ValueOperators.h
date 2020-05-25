@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Value.h"
+#include <LibJS/Runtime/Value.h>
 
 namespace JS {
 

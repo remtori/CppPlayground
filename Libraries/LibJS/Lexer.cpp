@@ -1,4 +1,4 @@
-#include "Lexer.h"
+#include <LibJS/Lexer.h>
 
 #include <ASL/HashMap.h>
 #include <ctype.h>

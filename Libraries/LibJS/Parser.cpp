@@ -1,4 +1,4 @@
-#include "Parser.h"
+#include <LibJS/Parser.h>
 
 #include <ASL/HashMap.h>
 #include <ASL/LogStream.h>
@@ -165,6 +165,15 @@ NonnullRefPtr<Statement> Parser::parse_statement()
     case TokenType::Let:
     case TokenType::Const:
         return parse_variable_declaration();
+    case TokenType::CurlyOpen: {
+        consume();
+        auto scope_node = create_ast_node<ScopeNode>();
+        while (m_current_token.type() != TokenType::CurlyClose && m_current_token.type() != TokenType::Eof)
+            scope_node->append(parse_statement());
+        consume(TokenType::CurlyClose);
+        return scope_node;
+    }
+
     default: {
         if (match_expression()) {
             auto expression = parse_expression(0);

@@ -1,8 +1,13 @@
-#include "Interpreter.h"
+#include <LibJS/Interpreter.h>
 
 namespace JS {
 
-Value Interpreter::run(Expression& expression)
+Interpreter::Interpreter()
+    : m_heap(*this)
+{
+}
+
+Value Interpreter::run(Statement& expression)
 {
     return expression.run(*this);
 }
