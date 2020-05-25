@@ -1,10 +1,10 @@
 #include <LibJS/AST.h>
 
-#include "Runtime/ValueOperators.h"
 #include <ASL/LogStream.h>
 #include <LibJS/Interpreter.h>
 #include <LibJS/Runtime/Object.h>
 #include <LibJS/Runtime/Value.h>
+#include <LibJS/Runtime/ValueOperators.h>
 
 namespace JS {
 

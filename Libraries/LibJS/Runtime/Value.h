@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Forward.h"
 #include <ASL/Forward.h>
 #include <ASL/SharedString.h>
 #include <ASL/StringImpl.h>
 #include <ASL/Types.h>
+#include <LibJS/Forward.h>
 #include <math.h>
 
 namespace JS {
