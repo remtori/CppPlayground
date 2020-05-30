@@ -1,6 +1,7 @@
 #include <ASL/ByteBuffer.h>
 
 #include <ASL/Assertions.h>
+#include <ASL/LogStream.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -95,6 +96,11 @@ void ByteBuffer::grow(size_t growth_size, bool fill_null_space)
     ensure_capacity(m_size + growth_size, fill_null_space);
 }
 
+void ByteBuffer::grow_capacity(size_t required_capacity, bool fill_null_space)
+{
+    ensure_capacity(required_capacity * 3 / 2, fill_null_space);
+}
+
 void ByteBuffer::ensure_capacity(size_t new_capacity, bool fill_null_space)
 {
     if (new_capacity < m_size)
@@ -109,6 +115,16 @@ void ByteBuffer::ensure_capacity(size_t new_capacity, bool fill_null_space)
     clear();
     m_buffer = new_buffer;
     m_size = new_capacity;
+}
+
+const DebugStream& operator<<(const DebugStream& stream, const ByteBuffer& buffer)
+{
+    stream << "ByteBuffer{ ";
+    for (size_t i = 0; i < buffer.size(); ++i)
+        stream << (int)buffer[i] << ", ";
+
+    stream << '}';
+    return stream;
 }
 
 } // namespace ASL

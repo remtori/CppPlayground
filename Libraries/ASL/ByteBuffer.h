@@ -47,6 +47,7 @@ public:
     void fill(u8 c, size_t byte_size = 0, size_t offset = 0);
 
     void grow(size_t growth_size, bool fill_null_space = true);
+    void grow_capacity(size_t required_capacity, bool fill_null_space = true);
     void ensure_capacity(size_t new_capacity, bool fill_null_space = true);
 
     // Note: Trim do not reallocate
@@ -60,6 +61,8 @@ private:
     size_t m_size = 0;
     u8* m_buffer = nullptr;
 };
+
+const DebugStream& operator<<(const DebugStream&, const ByteBuffer&);
 
 }; // namespace ASL
 
