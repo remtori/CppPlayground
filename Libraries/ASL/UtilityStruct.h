@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ASL/Types.h>
+
 namespace ASL {
 
 template<typename T>
@@ -22,11 +24,11 @@ struct BaseRect {
     T height = 0;
 };
 
-using Position = BasePosition<int>;
+using Position = BasePosition<i32>;
 using FPosition = BasePosition<float>;
-using Size = BaseSize<int>;
+using Size = BaseSize<i32>;
 using FSize = BaseSize<float>;
-using Rect = BaseRect<int>;
+using Rect = BaseRect<i32>;
 using FRect = BaseRect<float>;
 
 } // namespace ASL
