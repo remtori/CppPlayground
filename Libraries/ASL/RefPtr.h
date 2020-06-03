@@ -87,7 +87,7 @@ public:
 
     template<typename U>
     RefPtr(RefPtr<U>&& other)
-        : m_ptr(other.leak_ref())
+        : m_ptr(static_cast<T*>(other.leak_ref()))
     {
     }
 
