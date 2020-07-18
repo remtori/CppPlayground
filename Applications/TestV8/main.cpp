@@ -2,12 +2,18 @@
 #include "libplatform/libplatform.h"
 #include "v8.h"
 
+#include <ASL/Init.h>
+#include <ASL/Logger.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
+    // Initialize ASL
+    ASL::initialize(argv[0]);
+
     // Initialize V8.
     v8::V8::InitializeICUDefaultLocation(argv[0]);
     v8::V8::InitializeExternalStartupData(argv[0]);
