@@ -44,10 +44,15 @@ function make_proj(src_dir, proj_kind)
 	includedirs
 	{
 		_MAIN_SCRIPT_DIR .. '/Libraries',
+	}
+
+	sysincludedirs
+	{
 		_MAIN_SCRIPT_DIR .. '/third_party/v8/include',
 		_MAIN_SCRIPT_DIR .. '/third_party/glm',
 		_MAIN_SCRIPT_DIR .. '/third_party/GLFW/include',
 		_MAIN_SCRIPT_DIR .. '/third_party/glad/include',
+		_MAIN_SCRIPT_DIR .. '/third_party/spdlog/include',
 		_MAIN_SCRIPT_DIR .. '/third_party/imgui',
 		_MAIN_SCRIPT_DIR .. '/third_party/stb_image',
 	}
