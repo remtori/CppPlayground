@@ -45,6 +45,11 @@ function make_proj(src_dir, proj_kind)
 	{
 		_MAIN_SCRIPT_DIR .. '/Libraries',
 		_MAIN_SCRIPT_DIR .. '/third_party/v8/include',
+		_MAIN_SCRIPT_DIR .. '/third_party/glm',
+		_MAIN_SCRIPT_DIR .. '/third_party/GLFW/include',
+		_MAIN_SCRIPT_DIR .. '/third_party/glad/include',
+		_MAIN_SCRIPT_DIR .. '/third_party/imgui',
+		_MAIN_SCRIPT_DIR .. '/third_party/stb_image',
 	}
 
 	libdirs
@@ -91,10 +96,25 @@ function make_proj(src_dir, proj_kind)
 	filter {}
 end
 
--- group 'Libraries'
--- 	include './Libraries'
+function useSTB(table)
+	for key, value in pairs(table) do
+		files
+		{
+			_MAIN_SCRIPT_DIR .. '/third_party/stb/stb_' .. value .. '.h',
+			_MAIN_SCRIPT_DIR .. '/third_party/stb/stb_' .. value .. '.cpp',
+		}
+	end
+end
+
+group 'Libraries'
+	include './Libraries'
 
 group 'Applications'
 	include './Applications'
+
+group 'Dependencies'
+	include './third_party/GLFW'
+	include './third_party/glad'
+	include './third_party/imgui'
 
 group ''
