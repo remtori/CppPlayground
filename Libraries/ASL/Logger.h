@@ -1,12 +1,12 @@
 #pragma once
 
-#include <spdlog/spdlog.h>
-
+#include <ASL/Forward.h>
 #include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
 namespace ASL {
 
-class Logger {
+class LIB_API Logger {
 public:
     static void set_process_name(const char* arg0);
     inline static std::shared_ptr<spdlog::logger> logger() { return s_logger; }
