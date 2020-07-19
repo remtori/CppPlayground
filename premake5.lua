@@ -54,7 +54,7 @@ function make_proj(src_dir, proj_kind)
 		_MAIN_SCRIPT_DIR .. '/third_party/glad/include',
 		_MAIN_SCRIPT_DIR .. '/third_party/spdlog/include',
 		_MAIN_SCRIPT_DIR .. '/third_party/imgui',
-		_MAIN_SCRIPT_DIR .. '/third_party/stb_image',
+		_MAIN_SCRIPT_DIR .. '/third_party/stb',
 	}
 
 	libdirs
