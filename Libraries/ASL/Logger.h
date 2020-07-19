@@ -1,8 +1,9 @@
 #pragma once
 
+#include <spdlog/spdlog.h>
+
 #include <ASL/Forward.h>
 #include <spdlog/fmt/ostr.h>
-#include <spdlog/spdlog.h>
 
 namespace ASL {
 
