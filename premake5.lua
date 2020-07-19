@@ -14,15 +14,16 @@ workspace 'CppPlayground'
 
 outputdir = '%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}'
 
-function make_proj(src_dir, proj_kind)
+function make_proj(src_dir, proj_kind, name)
 
-	project(src_dir)
+	global_name = name or src_dir
+	project(global_name)
 	location(src_dir)
 	warnings 'Extra'
 
-	local istest = false
+	local is_test = false
 	if (proj_kind == 'Test') then
-		istest = true
+		is_test = true
 		proj_kind = 'ConsoleApp'
 	end
 
@@ -62,14 +63,14 @@ function make_proj(src_dir, proj_kind)
 		_MAIN_SCRIPT_DIR .. '/third_party/v8',
 	}
 
-	if (istest) then
+	if (is_test) then
 		files
 		{
 			_MAIN_SCRIPT_DIR .. '/third_party/catch2/include/catch2/catch2.hpp',
 			_MAIN_SCRIPT_DIR .. '/third_party/catch2/include/catch2/catch2.cpp',
 		}
 
-		includedirs
+		sysincludedirs
 		{
 			_MAIN_SCRIPT_DIR .. '/third_party/catch2/include',
 		}
@@ -109,6 +110,12 @@ function useSTB(table)
 			_MAIN_SCRIPT_DIR .. '/third_party/stb/stb_' .. value .. '.cpp',
 		}
 	end
+end
+
+function withTest()
+	local proj_name = global_name
+	make_proj(proj_name .. '/Tests', 'Test', 'Test' .. proj_name)
+		links { proj_name }
 end
 
 group 'Libraries'

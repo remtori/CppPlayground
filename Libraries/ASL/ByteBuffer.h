@@ -63,3 +63,5 @@ private:
 };
 
 } // namespace ASL
+
+using ASL::ByteBuffer;
