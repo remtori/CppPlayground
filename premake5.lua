@@ -124,6 +124,9 @@ group 'Libraries'
 group 'Applications'
 	include './Applications'
 
+group 'Game'
+	include './Game'
+
 group 'Dependencies'
 	include './third_party/GLFW'
 	include './third_party/glad'
