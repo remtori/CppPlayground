@@ -1,8 +1,8 @@
 #include <ASL/Demangle.h>
 
 #ifdef _MSC_VER
-#    include <DbgHelp.h>
 #    include <Windows.h>
+#    include <DbgHelp.h>
 #else
 #    include <cxxabi.h>
 #endif
@@ -13,13 +13,14 @@ std::string demangle(std::string_view name)
 {
 #ifdef _MSC_VER
     static char demangled_name[1024];
-    int size = UnDecorateSymbolName(std::string(name).data(), &demangled_name[0], 1024, UNDNAME_COMPLETE);
+    std::string str(name);
+    int size = UnDecorateSymbolName(str.data(), &demangled_name[0], 1024, UNDNAME_COMPLETE);
     if (size > 0) {
         demangled_name[size] = '\0';
         return demangled_name;
     }
 
-    return name;
+    return str;
 #else
     int status = 0;
     char* demangled_name = abi::__cxa_demangle(std::string(name).data(), nullptr, nullptr, &status);
