@@ -20,6 +20,9 @@ function make_proj(src_dir, proj_kind, name)
 	project(global_name)
 	location(src_dir)
 	warnings 'Extra'
+	language 'C++'
+	cppdialect 'C++17'
+	staticruntime 'off'
 
 	local is_test = false
 	if (proj_kind == 'Test') then
@@ -28,10 +31,6 @@ function make_proj(src_dir, proj_kind, name)
 	end
 
 	kind(proj_kind or 'SharedLib')
-
-	language 'C++'
-	cppdialect 'C++17'
-	staticruntime 'off'
 
 	targetdir(_MAIN_SCRIPT_DIR .. '/bin/' .. outputdir)
 	objdir(_MAIN_SCRIPT_DIR .. '/bin-int/' .. outputdir .. '/%{prj.name}')
@@ -83,7 +82,7 @@ function make_proj(src_dir, proj_kind, name)
 		linkoptions { '-rdynamic' }
 
 	filter 'system:linux'
-		toolset 'gcc'
+		toolset 'clang'
 
 	filter 'system:windows'
 		toolset 'msc'
