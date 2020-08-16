@@ -23,6 +23,7 @@ function make_proj(src_dir, proj_kind, name)
 	language 'C++'
 	cppdialect 'C++17'
 	staticruntime 'off'
+	toolset 'clang'
 
 	local is_test = false
 	if (proj_kind == 'Test') then
@@ -80,12 +81,6 @@ function make_proj(src_dir, proj_kind, name)
 
 	filter { 'system:linux', 'configurations:Debug' }
 		linkoptions { '-rdynamic' }
-
-	filter 'system:linux'
-		toolset 'clang'
-
-	filter 'system:windows'
-		toolset 'msc'
 
 	filter 'configurations:Debug'
 		defines 'DEBUG'
