@@ -2,7 +2,6 @@
 Language: Cpp
 BasedOnStyle: WebKit
 SpaceAfterTemplateKeyword: false
-SpaceInEmptyBlock: false
 AlignEscapedNewlines: true
 AlignTrailingComments: true
 BreakBeforeInheritanceComma: true
