@@ -6,10 +6,12 @@
 #include <string.h>
 #include <string>
 
-#ifdef PLATFORM_LINUX
-#    include <cxxabi.h>
+#include <cxxabi.h>
+
+#if defined(PLATFORM_LINUX) || defined(PLATFORM_MACOS)
 #    include <execinfo.h>
 #elif defined(PLATFORM_WINDOWS)
+
 #endif
 
 namespace ASL {
@@ -18,7 +20,9 @@ constexpr const size_t backtrace_size = 21;
 
 void print_backtrace(int signal)
 {
-#ifdef PLATFORM_LINUX
+
+#if defined(PLATFORM_LINUX) || defined(PLATFORM_MACOS)
+
     void* array[backtrace_size];
     size_t size;
     size = backtrace(array, backtrace_size);
@@ -54,8 +58,9 @@ void print_backtrace(int signal)
         }
     }
 #elif defined(PLATFORM_WINDOWS)
-
+    LOG_CRITICAL("Crashed! Signal {}", signal);
 #endif
+
     exit(1);
 }
 
