@@ -58,11 +58,6 @@ function make_proj(src_dir, proj_kind, name)
 		_MAIN_SCRIPT_DIR .. '/third_party/stb',
 	}
 
-	libdirs
-	{
-		_MAIN_SCRIPT_DIR .. '/third_party/v8',
-	}
-
 	if (is_test) then
 		files
 		{
