@@ -6,7 +6,9 @@
 #include <string.h>
 #include <string>
 
+#ifndef _MSC_VER
 #include <cxxabi.h>
+#endif
 
 #if defined(PLATFORM_LINUX) || defined(PLATFORM_MACOS)
 #    include <execinfo.h>

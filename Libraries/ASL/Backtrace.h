@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ASL/Forward.h>
+
 namespace ASL {
-void print_backtrace(int signal);
+LIB_API void print_backtrace(int signal);
 } // namespace ASL
