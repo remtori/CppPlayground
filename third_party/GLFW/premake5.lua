@@ -73,7 +73,8 @@ project 'GLFW'
 
 		links
 		{
-			'opengl32.lib'
+			'opengl32',
+			'gdi32',
 		}
 
 		defines
