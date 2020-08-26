@@ -1,8 +1,10 @@
 #pragma once
 
 #include <ASL/Backtrace.h>
-#include <ASL/Logger.h>
 #include <ASL/Platform.h>
+
+#define ASL_LOGGER_IMPL
+#include <ASL/Logger.h>
 
 #include <signal.h>
 
