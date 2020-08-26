@@ -6,7 +6,7 @@ Playing around with C++ but this time embracing open-source / library
 
 - Version: c++17
 
-- Compiler: g++
+- Compiler: clang++
 
 - Configurable define macro:
 
