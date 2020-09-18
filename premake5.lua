@@ -49,6 +49,7 @@ function make_proj(src_dir, proj_kind, name)
 
 	sysincludedirs
 	{
+		_MAIN_SCRIPT_DIR .. '/third_party',
 		_MAIN_SCRIPT_DIR .. '/third_party/v8/include',
 		_MAIN_SCRIPT_DIR .. '/third_party/glm',
 		_MAIN_SCRIPT_DIR .. '/third_party/GLFW/include',

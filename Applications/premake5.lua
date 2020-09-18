@@ -6,3 +6,6 @@ make_proj('TestV8', 'ConsoleApp')
 	links { 'v8', 'pthread', 'ASL' }
 
 make_proj('CppHidden', 'ConsoleApp')
+
+make_proj('WebSocketServer', 'ConsoleApp')
+	links { 'pthread' }
