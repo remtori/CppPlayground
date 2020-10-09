@@ -1,0 +1,16 @@
+# local generated folder
+build
+out
+
+# Visual Studio files and folder
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+
+# Makefile
+Makefile
+
+# VSCode folder
+.vscode/
