@@ -2,7 +2,7 @@
 
 #include <ASL/Attributes.h>
 #include <ASL/Types.h>
-#include <memory>
+#include <stdlib.h>
 
 namespace ASL {
 
