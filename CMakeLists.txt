@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 
 set(CMAKE_INSTALL_MESSAGE NEVER)
+set(CMAKE_C_COMPILER "clang")
+set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_CXX_STANDARD 20)
 
 project(CppPlayground)
 
@@ -16,8 +19,8 @@ function(make_lib target_name)
 endfunction()
 
 unset(CMAKE_SYSROOT)
-set(CMAKE_STAGING_PREFIX ${CMAKE_SOURCE_DIR}/out)
-set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/out)
+set(CMAKE_STAGING_PREFIX ${CMAKE_SOURCE_DIR}/Out)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/Out)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unknown-warning-option -Wall -Wextra -Werror -Wmissing-declarations -std=c++2a -fdiagnostics-color=always")
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
