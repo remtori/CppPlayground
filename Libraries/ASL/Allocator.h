@@ -6,17 +6,13 @@
 
 namespace ASL {
 
-template<typename T>
 struct Allocator {
-    using ValueType = T;
-    using PointerType = T*;
-
-    NO_DISCARD constexpr PointerType allocate(size_t num)
+    NO_DISCARD constexpr void* allocate(size_t size)
     {
-        return static_cast<PointerType>(malloc(sizeof(ValueType) * num));
+        return malloc(size);
     }
 
-    constexpr void deallocate(PointerType ptr)
+    constexpr void deallocate(void* ptr)
     {
         free(ptr);
     }

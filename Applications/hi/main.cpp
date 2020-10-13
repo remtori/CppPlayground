@@ -2,14 +2,18 @@
 #include <iostream>
 #include <vector>
 
+struct Alloc {
+    static int next()
+    {
+        return 3;
+    }
+};
+
 int main()
 {
+    Alloc t;
 
-    std::vector<u32> a = { 1, 2, 3, 4, 5, 6 };
-
-    for (auto& v : a) {
-        std::cout << v << std::endl;
-    }
+    std::cout << t.next() << " " << Alloc::next() << std::endl;
 
     return 0;
 }
