@@ -13,4 +13,4 @@
 #endif
 
 #define NO_DISCARD [[nodiscard]]
-#define ALWAYS_INLINE [[always_inline]]
+#define ALWAYS_INLINE [[gnu::always_inline]]
